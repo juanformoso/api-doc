@@ -31,7 +31,7 @@ All you need to do, is
 And that's it!  
 When you run your application, you'll see your pretty documentation
 
-![](http://github.com/juanformoso/repository/raw/master/img/screenshot.png)
+![](https://raw.github.com/juanformoso/api-doc/master/img/screenshot.png)
 
 Main features
 -------------
