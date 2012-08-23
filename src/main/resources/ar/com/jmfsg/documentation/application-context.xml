@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:lang="http://www.springframework.org/schema/lang" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+		http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang-3.0.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
+		   http://www.springframework.org/schema/task
+   http://www.springframework.org/schema/task/spring-task-3.0.xsd">
+
+	<context:annotation-config />
+
+	<mvc:resources mapping="/static/**"
+		location="classpath:ar/com/jmfsg/documentation/views/static/**"
+		order="-1" />
+
+	<import resource="classpath:ar/com/jmfsg/documentation/freemarker.xml" />
+
+	<bean class="org.springframework.web.servlet.view.BeanNameViewResolver" />
+
+	<bean id="ar.com.jmfsg.documentation.loader" class="ar.com.jmfsg.documentation.DocumentationLoader" />
+	<bean id="ar.com.jmfsg.documentation.documentationController"
+		class="ar.com.jmfsg.documentation.controller.DocumentationController"
+		p:documentationLoader-ref="ar.com.jmfsg.documentation.loader" />
+
+	<bean name="rawJsonView"
+		class="org.springframework.web.servlet.view.json.MappingJacksonJsonView" />
+</beans>
