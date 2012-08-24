@@ -19,9 +19,11 @@
 	<developers>
 		<developer>
 			<name>Juan Manuel Formoso</name>
-			<email>jformoso@despegar.com</email>
-			<id>jformoso</id>
+			<email>jformoso@gmail.com</email>
 			<url>http://seniorgeek.com.ar</url>
+			<roles>
+				<role>Author</role>
+			</roles>
 		</developer>
 	</developers>
 
