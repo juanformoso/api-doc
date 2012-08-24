@@ -41,4 +41,10 @@ Main features
 Stuff I know is wrong and plan on fixing
 ----------------------------------------
 
-// TODO
+- The *sections* supported in the detailed view are kind of hardcoded (they are optional, but hardcoded) to what we used internally -- parameters, filters, options, and facets. I plan on making it generic so you can define your own sections somewhere in the doc file, and specify the field list for them. (this will probably break compatibility, but I don't expect it to be that difficult)
+
+- The console only supports trying the service for the GET method. I plan on adding support for other methods as well.
+
+- Right now you need to put all your documentation in the same file, in the future you'll be able to split it into several files and the engine will merge them.
+
+- The toggle is suboptimal code, there's a TODO in there.
