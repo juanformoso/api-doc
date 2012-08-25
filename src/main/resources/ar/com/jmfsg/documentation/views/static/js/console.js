@@ -70,8 +70,7 @@ var console = function () {
 
                         writeTo.html(value);
                     },
-                    dataType: 'jsonp',
-                    jsonp: 'callback',
+                    dataType: 'json',
                     complete: function (req, status) {
                         actionButton.removeAttr('disabled');
                     },
