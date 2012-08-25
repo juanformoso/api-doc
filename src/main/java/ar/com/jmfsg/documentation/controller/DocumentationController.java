@@ -29,11 +29,7 @@ public class DocumentationController
     private Map<String, Object> documentationByMethod = new HashMap<String, Object>();
 
     private ModelAndView createView(String name) {
-        ModelAndView ret = new ModelAndView(name);
-        ret.addObject("headerNewRelicScript", com.newrelic.api.agent.NewRelic.getBrowserTimingHeader());
-        ret.addObject("footerNewRelicScript", com.newrelic.api.agent.NewRelic.getBrowserTimingFooter());
-
-        return ret;
+        return new ModelAndView(name);
     }
 
     @RequestMapping(value = {"/", "/docs"}, method = RequestMethod.GET)

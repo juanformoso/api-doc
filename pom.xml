@@ -21,7 +21,7 @@
 			<email>jformoso@gmail.com</email>
 			<url>http://seniorgeek.com.ar</url>
 			<roles>
-				<role>Author</role>
+				<role>author</role>
 			</roles>
 		</developer>
 	</developers>
@@ -45,11 +45,6 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
 			<version>3.0.7.RELEASE</version>
-		</dependency>
-		<dependency>
-			<groupId>newrelic</groupId>
-			<artifactId>newrelic-api</artifactId>
-			<version>2.1.2</version>
 		</dependency>
 		<dependency>
 			<groupId>net.sf.json-lib</groupId>
