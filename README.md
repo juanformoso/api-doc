@@ -22,7 +22,7 @@ All you need to do, is
 
     <import resource="classpath:ar/com/jmfsg/documentation/application-context.xml" />
 
-3) Write your *doc file* -- se the [sample application](https://github.com/juanformoso/api-doc-sample) with an example.
+3) Write your *doc file* -- see the [sample application](https://github.com/juanformoso/api-doc-sample) with an example.
 
 4) Specify where to find the *doc file*
 
