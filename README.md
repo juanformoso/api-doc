@@ -45,6 +45,4 @@ Stuff I know is wrong and plan on fixing
 
 - The console only supports trying the service for the GET method. I plan on adding support for other methods as well.
 
-- Right now you need to put all your documentation in the same file, in the future you'll be able to split it into several files and the engine will merge them.
-
 - The toggle is suboptimal code, there's a TODO in there.

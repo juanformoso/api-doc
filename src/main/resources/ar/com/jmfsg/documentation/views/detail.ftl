@@ -1,13 +1,13 @@
 <#import "/spring.ftl" as s />
 <#import "/library/container.ftl" as c />
 
+<@c.fixedHeadFor >
+
 <#if general.relativePath?has_content>
    	<#assign relativePath = "${general.relativePath}">
 <#else>
 	<#assign relativePath = "">
 </#if>
-
-<@c.fixedHeadFor >
 
 <script type="text/javascript" src="<@s.url "${relativePath}/static/js/console.js?v=3" />"></script>
 <script type="text/javascript">

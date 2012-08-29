@@ -11,6 +11,7 @@ import java.util.Set;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import org.apache.commons.lang.StringUtils;
 import org.reflections.Reflections;
 import org.reflections.scanners.MethodAnnotationsScanner;
 import org.reflections.util.ClasspathHelper;
@@ -70,8 +71,12 @@ public class DocumentationLoader
 
         for (DocumentationDescriptor d : getApplicationContext().getBeansOfType(DocumentationDescriptor.class).values()) {
             JSONObject doc = this.readDoc(d.getResource());
+
+            String modulePrefix = StringUtils.isEmpty(d.getModulePrefix()) ? "" : d.getModulePrefix();
             this.rawDoc = doc;
-            this.getGeneralDoc().accumulateAll(doc.getJSONObject("general"));
+            if (doc.has("general")) {
+                this.getGeneralDoc().accumulateAll(doc.getJSONObject("general"));
+            }
 
             if (doc.has("dictionary")) {
                 this.addToDictionary(doc.getJSONArray("dictionary"));
@@ -81,10 +86,12 @@ public class DocumentationLoader
                 this.addToGroupDocs(doc.getJSONObject("groups"));
             }
 
-            if (this.docByModule.containsKey(d.getModulePrefix())) {
-                this.docByModule.get(d.getModulePrefix()).addAll(doc.getJSONArray("methods"));
-            } else {
-                this.docByModule.put(d.getModulePrefix(), doc.getJSONArray("methods"));
+            if (doc.has("methods")) {
+                if (this.docByModule.containsKey(d.getModulePrefix())) {
+                    this.docByModule.get(modulePrefix).addAll(doc.getJSONArray("methods"));
+                } else {
+                    this.docByModule.put(modulePrefix, doc.getJSONArray("methods"));
+                }
             }
 
             // Check if there are complements via annotations
@@ -101,13 +108,13 @@ public class DocumentationLoader
                         Method m = it.next();
                         JSONObject o = JSONObject.fromObject(m.getAnnotation(Documentation.class).data());
 
-                        JSONObject original = this.getObjectLoadedFromResource(this.docByModule.get(d.getModulePrefix()),
+                        JSONObject original = this.getObjectLoadedFromResource(this.docByModule.get(modulePrefix),
                             m.getName());
 
                         if (original != null) {
                             original.accumulateAll(o);
                         } else {
-                            this.docByModule.get(d.getModulePrefix()).add(o);
+                            this.docByModule.get(modulePrefix).add(o);
                         }
                     }
                 }
