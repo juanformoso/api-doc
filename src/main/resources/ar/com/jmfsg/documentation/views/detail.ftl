@@ -75,9 +75,9 @@
  <#else>
  <p>${m.description}<p>
  </#if>
- <#if m.method?has_content && m.method == "POST">
+ <#if m.method?has_content && (m.method == "POST" || m.method == "PUT")>
  <p>
- This method receives a <b>POST</b>. The console is not supported at the moment for these methods. <br/> 
+ This method receives a <b>POST</b> or <b>PUT</b>. The console is not supported at the moment for these methods. <br/> 
  Keep in mind that the data has to be posted in <b>JSON</b> format. For example, if the method receives a string called "parameterA", a number called "parameterB", and a Dictionary called "parameterC", the posted JSON has to be like this:<br/>
  </p>
  <code><pre>
@@ -99,6 +99,7 @@
                 <h2>- Parameters</h2>
 			</div>
 			<div class="toggle-child" >
+			<p>Parameters may refer to values in the URL, entity properies posted as json, or both.</p>
                 <ul>
                 	${render_object(m.request.parameters)}
             </div>
@@ -204,7 +205,7 @@
 	                	<h2>+ Response Summary</h2>
 	                </div>
 	                <div class="toggle-child" style="display: none;">
-	                	<p>These are the fields returned by this method as a summary of its execution. There may be additional ones not documented here, but these will always be present.</p>
+	                	<p>These are the fields returned by this method as a summary of its execution. There may be additional ones not documented here, but these will always be present (if they have values, otherwise they are ignored).</p>
 	                	<ul>
 	                		${render_object(m.responseSummary)}
 	                	</ul>
@@ -225,6 +226,9 @@
 		</#if>
 		<#if c.type?has_content>
 			<#local ret = ret + ' &ndash; <i>' + c.type + '</i>'>
+		</#if>
+		<#if c.optional?has_content>
+			<#local ret = ret + ' &ndash; <i>Optional</i>.'>
 		</#if>
 		<#if c.vectorized?has_content && c.vectorized>
 			<ul><li>This is a <b>vectorized parameter</b>, multiple ids can be sent in a single request if delimitted with a comma string.</li></ul>
