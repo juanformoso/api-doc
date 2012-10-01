@@ -1,5 +1,6 @@
 <#import "/spring.ftl" as s />
 <#import "/library/container.ftl" as c />
+<#import "/library/examples.ftl" as e />
 
 <@c.fixedHeadFor >
 
@@ -13,7 +14,7 @@
 <script type="text/javascript">
         function showConsole() {
             var x = $('#console');
-            var method= "<@s.url "${relativePath + m.requestMapping?replace(':.+', '')}" />";
+            var method= "<@s.url "${general.methodPath + m.requestMapping?replace(':.+', '')}" />";
             var parameters = [<#if m.request?has_content>
             	<#if m.request.parameters?has_content>
 	            	<#list m.request.parameters as p>'${p.name}',</#list>
@@ -34,6 +35,16 @@
 			var apiUrl = "http://" + window.location.host;
             console.build(x, method, parameters, {<#if m.request?has_content && m.request.parameters?has_content><#list m.request.parameters as p><#if p.vectorized?has_content && p.vectorized>'${p.name}':true<#if p_has_next>,</#if></#if></#list></#if>}, apiUrl);
         }
+        
+        // Code for examples
+		function useExample(parameters) {
+			var paramsKeys = Object.keys(parameters);
+			for (var i = 0; i < paramsKeys.length; i++) {
+				var name = paramsKeys[i];
+				var field = document.getElementById('p-'+name);
+				field.value = parameters[paramsKeys[i]];
+			}
+		}
         
         $(document).ready(function() {
 	        $('.toggle-parent').mouseover(function () {
@@ -57,6 +68,8 @@
 			    $(this).html('<h2>'+$(this).text().replace("-", "+")+'</h2>');
 			});
 		});
+		
+		
 </script>
 <title>Usage of ${m.friendlyName}</title>
 </@c.fixedHeadFor>
@@ -213,6 +226,27 @@
 			</div>
           </#if>
             
+            <#-- Agrego ejemplos -->
+            <@e.examples/>
+            
+<#-- Imprime los ejemplos, prepara el código para llenar la consola -->
+<#function render_examples egs>
+	<#local ret = ''>
+	<#list egs as e>
+		<#local count = 1>
+		<#local ret = ret + "<div id='example' + ${count} class='example'>" >
+		<#list e?keys as k>
+			<#local ret = ret + '<li><b>' + k + '</b>'>
+			<#local ret = ret + ' &ndash; ' + e[k]>
+			<#local ret = ret + '</li>'>
+		 </#list>
+		<#local ret = ret + "<input type='button' value='Use Example' onclick='useExample(${count})' />" >
+		<#local ret = ret + "</div>" >
+		<#local count = count + 1>
+	</#list>
+	<#return ret>
+</#function>
+
 <#function render_object col>
 	<#local ret = ''>
 	<#list col as c>
