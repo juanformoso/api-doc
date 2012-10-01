@@ -1,11 +1,84 @@
-<#-- Función que convierte un SimpleHash de freemarker a un string de js -->
+<#-- Función para convertir valores Freemarker a string de js (soporta scalares, collection, sequence y extended hashes) -->
+<#function toJSString obj>
+	<#local ret = ''>
+	<#if obj?is_string>
+		<#local ret = ret + "\"" + obj + "\"">
+	<#elseif obj?is_number || obj?is_boolean || obj?is_date >
+		<#local ret = ret + "\"" + obj?string + "\"">
+	<#elseif obj?is_hash_ex>
+		<#local ret = ret + hashToJSString(obj)>
+	<#elseif obj?is_sequence || obj?is_collection>
+		<#local ret = ret + seqToJSString(obj)>
+	</#if>
+	<#return ret>
+</#function>
+
+
+<#-- Función que convierte un SimpleHash con valores escalares de freemarker a un string de js -->
 <#function hashToJSString hash>
 <#local ret = '{'>
 	<#list hash?keys as k>
 		<#local ret = ret + ' \"' + k + '\" :'>
-		<#local ret = ret + ' \"' + hash[k] + '\" '>
+		<#local ret = ret + toJSString(hash[k])>
 		<#local ret = ret + ', '>
     </#list>
 <#local ret = ret + '}'>
 <#return ret>
 </#function>
+
+<#-- Función que convierte un Collection o Sequence a string de js -->
+<#function seqToJSString obj>
+<#local ret = '['>
+	<#list obj as e>
+		<#local ret = ret + toJSString(e)>
+		<#local ret = ret + ', '>
+    </#list>
+<#local ret = ret + ']'>
+<#return ret>
+</#function>
+
+<#-- Función que renderiza un objeto JSON -->
+<#function render_object col>
+	<#local ret = ''>
+	<#list col as c>
+		<#local ret = ret + '<li><b>' + c.name + '</b>'>
+		<#if c.isList?has_content && c.isList>
+			<#local ret = ret + ' &ndash; <i>List</i>'>
+		</#if>
+		<#local description = resolve_description(c) >
+		<#if description?has_content>
+			<#local ret = ret + ' &ndash; ' + description>
+		</#if>
+		<#if c.type?has_content>
+			<#local ret = ret + ' &ndash; <i>' + c.type + '</i>'>
+		</#if>
+		<#if c.optional?has_content>
+			<#local ret = ret + ' &ndash; <i>Optional</i>.'>
+		</#if>
+		<#if c.vectorized?has_content && c.vectorized>
+			<ul><li>This is a <b>vectorized parameter</b>, multiple ids can be sent in a single request if delimitted with a comma string.</li></ul>
+		</#if>
+		<#if c.children?has_content>
+			<#local ret = ret + '<ul>' + render_object(c.children) + '</ul>' >	
+		</#if>
+		<#local ret = ret + '</li>'>
+	</#list>
+    <#return ret>
+ </#function>
+ 
+ <#-- -->
+ <#function resolve_description field>
+ 	
+ 	<#local ret = ''>
+ 	
+ 	<#if field.description?has_content>
+ 		<#local ret = field.description >
+ 	<#elseif field.descriptionKey?has_content && dictionary?keys?seq_contains(field.descriptionKey)>
+ 		<#local ret = dictionary[field.descriptionKey] >
+ 	<#elseif dictionary?keys?seq_contains(field.name)>
+ 		<#local ret = dictionary[field.name]>
+ 	</#if>
+ 	
+ 	<#return ret>
+ </#function>
+ 
