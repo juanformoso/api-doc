@@ -1,10 +1,10 @@
-<#-- Función para convertir valores Freemarker a string de js (soporta scalares, collection, sequence y extended hashes) -->
+<#-- Funcion para convertir valores Freemarker a string de js (soporta scalares, collection, sequence y extended hashes) -->
 <#function toJSString obj>
 	<#local ret = ''>
 	<#if obj?is_string>
-		<#local ret = ret + "\"" + obj + "\"">
+		<#local ret = ret + "\"" + obj?js_string + "\"">
 	<#elseif obj?is_number || obj?is_boolean || obj?is_date >
-		<#local ret = ret + "\"" + obj?string + "\"">
+		<#local ret = ret + "\"" + obj?string?js_string + "\"">
 	<#elseif obj?is_hash_ex>
 		<#local ret = ret + hashToJSString(obj)>
 	<#elseif obj?is_sequence || obj?is_collection>
@@ -14,7 +14,7 @@
 </#function>
 
 
-<#-- Función que convierte un SimpleHash con valores escalares de freemarker a un string de js -->
+<#-- Funcion que convierte un SimpleHash con valores escalares de freemarker a un string de js -->
 <#function hashToJSString hash>
 <#local ret = '{'>
 	<#list hash?keys as k>
@@ -26,7 +26,7 @@
 <#return ret>
 </#function>
 
-<#-- Función que convierte un Collection o Sequence a string de js -->
+<#-- Funcion que convierte un Collection o Sequence a string de js -->
 <#function seqToJSString obj>
 <#local ret = '['>
 	<#list obj as e>
@@ -37,7 +37,7 @@
 <#return ret>
 </#function>
 
-<#-- Función que renderiza un objeto JSON -->
+<#-- Funcion que renderiza un objeto JSON -->
 <#function render_object col>
 	<#local ret = ''>
 	<#list col as c>

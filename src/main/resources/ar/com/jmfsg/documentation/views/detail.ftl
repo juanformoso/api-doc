@@ -1,6 +1,8 @@
 <#import "/spring.ftl" as s />
 <#import "/library/container.ftl" as c />
 <#import "/library/examples.ftl" as e />
+<#import "/library/optParameters.ftl" as o />
+<#import "/library/utils.ftl" as u />
 
 <@c.fixedHeadFor >
 
@@ -33,7 +35,8 @@
             </#if>];
 
 			var apiUrl = "http://" + window.location.host;
-            console.build(x, method, parameters, {<#if m.request?has_content && m.request.parameters?has_content><#list m.request.parameters as p><#if p.vectorized?has_content && p.vectorized>'${p.name}':true<#if p_has_next>,</#if></#if></#list></#if>}, apiUrl);
+			var optParameters = <#if m.request?has_content && m.request.parameters?has_content>${u.toJSString(m.request.optParameters)}<#else>{}</#if>
+            console.build(x, method, parameters, {<#if m.request?has_content && m.request.parameters?has_content><#list m.request.parameters as p><#if p.vectorized?has_content && p.vectorized>'${p.name}':true<#if p_has_next>,</#if></#if></#list></#if>}, apiUrl, optParameters);
         }
         
         // Code for examples
@@ -114,8 +117,14 @@
 			<div class="toggle-child" >
 			<p>Parameters may refer to values in the URL, entity properies posted as json, or both.</p>
                 <ul>
-                	${render_object(m.request.parameters)}
+                	${u.render_object(m.request.parameters)}
+                	
+            	<#-- Parametros opcionales -->
+            	<@o.optParameters />
             </div>
+            
+            
+            
             </div>
             </#if>
             
@@ -176,7 +185,7 @@
                 <div class="toggle-child">
 				<p>Facets are extra filters that modify the original request. The list of available facets and their types and possible values are included in the service response. <br> This service supports the following ones.</p>
                 <ul>
-                	${render_object(m.request.facets)}
+                	${u.render_object(m.request.facets)}
 				</ul>
 				</div>
             </div>
@@ -200,12 +209,12 @@
 		                		<#list m.dynamicResponse as op>
 		                			<ul>
 		                				<h3>${op.name}</h3>
-		                				${render_object(op.response)}
+		                				${u.render_object(op.response)}
 		                			</ul>
 		                		</#list>
 		                		</li>
 		                	<#else>
-		                		${render_object(m.response)}
+		                		${u.render_object(m.response)}
 		                	</#if>
 						</ul>
 					</div>
@@ -220,7 +229,7 @@
 	                <div class="toggle-child" style="display: none;">
 	                	<p>These are the fields returned by this method as a summary of its execution. There may be additional ones not documented here, but these will always be present (if they have values, otherwise they are ignored).</p>
 	                	<ul>
-	                		${render_object(m.responseSummary)}
+	                		${u.render_object(m.responseSummary)}
 	                	</ul>
 					</div>
 			</div>
@@ -247,48 +256,6 @@
 	<#return ret>
 </#function>
 
-<#function render_object col>
-	<#local ret = ''>
-	<#list col as c>
-		<#local ret = ret + '<li><b>' + c.name + '</b>'>
-		<#if c.isList?has_content && c.isList>
-			<#local ret = ret + ' &ndash; <i>List</i>'>
-		</#if>
-		<#local description = resolve_description(c) >
-		<#if description?has_content>
-			<#local ret = ret + ' &ndash; ' + description>
-		</#if>
-		<#if c.type?has_content>
-			<#local ret = ret + ' &ndash; <i>' + c.type + '</i>'>
-		</#if>
-		<#if c.optional?has_content>
-			<#local ret = ret + ' &ndash; <i>Optional</i>.'>
-		</#if>
-		<#if c.vectorized?has_content && c.vectorized>
-			<ul><li>This is a <b>vectorized parameter</b>, multiple ids can be sent in a single request if delimitted with a comma string.</li></ul>
-		</#if>
-		<#if c.children?has_content>
-			<#local ret = ret + '<ul>' + render_object(c.children) + '</ul>' >	
-		</#if>
-		<#local ret = ret + '</li>'>
-	</#list>
-    <#return ret>
- </#function>
-
- <#function resolve_description field>
- 	
- 	<#local ret = ''>
- 	
- 	<#if field.description?has_content>
- 		<#local ret = field.description >
- 	<#elseif field.descriptionKey?has_content && dictionary?keys?seq_contains(field.descriptionKey)>
- 		<#local ret = dictionary[field.descriptionKey] >
- 	<#elseif dictionary?keys?seq_contains(field.name)>
- 		<#local ret = dictionary[field.name]>
- 	</#if>
- 	
- 	<#return ret>
- </#function>
           
             <#if m.facets?has_content>
             <div>

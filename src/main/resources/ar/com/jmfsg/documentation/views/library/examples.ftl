@@ -15,7 +15,7 @@
 </#if>
 </#macro>
 
-<#-- Imprime los ejemplos, prepara el código para llenar la consola -->
+<#-- Imprime los ejemplos, prepara el codigo para llenar la consola -->
 <#function render_examples egs>
 	<#local ret = ''>
 	<#list egs as e>
@@ -28,8 +28,8 @@
 			<#local ret = ret + ' &ndash; ' + e[k]>
 			<#local ret = ret + '</li>'>
 		 </#list>
-		<#-- Muy fea la construcción de parámetros, buscar alternativa -->
-		<#local parameters = u.hashToJSString(e)>
+		<#-- Muy fea la construcción de parametros, buscar alternativa -->
+		<#local parameters = u.toJSString(e)>
 		<#local ret = ret + "<input type='button' value='Use Example' onclick='useExample(${parameters})' />" >
 		<#local ret = ret + "</div>" >
 		<#local count = count + 1>

@@ -2,7 +2,7 @@ var console = function () {
     var _targetUrl;
 
     return {
-        build: function (div, route, parameters, vectParameters, url) {
+        build: function (div, route, parameters, vectParameters, url, optParameters) {
             $(div).empty();
 
             _targetUrl = url;
@@ -27,6 +27,23 @@ var console = function () {
                 $(div).append(table);
             }
 
+            //Agrego seccion de parametros opcionales
+            if (typeof optParameters != "undefined" && optParameters.length > 0) {
+                $(div).append($('<h4>Optional Parameters</h4>'));
+
+                var table = $('<table width="90%"></table>');
+
+                for (var i = 0; i < optParameters.length; i++) {
+                    var p = $('<tr><td><b>' + optParameters[i]["name"] + '</b>&nbsp;' + '</td><td style="margin-left:20px;"><input type="text" id="p-' + optParameters[i]["name"] + '" /></td></tr>');
+
+                    paramFields[paramFields.length] = { name: optParameters[i]["name"] };
+
+                    $(table).append(p);
+                }
+
+                $(div).append(table);
+            }
+            
             var result = $('<div id="result"></div>');
 
             var doIt = $('<input type="button" id="doIt" value="Call Method" />');
