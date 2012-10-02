@@ -12,74 +12,40 @@
 	<#assign relativePath = "">
 </#if>
 
-<script type="text/javascript" src="<@s.url "${relativePath}/static/js/console.js?v=3" />"></script>
+<script type="text/javascript" src="<@s.url "${relativePath}/static/js/console.js?v=3" />" > </script>
+<script type="text/javascript" src="<@s.url "${relativePath}/static/js/detail.js?v=3" />"  > </script>
 <script type="text/javascript">
-        function showConsole() {
-            var x = $('#console');
-            var method= "<@s.url "${general.methodPath + m.requestMapping?replace(':.+', '')}" />";
-            var parameters = [<#if m.request?has_content>
-            	<#if m.request.parameters?has_content>
-	            	<#list m.request.parameters as p>'${p.name}',</#list>
-	            </#if>
-	            <#if m.request.filters?has_content>
-	            	<#list m.request.filters as p>'${p.name}',</#list>
-	            </#if>
-	            <#if m.request.options?has_content>
-	            	<#list m.request.options as p>'${p.name}',</#list>
-	            </#if>
-	            <#if m.request.facets?has_content>
-	            	<#list m.request.facets as p>'${p.name}',</#list>
-	            </#if>
-	            <#if m.request.paginable?has_content>'page','pagesize',</#if>
-	            <#if m.request.sortable?has_content>'sort','order',</#if>
-            </#if>];
+//Javascript associated with detail view
+function showConsole() {
+    var x = $('#console');
+    var method= "<@s.url "${general.methodPath + m.requestMapping?replace(':.+', '')}" />";
+    var parameters = [<#if m.request?has_content>
+    	<#if m.request.parameters?has_content>
+        	<#list m.request.parameters as p>'${p.name}',</#list>
+        </#if>
+        <#if m.request.filters?has_content>
+        	<#list m.request.filters as p>'${p.name}',</#list>
+        </#if>
+        <#if m.request.options?has_content>
+        	<#list m.request.options as p>'${p.name}',</#list>
+        </#if>
+        <#if m.request.facets?has_content>
+        	<#list m.request.facets as p>'${p.name}',</#list>
+        </#if>
+        <#if m.request.paginable?has_content>'page','pagesize',</#if>
+        <#if m.request.sortable?has_content>'sort','order',</#if>
+    </#if>];
 
-			var apiUrl = "http://" + window.location.host;
-			var optParameters = <#if m.request?has_content && m.request.parameters?has_content>${u.toJSString(m.request.optParameters)}<#else>{}</#if>
-            console.build(x, method, parameters, {<#if m.request?has_content && m.request.parameters?has_content><#list m.request.parameters as p><#if p.vectorized?has_content && p.vectorized>'${p.name}':true<#if p_has_next>,</#if></#if></#list></#if>}, apiUrl, optParameters);
-        }
-        
-        // Code for examples
-		function useExample(parameters) {
-			var paramsKeys = Object.keys(parameters);
-			for (var i = 0; i < paramsKeys.length; i++) {
-				var name = paramsKeys[i];
-				var field = document.getElementById('p-'+name);
-				field.value = parameters[paramsKeys[i]];
-			}
-		}
-		
-		function registerToggleFunction() {
-			$('.toggle-parent').mouseover(function () {
-						$(this).css('cursor', 'pointer');
-				});
-				
-		        $('.toggle-parent').click(function(e) {
-		        
-		          var header = $(this).children()
-		        
-		       	  if($(e.target).is("div.toggle-child ul li a")) {
-			  		return;
-			  	  }
-		        
-				  $(this).parent().children('.toggle-child').slideToggle(400, function() {
-				    // Animation complete.
-				  });
-				  
-				  // TODO: JMF: Mejorar esto :P
-				  if (header.text().trim().charAt(0) == "+")
-				    header.text(header.text().replace("+", "-"));
-		 		  else
-				    header.text(header.text().replace("-", "+"));
-				});
-		}
-        
-        $(document).ready(function() {
-	        registerToggleFunction()
-		});
-		
-		
+	var apiUrl = "http://" + window.location.host;
+	var optParameters = <#if m.request?has_content && m.request.parameters?has_content>${u.toJSString(m.request.optParameters)}<#else>{}</#if>
+    console.build(x, method, parameters, {<#if m.request?has_content && m.request.parameters?has_content><#list m.request.parameters as p><#if p.vectorized?has_content && p.vectorized>'${p.name}':true<#if p_has_next>,</#if></#if></#list></#if>}, apiUrl, optParameters);
+}
+
+$(document).ready(function() {
+    registerToggleFunction();
+});
 </script>
+
 <title>Usage of ${m.friendlyName}</title>
 </@c.fixedHeadFor>
 
