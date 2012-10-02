@@ -29,8 +29,11 @@ var console = function () {
 
             //Agrego seccion de parametros opcionales
             if (typeof optParameters != "undefined" && optParameters.length > 0) {
-                $(div).append($('<h4>Optional Parameters</h4>'));
+            	var optDiv = $('<div id="optDiv" ></div>');
+            	var optHeadDiv = $('<div id="optHeadDiv" class="toggle-parent"></div>');
+                $(optHeadDiv).append($('<h4 > -Optional Parameters</h4>'));
 
+            	var optParamDiv = $('<div id="optParamDiv" style="padding-left:20px" class="toggle-child" ></div>')
                 var table = $('<table width="90%"></table>');
 
                 for (var i = 0; i < optParameters.length; i++) {
@@ -40,8 +43,13 @@ var console = function () {
 
                     $(table).append(p);
                 }
+                
+                $(optDiv).append(optHeadDiv);
+                $(optParamDiv).append(table);
+                $(optDiv).append(optParamDiv);
+                $(div).append(optDiv);
 
-                $(div).append(table);
+                registerToggleFunction();
             }
             
             var result = $('<div id="result"></div>');
@@ -51,6 +59,8 @@ var console = function () {
             $(div).append(result);
             $(div).append(doIt);
 
+            $(document).ready();
+            
             doIt.click(
                 function () {
                     console.makeCall(route, paramFields, result, doIt);
