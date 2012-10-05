@@ -29,7 +29,7 @@ var console = function () {
 
             //Agrego seccion de parametros opcionales
             if (typeof optParameters != "undefined" && optParameters.length > 0) {
-            	var optDiv = $('<div id="optDiv" ></div>');
+            	var optDiv = $('<div id="optDiv" style="height:auto"></div>');
             	var optHeadDiv = $('<div id="optHeadDiv" class="toggle-parent"></div>');
                 $(optHeadDiv).append($('<h4 > -Optional Parameters</h4>'));
 
@@ -44,11 +44,13 @@ var console = function () {
                     $(table).append(p);
                 }
                 
+                //Agrego estos nuevos elementos al div original
                 $(optDiv).append(optHeadDiv);
                 $(optParamDiv).append(table);
                 $(optDiv).append(optParamDiv);
                 $(div).append(optDiv);
 
+                //Registro la función de colapsado para los nuevos componente 
                 registerToggleFunction();
             }
             

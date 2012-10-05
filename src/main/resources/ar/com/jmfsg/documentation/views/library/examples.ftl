@@ -23,14 +23,15 @@
 		<#local exampleId = 'example' + count?string>
 		<#local ret = ret + "<div id=${exampleId} class='example'>" >
 		<#local ret = ret + '<h3> ${exampleId} </h3>' />
-		<#list e?keys as k>
+		<#list e.getParams?keys as k>
 			<#local ret = ret + '<li><b>' + k + '</b>'>
-			<#local ret = ret + ' &ndash; ' + e[k]>
+			<#local ret = ret + ' &ndash; ' + e.getParams[k]>
 			<#local ret = ret + '</li>'>
 		 </#list>
 		<#-- Muy fea la construcción de parametros, buscar alternativa -->
-		<#local parameters = u.toJSString(e)>
-		<#local ret = ret + "<input type='button' value='Use Example' onclick='useExample(${parameters})' />" >
+		<#local parameters = u.toJSString(e.getParams)>
+		<#local postFile = e.postFile?has_content?string(u.toJSString(e.postFile), "")>
+		<#local ret = ret + "<input type='button' value='Use Example' onclick='useExample(${parameters}, ${postFile})' />" >
 		<#local ret = ret + "</div>" >
 		<#local count = count + 1>
 	</#list>

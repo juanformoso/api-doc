@@ -1,5 +1,6 @@
 <#import "/spring.ftl" as s />
 <#import "/library/container.ftl" as c />
+<#import "/library/tabbedConsole.ftl" as tc />
 <#import "/library/examples.ftl" as e />
 <#import "/library/optParameters.ftl" as o />
 <#import "/library/utils.ftl" as u />
@@ -11,14 +12,22 @@
 <#else>
 	<#assign relativePath = "">
 </#if>
+<#if general.methodPath?has_content>
+   	<#assign methodPath = "${general.methodPath}">
+<#else>
+	<#assign methodPath = relativePath>
+</#if>
+
 
 <script type="text/javascript" src="<@s.url "${relativePath}/static/js/console.js?v=3" />" > </script>
 <script type="text/javascript" src="<@s.url "${relativePath}/static/js/detail.js?v=3" />"  > </script>
 <script type="text/javascript">
 //Javascript associated with detail view
+var postCodeMirror;
+
 function showConsole() {
-    var x = $('#console');
-    var method= "<@s.url "${general.methodPath + m.requestMapping?replace(':.+', '')}" />";
+    var x = $('#getConsole');
+    var method= "<@s.url "${methodPath + m.requestMapping?replace(':.+', '')}" />";
     var parameters = [<#if m.request?has_content>
     	<#if m.request.parameters?has_content>
         	<#list m.request.parameters as p>'${p.name}',</#list>
@@ -37,12 +46,16 @@ function showConsole() {
     </#if>];
 
 	var apiUrl = "http://" + window.location.host;
-	var optParameters = <#if m.request?has_content && m.request.parameters?has_content>${u.toJSString(m.request.optParameters)}<#else>{}</#if>
+	var optParameters = <#if m.request?has_content && m.request.optParameters?has_content>${u.toJSString(m.request.optParameters)}<#else>{}</#if>
     console.build(x, method, parameters, {<#if m.request?has_content && m.request.parameters?has_content><#list m.request.parameters as p><#if p.vectorized?has_content && p.vectorized>'${p.name}':true<#if p_has_next>,</#if></#if></#list></#if>}, apiUrl, optParameters);
 }
 
 $(document).ready(function() {
     registerToggleFunction();
+    // setup ul.tabs to work as tabs for each div directly under div.panes
+    $("ul.tabs").tabs("div.panes > div");
+    // setup json post console
+    myCodeMirror = CodeMirror($("#postConsole")[0], {name: "javascript", json: true});
 });
 </script>
 
@@ -281,7 +294,7 @@ meta: {
 
 		<#if !m.method?has_content || m.method == "GET" || (m.implemented?has_content && m.implemented) >
             <h2>Try it!</h2>
-            <div id="console"><input type="button" value="Show Console" onclick="showConsole()" /></div>
+            <@tc.consoles />
 		</#if>
         </div>
             
