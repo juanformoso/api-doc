@@ -6,7 +6,9 @@ function useExample(parameters, postFileName) {
 		for ( var i = 0; i < paramsKeys.length; i++) {
 			var name = paramsKeys[i];
 			var field = document.getElementById('p-' + name);
-			field.value = parameters[paramsKeys[i]];
+			if (typeof field !== "undefined" && field !== null) {
+				field.value = parameters[paramsKeys[i]];
+			}
 		}
 	}
 
@@ -46,12 +48,24 @@ function registerToggleFunction() {
 }
 
 // Metodo para realizar el post
-function postConsoleJson(url) {
+function postConsoleJson(url, resultName) {
 	$.ajax({
 		url : url,
 		type : "POST",
 		data : myCodeMirror.getValue(),
 		contentType : "application/json; charset=utf-8",
-		dataType : "json",
+        success: function (data, status, req) {
+        	var result = $('#'+resultName);
+        	
+            var value = '<p>From calling: <a href="' + url+ '">' + url + '</a></p>';
+            value += '<code class="json"><pre>' + JSON.stringify(data, null, 1) + '</pre></code>';
+
+            result.html(value);
+        },
+        dataType: 'json',
+        error: function (req, status, e) {
+        	var result = $('#'+ resultName);
+            result.html('From calling: ' + url + '<br/>An Error Occured:<br/>' + e);
+        }
 	})
 }

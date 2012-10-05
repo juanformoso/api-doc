@@ -18,9 +18,9 @@
 	<#assign methodPath = relativePath>
 </#if>
 
-
 <script type="text/javascript" src="<@s.url "${relativePath}/static/js/console.js?v=3" />" > </script>
 <script type="text/javascript" src="<@s.url "${relativePath}/static/js/detail.js?v=3" />"  > </script>
+<script type="text/javascript" src="<@s.url "${relativePath}/static/js/codemirror-compressed.js"/>" > </script>
 <script type="text/javascript">
 //Javascript associated with detail view
 var postCodeMirror;
@@ -55,7 +55,7 @@ $(document).ready(function() {
     // setup ul.tabs to work as tabs for each div directly under div.panes
     $("ul.tabs").tabs("div.panes > div");
     // setup json post console
-    myCodeMirror = CodeMirror($("#postConsole")[0], {name: "javascript", json: true});
+    myCodeMirror = CodeMirror.fromTextArea($('#postTextArea')[0], {name: "javascript", json: true});
 });
 </script>
 
@@ -222,24 +222,6 @@ $(document).ready(function() {
             
             <#-- Agrego ejemplos -->
             <@e.examples/>
-            
-<#-- Imprime los ejemplos, prepara el código para llenar la consola -->
-<#function render_examples egs>
-	<#local ret = ''>
-	<#list egs as e>
-		<#local count = 1>
-		<#local ret = ret + "<div id='example' + ${count} class='example'>" >
-		<#list e?keys as k>
-			<#local ret = ret + '<li><b>' + k + '</b>'>
-			<#local ret = ret + ' &ndash; ' + e[k]>
-			<#local ret = ret + '</li>'>
-		 </#list>
-		<#local ret = ret + "<input type='button' value='Use Example' onclick='useExample(${count})' />" >
-		<#local ret = ret + "</div>" >
-		<#local count = count + 1>
-	</#list>
-	<#return ret>
-</#function>
 
           
             <#if m.facets?has_content>

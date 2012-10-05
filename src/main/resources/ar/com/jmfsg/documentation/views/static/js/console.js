@@ -61,8 +61,6 @@ var console = function () {
             $(div).append(result);
             $(div).append(doIt);
 
-            $(document).ready();
-            
             doIt.click(
                 function () {
                     console.makeCall(route, paramFields, result, doIt);
