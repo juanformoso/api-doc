@@ -1,0 +1,66 @@
+{
+    "id" : "doc",
+    "description" : "Json with the information about the api and the methods in the api",
+    "properties" : {
+       "general" : {
+           "type" : "object",
+           "descrption" : "General attributes of the api being documented",
+           "properties" : {
+                "projectName" : { "type" : "string", "description" : "Name of the proyect being documented", "required" : true },
+                "projectSummary" : { "type" : "string/html", "description" : "Summary of the proyect being documented" },
+                "methodSummary" : { "type" : "string/html", "description" : "Description of the methods" },
+                "twitterUsername" : { "unknown" },
+                "relativePath" : {},
+                "methodPath" : {},
+                "resourcesPath" : {}
+           }
+       },
+       "methods" : {
+           "type" : "array",
+           "description" : "List of all methods in the api",
+           "items" : {
+             "id" : "method",
+             "description" : "A method documentation",
+             "properties" : {
+                 "group" : { "type" : "string" , "description" : "Defines the group to which the method belongs", "required" : true },
+                 "description" : { "type" : "string", "description" : "Description of the method" },
+                 "friendlyName" : { "type" : "string", "description" : "String used in the url to this method detailed documentation", "required" : true },
+                 "shortName" : { "type" : "string", "description" : "If defined, used to show the method in the method list"}, 
+                 "order" : { "type" : "natural" },
+                 "method" : { "type" : "string", 
+                              "description" : "Defines the type of http action used to access the method (e.g. post, get). Clashes with 'supportedMappings'", 
+                              "default" : "get"},
+                 "supportedMappings" : { "type" : "array",
+                                         "items" : { "enum" : [ "POST", "GET" ] },
+                                         "description" : "List of supported mappings for the method. Since reversion a method can have more than one mapping for itself. Currently only POST and GET are supported. Each supportedMapping defines different requiered properties for the method.",
+                                         "default" : [ "GET" ] },
+                 "requestMapping" : { "type" : "string", 
+                                      "description" : "URI relative to 'relativePath' that must be equivalent to a spring method mapping for REST interface. Requiered if method supports GET. Should match the requestMapping used in the controller for the method that is to be called via GET." 
+                                    }
+                 "postMapping" : { "type" : "string", "description" : "URI relative to 'relativePath' to be used by POST interface. Support for REST parameters??" }
+                 "request" : {
+                     "description" : "Defines de request made, either by POST or GET, the semantics should be the same.",
+                     "properties" : {
+                         "parameters" : { "type" : "array", 
+                                          "items" : {
+                                              "properties" : { "name" : {} , "description" : {} }
+                                          }
+                                        }
+                         "optParameters" : {
+                             "type" : "array",
+                             "items" : { "description" : "Sames as 'parameters.properties'." }
+                         }
+                 }
+                 "examples" : { "type" : "array",
+                                "items" : {
+                                    "description" : "Information about an example for the method. May have both data for GET request and POST request. This data should be set according to the parent's 'supportedMappings'." 
+                                    "properties" : {
+                                        "postFile" : { "type" : "string", "description" : "Path to json file with the parameters for the POST request. Path should be relative to 'resourcesPath'.",
+                                        "getParams" : { "type" : "object", "description" : "Object properties should have as key the same name defined in 'request.parameters', and values should all be strings." }
+                                    }
+                                }
+                 }
+           }
+       }
+    }
+}
