@@ -15,3 +15,9 @@
 <#else>
 	<#assign methodPath = "">
 </#if>
+
+<#if general.resourcesPath?has_content>
+	<#assign resourcesPath = relativePath + general.resourcesPath >
+<#else>
+	<#assign resourcesPath = relativePath >
+</#if>

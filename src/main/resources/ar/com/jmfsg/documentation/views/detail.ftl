@@ -12,6 +12,7 @@
 <#else>
 	<#assign relativePath = "">
 </#if>
+
 <#if general.methodPath?has_content>
    	<#assign methodPath = "${general.methodPath}">
 <#else>

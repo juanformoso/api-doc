@@ -4,8 +4,8 @@
 <#-- Arma la consola de post, recibe el nombre del div al cual agregar la consola -->
 <#function postConsole divName>
 <#local ret = ''>
-<#local postMapping = "${p.methodPath}" + "${m.postMapping}" >
-<#if m.postMapping?has_content> 
+<#if m.postMapping?has_content>
+<#local postMapping = "${p.methodPath}" + "${m.postMapping}" > 
 <#local ret = ret + '<div id="${divName}">' > 
 <#local ret = ret + '<input type="button" id="postButton" value="Post!" onclick="postConsoleJson(\'${postMapping}\', \'postResult\')"/>\n' >
 <#local ret = ret + '<textarea id="postTextArea"></textarea>'>

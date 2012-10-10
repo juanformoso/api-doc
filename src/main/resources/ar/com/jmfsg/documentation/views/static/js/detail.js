@@ -1,5 +1,5 @@
 // Code for examples
-function useExample(parameters, postFileName) {
+function useExample(parameters, postFileName, resourcesPath) {
 	// Lleno la consola get si hay parámetros para usar
 	if (typeof parameters != undefined && parameters != []) {
 		var paramsKeys = Object.keys(parameters);
@@ -14,7 +14,7 @@ function useExample(parameters, postFileName) {
 
 	// Lleno la consola post si hay nombre de postFile
 	if (typeof postFileName != "undefined" && postFileName != "") {
-		$.get("../../res/" + postFileName, success = function(data, textStatus,
+		$.get(resourcesPath + postFileName, success = function(data, textStatus,
 				jqXHR) {
 			myCodeMirror.setValue(data);
 		});

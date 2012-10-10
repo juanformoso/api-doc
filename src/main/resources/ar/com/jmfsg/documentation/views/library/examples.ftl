@@ -1,4 +1,5 @@
 <#import "/library/utils.ftl" as u />
+<#import "/library/paths.ftl" as p />
 
 <#-- Agrego ejemplos -->
 <#macro examples>
@@ -31,7 +32,7 @@
 		<#-- Muy fea la construcción de parametros, buscar alternativa -->
 		<#local parameters = u.toJSString(e.getParams)>
 		<#local postFile = e.postFile?has_content?string(u.toJSString(e.postFile), "")>
-		<#local ret = ret + "<input type='button' value='Use Example' onclick='useExample(${parameters}, ${postFile})' />" >
+		<#local ret = ret + "<input type='button' value='Use Example' onclick='useExample(${parameters}, ${postFile}, ${u.toJSString(p.resourcesPath)})' />" >
 		<#local ret = ret + "</div>" >
 		<#local count = count + 1>
 	</#list>
