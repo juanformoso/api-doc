@@ -37,6 +37,7 @@ public class DocumentationController
         ModelAndView modelAndView = this.createView("index");
         modelAndView.addObject("controllers", this.documentationByGroup);
         modelAndView.addObject("general", this.getDocumentationLoader().getGeneralDoc());
+        modelAndView.addObject("tags", this.documentationLoader.getTags());
         return modelAndView;
     }
 
@@ -58,6 +59,7 @@ public class DocumentationController
         modelAndView.addObject("m", this.documentationByMethod.get(method));
         modelAndView.addObject("general", this.getDocumentationLoader().getGeneralDoc());
         modelAndView.addObject("dictionary", this.getDocumentationLoader().getDictionary());
+        modelAndView.addObject("tags", this.documentationLoader.getTags());
         return modelAndView;
     }
 

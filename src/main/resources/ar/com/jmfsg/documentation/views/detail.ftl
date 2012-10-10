@@ -65,6 +65,7 @@
 
     <div class="subheader">
         <h1>Usage of ${m.friendlyName}</h1>
+        <#if m.tags?has_content>${renderTags(m.tags)}</#if>
     </div>
 
     <div class="content-page">
@@ -255,6 +256,7 @@
  	
  	<#return ret>
  </#function>
+ 
           
             <#if m.facets?has_content>
             <div>
@@ -318,3 +320,18 @@ meta: {
         </div>
     </div>
 </@c.fixedBodyFor>
+
+
+<#function renderTags methodTags>
+	<#local ret = ''>
+
+ 	<#list methodTags as tag>
+ 		<#if tags?has_content && tags?keys?seq_contains(tag)>
+ 			<#local ret = ret + '<span class="tags-big" title="' + tags[tag].title +'" style="background-color:' + tags[tag].color +'">' + tags[tag].name + '</span>'>
+ 		<#else>
+ 			<#local ret = ret + '<span class="tags-big" title="' + tag +'" style="background-color:#EEEEEE">' + tag + '</span>'>
+ 		</#if>
+ 	</#list> 	
+ 	
+ 	<#return ret>
+ </#function>
