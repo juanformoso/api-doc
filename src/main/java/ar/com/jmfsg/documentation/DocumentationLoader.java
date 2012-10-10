@@ -35,6 +35,7 @@ public class DocumentationLoader
     implements InitializingBean, ApplicationContextAware {
     private Map<String, JSONArray> docByModule;
     private Map<String, String> dictionary = new HashMap<String, String>();
+    private Map<String, JSONObject> tags = new HashMap<String, JSONObject>();
     private Map<String, JSONObject> groupDocs = new HashMap<String, JSONObject>();
     private JSONObject generalDoc = new JSONObject();
     private JSONObject rawDoc;
@@ -85,6 +86,10 @@ public class DocumentationLoader
             if (doc.has("groups")) {
                 this.addToGroupDocs(doc.getJSONObject("groups"));
             }
+            
+            if (doc.has("tags")) {
+                this.addToTags(doc.getJSONArray("tags"));
+            }
 
             if (doc.has("methods")) {
                 if (this.docByModule.containsKey(d.getModulePrefix())) {
@@ -134,6 +139,15 @@ public class DocumentationLoader
             JSONObject o = (JSONObject) jsonArray.get(i);
             if (o.has("key") && o.has("description")) {
                 this.getDictionary().put(o.getString("key"), o.getString("description"));
+            }
+        }
+    }
+    
+    private void addToTags(JSONArray jsonArray) {
+        for (int i = 0; i < jsonArray.size(); i++) {
+            JSONObject o = (JSONObject) jsonArray.get(i);
+            if (o.has("name") && o.has("color")) {
+                this.getTags().put(o.getString("name"), o);
             }
         }
     }
@@ -196,4 +210,8 @@ public class DocumentationLoader
     public Map<String, JSONObject> getGroupDocs() {
         return this.groupDocs;
     }
+
+	public Map<String, JSONObject> getTags() {
+		return tags;
+	}
 }
