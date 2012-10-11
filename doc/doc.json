@@ -28,9 +28,9 @@
                  "longDescription" : { "type" : "string", "description" : "Description of the method to be used in the detailed page." },
                  "friendlyName" : { "type" : "string", "description" : "String used in the url to this method detailed documentation", "required" : true },
                  "shortName" : { "type" : "string", "description" : "If defined, used to show the method in the method list"}, 
-                 "order" : { "type" : "natural", "description" : "Unknown" },
+                 "order" : { "type" : "natural", "description" : "Unknown", "required" : true },
                  "method" : { "type" : "string", 
-                              "description" : "Defines the type of http action used to access the method (e.g. post, get). Is used by the main page when it displays the list of methods. Clashes with 'supportedMappings'", 
+                              "description" : "Defines the type of http action used to access the method (e.g. 'POST', 'GET', 'PUT'). Is used by the main page when it displays the list of methods. Clashes with 'supportedMappings'", 
                               "default" : "get"},
                  "supportedMappings" : { "type" : "array",
                                          "items" : { "enum" : [ "POST", "GET" ] },
@@ -41,17 +41,69 @@
                                       "required" : true 
                                     },
                  "postMapping" : { "type" : "string", "description" : "URI relative to 'relativePath' to be used by POST interface. Support for REST parameters??" },
+                 "facets" : { "type" : "any" , "description" : "If set, facet description is shown. 'request.facets' must be defined." },
                  "request" : {
                      "description" : "Defines de request made, either by POST or GET, the semantics should be the same.",
                      "properties" : {
                          "parameters" : { "type" : "array", 
                                           "items" : {
-                                              "properties" : { "name" : {} , "description" : {} }
+                                          	  "description" : "The items in the list of parameters are named as 'objects' and are rendered by the 'render_objects' function in 'utils.ftl'. They can have inner objects under the property 'children'." },
+                                              "id" : "object" ,
+                                              "properties" : { 
+                                              		"name" : { "type" : "string", "description" : "If the name is within the keys of the dictionary and 'description' is not defined, description equals dictionary[descriptionKey].", "required" : true } , 
+	                                    			"description" : { "type" : "string" },
+	                                    			"descriptionKey" : { "type" : "string", "description" : "If present and within the keys of dictionary, description is replaced by description in dictionary[descriptionKey]." }, 
+                                              		"description" : { "type" : "string" },  
+												    "children" : { "type" : "array", "items" : { "id" : "object" } },
+												    "optional" : { "type" : "boolean", "description" : "If set and true, adds an 'optional' tag to the parameter." },
+												    "type" : { "type" : "string", "description" : "If set, appends the type to the description." },
+												    "isList" : { "type" : "boolean", "description" : "If set and true, appends a 'list' tag to the parameter." }
                                           }
-                                        },
+						 },
+						 "filters" : {
+						 	"description" : "Filters are a list of values that are used to narrow down the search.",
+						 	"type" : "array",
+						 	"items" : {
+							 	"properties" : {
+							 	  		"name" : { "type" : "string", "description" : "If the name is within the keys of the dictionary and 'description' is not defined, description equals dictionary[descriptionKey].", "required" : true } , 
+	                                    "description" : { "type" : "string" },
+	                                    "descriptionKey" : { "type" : "string", "description" : "If present and within the keys of dictionary, description is replaced by description in dictionary[descriptionKey]." }
+								}
+							}
+						 },
+						 "facets" : {
+						 	"type" : "array",
+						 	"items" : { 
+								"properties" : {
+							 	  		"name" : { "type" : "string", "description" : "If the name is within the keys of the dictionary and 'description' is not defined, description equals dictionary[descriptionKey].", "required" : true } , 
+	                                    "description" : { "type" : "string" },
+	                                    "descriptionKey" : { "type" : "string", "description" : "If present and within the keys of dictionary, description is replaced by description in dictionary[descriptionKey]." },
+	                                    "type" : { "type" : "string" },
+								}
+						 	}
+						 },
+						 "options" : {
+						 	"description" : "Options are a list of values that are used to customize the resultset.",
+						 	"type" : "array",
+						 	"items" : {
+							 	"properties" : {
+							 		"name" : { "type" : "string", "description" : "If the name is within the keys of the dictionary and 'description' is not defined, description equals dictionary[descriptionKey].", "required" : true } , 
+	                                "description" : { "type" : "string" },
+	                                "descriptionKey" : { "type" : "string", "description" : "If present and within the keys of dictionary, description is replaced by description in dictionary[descriptionKey]." },
+							 		"type" : { "type" : "string" },
+							 		"longDescription" : "Long description that is added below the parameter description.",
+							 		"defaultValue" : "Default value of the parameter."
+							 	}
+						 	}
+						 },
+						 "paginable" : { "type" : "boolean" },
+						 "sortable" : { "properties" : { "possibleValues" : { "type" : "array", 
+						 													  "description" : "Possible values for sorting", 
+						 													  "items" : { "type" : "string" } 
+						 													 } } },
                          "optParameters" : {
                              "type" : "array",
-                             "items" : { "description" : "Same as 'parameters.parameters'." }
+                             "items" : { "id" : "object" }
                          }
                     }
                  },
@@ -67,11 +119,29 @@
                  "responseIsList" : { "type" : "boolean", "description" : "Defines whether the response is a list. Used to add 'The method returns a list' in the result description."  },
                  "response" : { "type" : "array",
                  				"description" : "List of result parameters",
-                 				"items" : { "description" : "Same as 'parameters.parameters'." }
-                 			}
-            	     				
+                 				"items" : { "id" : "object" }
+                 },
+                 "dynamicResponse" : { "type" : "array",
+                 					   "description" : "If has content, means this response varies depending on some variable specific to the method. If has content, response is not used.",
+                 					   "items" : {
+                 					   		"properties" : {
+                 					   			"name" : { "type" : "string" },
+                 					   			"response" : { "id" : "object" }
+                 					   		}
+                 					   }
+            	 }
 	           }
 	       }
+  	   },
+  	   "dictionary" : {
+  	   		"description" : "This dictionary contains general descriptions accessible by elements described above.", 
+  	   		"type" : "array",
+  	   		"items" : {
+  	   			"properties" : {
+  	   				"key" : { "type" : "string" },
+  	   				"description" : { "type" : "string" }
+  	   			}
+  	   		}
   	   }
   	}
 }
