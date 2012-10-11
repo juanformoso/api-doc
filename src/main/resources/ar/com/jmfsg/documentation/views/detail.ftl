@@ -123,7 +123,7 @@ $(document).ready(function() {
 				<p>Filters are a list of values that are used to narrow down the search. They are always required unless otherwise stated</p>
                 <ul>
                 <#list m.request.filters as f>
-					<li><b>${f.name}</b> &ndash; ${resolve_description(f)}</li>
+					<li><b>${f.name}</b> &ndash; ${u.resolve_description(f)}</li>
 				</#list>
 				</ul>
 				</div>
@@ -148,7 +148,7 @@ $(document).ready(function() {
             	</#if>
             	<#if m.request.options?has_content>
                 <#list m.request.options as o>
-					<li><b>${o.name}</b> &ndash; ${resolve_description(o)} <i>${o.type}</i>
+					<li><b>${o.name}</b> &ndash; ${u.resolve_description(o)} <#if o.type?has_content><i>${o.type}</i></#if>
 					<#if o.longDescription?has_content>
 						<ul><li>${o.longDescription}</li></ul>
 					</#if>
@@ -165,7 +165,7 @@ $(document).ready(function() {
             
             <#if m.request?has_content && m.request.facets?has_content>
             <div>
-        <div id="filters" class="toggle-parent">
+        <div id="facets" class="toggle-parent">
                 <h2>- Facets</h2>
                 </div>
                 <div class="toggle-child">
@@ -264,7 +264,7 @@ meta: {
 				 <p>
                 <ul>
                 <#list m.request.facets as f>
-					<li><b>${f.name}</b> &ndash; ${resolve_description(f)} <i>${f.type}</i>
+					<li><b>${f.name}</b> &ndash; ${u.resolve_description(f)} <#if f.type?has_content>><i>${f.type}</i></#if>
 					</li>
 				</#list>
 				</ul>
