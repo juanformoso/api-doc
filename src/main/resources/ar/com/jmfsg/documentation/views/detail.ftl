@@ -27,8 +27,9 @@
 var postCodeMirror;
 
 function showConsole() {
+    <#if m.method?keys?seq_contains('get')>
     var x = $('#getConsole');
-    var method= "<@s.url "${methodPath + m.requestMapping?replace(':.+', '')}" />";
+    var method= "<@s.url "${methodPath + m.method['get']?replace(':.+', '')}" />";
     var parameters = [<#if m.request?has_content>
     	<#if m.request.parameters?has_content>
         	<#list m.request.parameters as p>'${p.name}',</#list>
@@ -49,6 +50,7 @@ function showConsole() {
 	var apiUrl = "http://" + window.location.host;
 	var optParameters = <#if m.request?has_content && m.request.optParameters?has_content>${u.toJSString(m.request.optParameters)}<#else>{}</#if>
     console.build(x, method, parameters, {<#if m.request?has_content && m.request.parameters?has_content><#list m.request.parameters as p><#if p.vectorized?has_content && p.vectorized>'${p.name}':true<#if p_has_next>,</#if></#if></#list></#if>}, apiUrl, optParameters);
+    </#if>
 }
 
 $(document).ready(function() {
@@ -77,6 +79,7 @@ $(document).ready(function() {
  <#else>
  <p>${m.description}<p>
  </#if>
+ <#-- Depricated as POST was implemented --
  <#if m.method?has_content && (m.method == "POST" || m.method == "PUT")>
  <p>
  This method receives a <b>POST</b> or <b>PUT</b>. The console is not supported at the moment for these methods. <br/> 
@@ -92,7 +95,7 @@ $(document).ready(function() {
 	}
 }</pre></code>
  
-</#if>
+</#if> -->
         </div>
 
         <#if m.request?has_content && m.request.parameters?has_content>
@@ -275,7 +278,8 @@ meta: {
             
             <div>
 
-		<#if !m.method?has_content || m.method == "GET" || (m.implemented?has_content && m.implemented) >
+		<#-- if !m.method?has_content || m.method == "GET" || (m.implemented?has_content && m.implemented) -->
+		<#if m.method?has_content && m.method?keys?size &gt; 0>
             <h2>Try it!</h2>
             <@tc.consoles />
 		</#if>

@@ -1,3 +1,5 @@
+<#import "paths.ftl" as p />
+
 <#-- Funcion para convertir valores Freemarker a string de js (soporta scalares, collection, sequence y extended hashes) -->
 <#function toJSString obj>
 	<#local ret = ''>
@@ -81,4 +83,16 @@
  	
  	<#return ret>
  </#function>
+ 
+ <#-- Macro to get a method item for the index page -->
+ <#macro indexPageMethodIndex method support>
+ 			<#if method.friendlyName == "">
+	    		<li>${method.method?values?first}
+	    	<#else>
+		        <li><a href="${p.relativePath + '/docs/method/' + support.internalMethodName}">${method.method?values?first?replace(":.+", "")}</a>
+		    </#if>
+		    <sub><sub><b>
+    			[ <#list method.method?keys as k> ${k?lower_case} </#list> ]
+    		</b></sub></sub><#if method.implemented?has_content && !method.implemented><span class="not-implemented" title="This method is not currently implemented but will be included in a future release. Parameters and responses are subject to change in the final version.">not implemented</span></#if> &ndash; ${method.description}</li>
+ </#macro>
  
