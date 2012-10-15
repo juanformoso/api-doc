@@ -22,8 +22,8 @@
              "id" : "method",
              "description" : "A method documentation",
              "properties" : {
-                 "group" : { "type" : "string" , "description" : "Defines the group to which the method belongs", "required" : true },
-                 "friendlyName" : { "type" : "string", "description" : "String used in the url to this method detailed documentation", "required" : true },
+                 "group" : { "type" : "string" , "description" : "Defines the group to which the method belongs.", "required" : true },
+                 "friendlyName" : { "type" : "string", "description" : "String used in the url to this method detailed documentation.", "required" : true },
                  "order" : { "type" : "natural", "description" : "Unknown", "required" : true },
                  "subGroup" : { "type" : "string", "description" : "Defines de subgroup to which the method belongs."},
                  "description" : { "type" : "string", "description" : "Description of the method to be used in the main page." },
@@ -53,7 +53,7 @@
                                       "description" : "URI relative to 'relativePath' that must be equivalent to a spring method mapping for REST interface. Requiered if method supports GET. Should match the requestMapping used in the controller for the method that is to be called via GET.",
                                       "required" : true 
                                     },
-                 "postMapping" : { "type" : "string", "description" : "URI relative to 'relativePath' to be used by POST interface. Support for REST parameters??" },
+                 "postMapping" : { "type" : "string", "description" : "URI relative to 'relativePath' to be used by POST interface. Support for REST parameters??", "depricated" : true },
                  "facets" : { "type" : "any" , "description" : "If set, facet description is shown. 'request.facets' must be defined." },
                  "request" : {
                      "description" : "Defines de request made, either by POST or GET, the semantics should be the same.",
@@ -63,7 +63,7 @@
                                           	  "description" : "The items in the list of parameters are named as 'objects' and are rendered by the 'render_objects' function in 'utils.ftl'. They can have inner objects under the property 'children'." },
                                               "id" : "object" ,
                                               "properties" : { 
-                                              		"name" : { "type" : "string", "description" : "If the name is within the keys of the dictionary and 'description' is not defined, description equals dictionary[descriptionKey].", "required" : true } , 
+                                              		"name" : { "type" : "string", "description" : "If the name is within the keys of the dictionary and 'description' is not defined, description equals dictionary[name].", "required" : true } , 
 	                                    			"description" : { "type" : "string" },
 	                                    			"descriptionKey" : { "type" : "string", "description" : "If present and within the keys of dictionary, description is replaced by description in dictionary[descriptionKey]." }, 
                                               		"description" : { "type" : "string" },  
@@ -78,7 +78,7 @@
 						 	"type" : "array",
 						 	"items" : {
 							 	"properties" : {
-							 	  		"name" : { "type" : "string", "description" : "If the name is within the keys of the dictionary and 'description' is not defined, description equals dictionary[descriptionKey].", "required" : true } , 
+							 	  		"name" : { "type" : "string", "description" : "If the name is within the keys of the dictionary and 'description' is not defined, description equals dictionary[name].", "required" : true } , 
 	                                    "description" : { "type" : "string" },
 	                                    "descriptionKey" : { "type" : "string", "description" : "If present and within the keys of dictionary, description is replaced by description in dictionary[descriptionKey]." }
 								}
@@ -88,7 +88,7 @@
 						 	"type" : "array",
 						 	"items" : { 
 								"properties" : {
-							 	  		"name" : { "type" : "string", "description" : "If the name is within the keys of the dictionary and 'description' is not defined, description equals dictionary[descriptionKey].", "required" : true } , 
+							 	  		"name" : { "type" : "string", "description" : "If the name is within the keys of the dictionary and 'description' is not defined, description equals dictionary[name].", "required" : true } , 
 	                                    "description" : { "type" : "string" },
 	                                    "descriptionKey" : { "type" : "string", "description" : "If present and within the keys of dictionary, description is replaced by description in dictionary[descriptionKey]." },
 	                                    "type" : { "type" : "string" },
@@ -100,7 +100,7 @@
 						 	"type" : "array",
 						 	"items" : {
 							 	"properties" : {
-							 		"name" : { "type" : "string", "description" : "If the name is within the keys of the dictionary and 'description' is not defined, description equals dictionary[descriptionKey].", "required" : true } , 
+							 		"name" : { "type" : "string", "description" : "If the name is within the keys of the dictionary and 'description' is not defined, description equals dictionary[name].", "required" : true } , 
 	                                "description" : { "type" : "string" },
 	                                "descriptionKey" : { "type" : "string", "description" : "If present and within the keys of dictionary, description is replaced by description in dictionary[descriptionKey]." },
 							 		"type" : { "type" : "string" },
