@@ -34,7 +34,7 @@
 
     <ul>
     	<#list controllers[key].methods as m>
-	    	   <#-- 
+	    	   <#-- This default assign is controlled by new definition of method and implemented at Utils.groovy
     		<#if m.data.method?has_content>
 		    	<#assign method = "${m.data.method?lower_case}">
 		    <#else>
@@ -57,7 +57,7 @@
 	
 	    <ul class="subGroup">
 	    	<#list controllers[key].subGroups[subKey].methods as m>
-	    			<#--
+	    			<#-- This default assign is controlled by new definition of method and implemented at Utils.groovy
 	    		<#if m.data.method?has_content>
 			    	<#assign method = "${m.data.method?lower_case}">
 			    <#else>

@@ -31,6 +31,7 @@
                  "shortName" : { "type" : "string", "description" : "If defined, used to show the method in the method list"}, 
                  "implemented" : { "type" : "boolean", "description" : "If false, adds -not implemented- disclaimer in main list.", "defaultValue" : false},
                  "method" : { "description" : "String type is for retro-compatibility. As String defines the type of http action used to access the method (e.g. 'post', 'get', 'put'). Is used by the main page when it displays the list of methods. If String, requires 'requestMapping' to be defined.",
+                 			  "required" : true,
                  			  "type" : [ "string",
                  			  			 {  "description" : "If method is an object then it defines in itself both method (POST, GET, etc.) and mapping URI. If method is an object,  'requestMapping' is ignored. All properties are optional but must have at least one defined. The URI defined will be shown in the webpage.",
                  			  			    "id" : "mappingObject", 
