@@ -58,17 +58,64 @@ var console = function () {
 
             var doIt = $('<input type="button" id="doIt" value="Call Method" />');
 
+            
+            
+            var doItNew = $('<img src="../../static/img/externalLink.png">' )
+
+            
+            
             $(div).append(result);
             $(div).append(doIt);
+            $(div).append(doItNew);
 
             doIt.click(
                 function () {
                     console.makeCall(route, paramFields, result, doIt);
                 });
+            
+            doItNew.click(
+            		function() {
+            			var toCall = console.getToCall(route, paramFields);
+            			OpenWindow = window.open(toCall, "_blank");
+            		});            
         },
         makeCall: function (toCall, withParams, writeTo, actionButton) {
             actionButton.attr('disabled', 'true');
 
+            toCall = getToCall();
+
+            $.ajax(
+                {
+                    url: toCall,
+                    success: function (data, status, req) {
+                        var value = '<p>From calling: <a href="' + toCall + '">' + console.replace(toCall, '<', '&lt;') + '</a></p>';
+                        value += '<code class="json"><pre>' + console.replace(JSON.stringify(data, null, 1), '<', '&lt;') + '</pre></code>';
+
+                        writeTo(value);
+                    },
+                    dataType: 'json',
+                    complete: function (req, status) {
+                        actionButton.removeAttr('disabled');
+                    },
+                    error: function (req, status, e) {
+                        writeTo('From calling: ' + console.replace(toCall, '<', '&lt;') + '<br/>An Error Occured:<br/>' + e);
+                    }
+                });
+        },
+        replace: function (text, target, replaceWith) {
+            // IE regex differs from... everything else
+            //   Arguably, it makes more sense but still
+            if (!$.browser.msie) {
+                replaceWith = replaceWith.replace(/\$/g, "$$$");
+            }
+
+            while (text.indexOf(target) != -1) {
+                text = text.replace(target, replaceWith);
+            }
+
+            return text;
+        },
+        getToCall: function(toCall, withParams) {
             var toCall = _targetUrl + toCall;
 
             var firstP = true;
@@ -87,37 +134,7 @@ var console = function () {
                     toCall = newCall;
                 }
             }
-
-            $.ajax(
-                {
-                    url: toCall,
-                    success: function (data, status, req) {
-                        var value = '<p>From calling: <a href="' + toCall + '">' + console.replace(toCall, '<', '&lt;') + '</a></p>';
-                        value += '<code class="json"><pre>' + console.replace(JSON.stringify(data, null, 1), '<', '&lt;') + '</pre></code>';
-
-                        writeTo.html(value);
-                    },
-                    dataType: 'json',
-                    complete: function (req, status) {
-                        actionButton.removeAttr('disabled');
-                    },
-                    error: function (req, status, e) {
-                        writeTo.html('From calling: ' + console.replace(toCall, '<', '&lt;') + '<br/>An Error Occured:<br/>' + e);
-                    }
-                });
-        },
-        replace: function (text, target, replaceWith) {
-            // IE regex differs from... everything else
-            //   Arguably, it makes more sense but still
-            if (!$.browser.msie) {
-                replaceWith = replaceWith.replace(/\$/g, "$$$");
-            }
-
-            while (text.indexOf(target) != -1) {
-                text = text.replace(target, replaceWith);
-            }
-
-            return text;
+            return toCall;
         }
     };
 } ();
