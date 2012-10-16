@@ -103,3 +103,21 @@
     		</b></sub></sub><#if method.implemented?has_content && !method.implemented><span class="not-implemented" title="This method is not currently implemented but will be included in a future release. Parameters and responses are subject to change in the final version.">not implemented</span></#if> &ndash; ${method.description}</li>
  </#macro>
  
+ <#-- Function that gets parameters names from the list and their children recursively -->
+ <#function obtainAllParams objs>
+ 	<#local ret = '['>
+ 	<#local ret = ret + obtainAllParamsAux(objs)>
+ 	<#local ret = ret + ']'>
+ 	<#return ret>
+ </#function>
+ 
+ <#function obtainAllParamsAux objs>
+ 	<#local ret = ''>
+ 	<#list objs as o>
+ 		<#local ret = ret + '\'' + o.name + '\', '>
+ 		<#if o.children?has_content>
+ 			<#local ret = ret + obtainAllParamsAux(o.children)>
+ 		</#if>
+ 	</#list>
+ 	<#return ret>
+ </#function>

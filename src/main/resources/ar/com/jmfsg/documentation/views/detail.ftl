@@ -30,11 +30,11 @@ function showConsole() {
     <#if m.method?keys?seq_contains('get')>
     var x = $('#getConsole');
     var method= "<@s.url "${methodPath + m.method['get']?replace(':.+', '')}" />";
-    var parameters = [<#if m.request?has_content>
-    	<#if m.request.parameters?has_content>
-        	<#list m.request.parameters as p>'${p.name}',</#list>
-        </#if>
-        <#if m.request.filters?has_content>
+    var parameters = <#if m.request?has_content && m.request.parameters?has_content>
+	    				${u.obtainAllParams(m.request.parameters)}
+	    			 <#else> [] </#if> ;
+    var extraParams = [ <#if m.request?has_content>
+    	<#if m.request.filters?has_content>
         	<#list m.request.filters as p>'${p.name}',</#list>
         </#if>
         <#if m.request.options?has_content>
@@ -44,9 +44,10 @@ function showConsole() {
         	<#list m.request.facets as p>'${p.name}',</#list>
         </#if>
         <#if m.request.paginable?has_content>'page','pagesize',</#if>
-        <#if m.request.sortable?has_content>'sort','order',</#if>
-    </#if>];
+        <#if m.request.sortable?has_content>'sort','order',</#if> 
+        	</#if> ];
 
+	parameters = parameters.concat(extraParams)
 	var apiUrl = "http://" + window.location.host;
 	var optParameters = <#if m.request?has_content && m.request.optParameters?has_content>${u.toJSString(m.request.optParameters)}<#else>{}</#if>
     console.build(x, method, parameters, {<#if m.request?has_content && m.request.parameters?has_content><#list m.request.parameters as p><#if p.vectorized?has_content && p.vectorized>'${p.name}':true<#if p_has_next>,</#if></#if></#list></#if>}, apiUrl, optParameters);
