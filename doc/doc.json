@@ -45,6 +45,8 @@
 									   ], 
                               "default" : "get",
                             },
+                 "preferredMethod" : { "type" : "string", "enum" : [ "get", "put", "post", "delete" ], 
+									   "description" : "If defined and no 'shortName', defines which uri from 'method' to used in the main index. SHOULD be set if method has more than one property." },
                  "supportedMappings" : { "type" : "array",
                  						 "depricated" : true,
                                          "items" : { "enum" : [ "POST", "GET" ] },

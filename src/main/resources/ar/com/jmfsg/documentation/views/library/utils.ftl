@@ -89,7 +89,12 @@
  			<#if method.friendlyName == "">
 	    		<li>${method.method?values?first}
 	    	<#else>
-		        <li><a href="${p.relativePath + '/docs/method/' + support.internalMethodName}">${method.method?values?first?replace(":.+", "")}</a>
+	    		<#if method.preferredMethod?has_content && method.method?keys?seq_contains(method.preferredMethod) >
+	    			<#local preferredMethod =  method.method[method.preferredMethod] >
+	    		<#else>
+	    			<#local preferredMethod =  method.method?values?first >
+	    		</#if>	
+		        <li><a href="${p.relativePath + '/docs/method/' + support.internalMethodName}">${preferredMethod?replace(":.+", "")}</a>
 		    </#if>
 		    <sub><sub><b>
     			[ <#list method.method?keys as k> ${k?lower_case} </#list> ]
