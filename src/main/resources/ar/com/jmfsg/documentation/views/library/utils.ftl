@@ -86,7 +86,9 @@
  
  <#-- Macro to get a method item for the index page -->
  <#macro indexPageMethodIndex method support>
- 			<#if method.friendlyName == "">
+ 			<#if method.shortName?has_content>
+ 				<li><a href="${p.relativePath + '/docs/method/' + support.internalMethodName}">${method.shortName}</a>
+ 			<#elseif method.friendlyName == "">
 	    		<li>${method.method?values?first}
 	    	<#else>
 	    		<#if method.preferredMethod?has_content && method.method?keys?seq_contains(method.preferredMethod) >
