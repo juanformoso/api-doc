@@ -68,6 +68,11 @@ public class DocumentationController
         return modelAndView;
     }
 
+    @RequestMapping(value = "/docs/jsonResult/", method = RequestMethod.GET)
+    public String jsonResult() {
+    	return "rawJsonView";
+    }
+    
     private DocumentationLoader documentationLoader;
 
     @Override

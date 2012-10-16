@@ -69,3 +69,25 @@ function postConsoleJson(url, resultName) {
         }
 	})
 }
+
+// Metodo para realizar el post en otra ventana
+function postNewJson(url) {
+	var OpenWindow = window.open("../jsonResult/", "_blank")
+	OpenWindow.onload = function() {
+		$.ajax({
+			url : url,
+			type : "POST",
+			data : myCodeMirror.getValue(),
+			contentType : "application/json; charset=utf-8",
+	        success: function (data, status, req) {
+	    		OpenWindow.document.write(JSON.stringify(data, null, 1))
+	    		OpenWindow.document.close()
+	        },
+	        dataType: 'json',
+	        error: function (req, status, e) {
+	        	var result = $('#'+ resultName);
+	            result.html('From calling: ' + url + '<br/>An Error Occured:<br/>' + e);
+	        }
+		})
+	}
+}

@@ -23,7 +23,7 @@
              "description" : "A method documentation",
              "properties" : {
                  "group" : { "type" : "string" , "description" : "Defines the group to which the method belongs.", "required" : true },
-                 "friendlyName" : { "type" : "string", "description" : "String used in the url to this method detailed documentation.", "required" : true },
+                 "friendlyName" : { "type" : "string", "description" : "String used in the url to this method detailed documentation. If empty, no link to the detailed page is given.", "required" : true },
                  "order" : { "type" : "natural", "description" : "Unknown", "required" : true },
                  "subGroup" : { "type" : "string", "description" : "Defines de subgroup to which the method belongs."},
                  "description" : { "type" : "string", "description" : "Description of the method to be used in the main page." },
