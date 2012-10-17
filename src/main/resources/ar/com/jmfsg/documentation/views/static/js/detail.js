@@ -52,7 +52,7 @@ function postConsoleJson(url, resultName) {
 	$.ajax({
 		url : url,
 		type : "POST",
-		data : myCodeMirror.getValue(),
+		data : parseDynamicDate(myCodeMirror.getValue()),
 		contentType : "application/json; charset=utf-8",
         success: function (data, status, req) {
         	var result = $('#'+resultName);
@@ -77,7 +77,7 @@ function postNewJson(url) {
 		$.ajax({
 			url : url,
 			type : "POST",
-			data : myCodeMirror.getValue(),
+			data : parseDynamicDate(myCodeMirror.getValue()),
 			contentType : "application/json; charset=utf-8",
 	        success: function (data, status, req) {
 	    		OpenWindow.document.write(JSON.stringify(data, null, 1))

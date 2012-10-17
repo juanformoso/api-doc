@@ -53,8 +53,7 @@
                                          "description" : "List of supported mappings for the method. Since revision, a method can have more than one mapping for itself. Currently only POST and GET are supported. Each supportedMapping defines different requiered properties for the method. Is used to define which consoles are shown and built.",
                                          "default" : [ "GET" ] },
                  "requestMapping" : { "type" : "string", 
-                                      "description" : "URI relative to 'relativePath' that must be equivalent to a spring method mapping for REST interface. Requiered if method supports GET. Should match the requestMapping used in the controller for the method that is to be called via GET.",
-                                      "required" : true 
+                                      "description" : "URI relative to 'relativePath' that must be equivalent to a spring method mapping for REST interface. Requiered if method supports GET. Should match the requestMapping used in the controller for the method that is to be called via GET."
                                     },
                  "postMapping" : { "type" : "string", "description" : "URI relative to 'relativePath' to be used by POST interface. Support for REST parameters??", "depricated" : true },
                  "facets" : { "type" : "any" , "description" : "If set, facet description is shown. 'request.facets' must be defined." },
@@ -128,7 +127,7 @@
                                     "description" : "Information about an example for the method. May have both data for GET request and POST request. This data should be set according to the parent's 'supportedMappings'.", 
                                     "properties" : {
                                         "postFile" : { "type" : "string", "description" : "Path to json file with the parameters for the POST request. Path should be relative to 'resourcesPath'." },
-                                        "getParams" : { "type" : "object", "description" : "Object properties should have as key the same name defined in 'request.parameters', and values should all be strings." }
+                                        "getParams" : { "type" : "object", "description" : "Object properties should have as key the same name defined in 'request.parameters', and values should all be strings. Date string parameters may use %$d notation defined in dynamicDate.js to generate dynamic dates" }
         	                            }
                                 }
                  },

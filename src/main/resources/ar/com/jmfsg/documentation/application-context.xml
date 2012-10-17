@@ -17,6 +17,9 @@
 	<mvc:resources mapping="/static/**"
 		location="classpath:ar/com/jmfsg/documentation/views/static/**"
 		order="-1" />
+	<mvc:resources mapping="/**"
+		location="classpath:postFiles/**"
+		order="0" />
 
 	<import resource="classpath:ar/com/jmfsg/documentation/freemarker.xml" />
 

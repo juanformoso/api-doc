@@ -62,8 +62,6 @@ var console = function () {
             
             var doItNew = $('<img src="../../static/img/externalLink.png">' )
 
-            
-            
             $(div).append(result);
             $(div).append(doIt);
             $(div).append(doItNew);
@@ -82,7 +80,7 @@ var console = function () {
         makeCall: function (toCall, withParams, writeTo, actionButton) {
             actionButton.attr('disabled', 'true');
 
-            toCall = getToCall();
+            toCall = console.getToCall(toCall, withParams);
 
             $.ajax(
                 {
@@ -91,14 +89,14 @@ var console = function () {
                         var value = '<p>From calling: <a href="' + toCall + '">' + console.replace(toCall, '<', '&lt;') + '</a></p>';
                         value += '<code class="json"><pre>' + console.replace(JSON.stringify(data, null, 1), '<', '&lt;') + '</pre></code>';
 
-                        writeTo(value);
+                        writeTo.html(value);
                     },
                     dataType: 'json',
                     complete: function (req, status) {
                         actionButton.removeAttr('disabled');
                     },
                     error: function (req, status, e) {
-                        writeTo('From calling: ' + console.replace(toCall, '<', '&lt;') + '<br/>An Error Occured:<br/>' + e);
+                        writeTo.html('From calling: ' + console.replace(toCall, '<', '&lt;') + '<br/>An Error Occured:<br/>' + e);
                     }
                 });
         },
@@ -122,6 +120,7 @@ var console = function () {
 
             for (var i = 0; i < withParams.length; i++) {
                 var value = $('#p-' + withParams[i].name).val();
+                value = dynamicDate(value);
 
                 if (!value) continue;
 
