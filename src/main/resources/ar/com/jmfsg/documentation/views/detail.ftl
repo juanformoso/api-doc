@@ -23,6 +23,7 @@
 <script type="text/javascript" src="<@s.url "${relativePath}/static/js/detail.js?v=3" />"  > </script>
 <script type="text/javascript" src="<@s.url "${relativePath}/static/js/codemirror-compressed.js"/>" > </script>
 <script type="text/javascript" src="<@s.url "${relativePath}/static/js/dynamicDate.js"/>" > </script>
+<script type="text/javascript" src="<@s.url "${relativePath}/static/js/date.f-0.5.0-min.js"/>" > </script>
 <script type="text/javascript">
 //Javascript associated with detail view
 var postCodeMirror;

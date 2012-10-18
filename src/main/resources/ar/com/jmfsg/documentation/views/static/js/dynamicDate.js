@@ -5,6 +5,10 @@
  * 		-4d+1m-3y
  * 	Lo cual indica que a la fecha obtenida se le restan 4 días, se le suma 1 mes y se le restan 3 años
  * Además el modificador puede contener %now, lo que indica que la fecha a utilizar es la fecha actual.
+ * El date resultado se devuelve como un long, salvo que se agregue una aclaración de formato:
+ * 	%f str f%
+ * Donde 'str' es un string con un formato compatible con la siguiente documentación: http://fisforformat.sourceforge.net/
+ * Si se encuentra %f f%, la fecha se devuelve como un string formateada de esa forma.
  */
 
 // Dado un string de json lo recorre en búsqueda de fechas dinámicas y devuelve otro string con las fechas modificadas
@@ -47,20 +51,32 @@ function dynamicDate( str ) {
 		var monthModif = 0
 		var yearModif = 0
 		
-		if (dayRE.test(str)) {
-			dayModif = parseInt(dayRE.exec(str)[1])
+		if (dayRE.test(modif)) {
+			dayModif = parseInt(dayRE.exec(modif)[1])
 		}
-		if (monthRE.test(str)) {
-			monthModif = parseInt(monthRE.exec(str)[1])
-		}
-		
-		if (yearRE.test(str)) {
-			yearModif = parseInt(yearRE.exec(str)[1])
+		if (monthRE.test(modif)) {
+			monthModif = parseInt(monthRE.exec(modif)[1])
 		}
 		
-		date.setFullYear(date.getFullYear() + yearModif, date.getMonth() + monthModif, date.getDate() + dayModif)
+		if (yearRE.test(modif)) {
+			yearModif = parseInt(yearRE.exec(modif)[1])
+		}
+		
+		date.setDate(date.getDate() + dayModif)
+		date.setMonth(date.getMonth() + monthModif)
+		date.setFullYear(date.getFullYear() + yearModif, date.getMonth(), date.getDate())
+		
+		var formatRE = new RegExp("%f(.+)f%")
+		var formatStr = ""
+		
+		if (formatRE.test(modif)) {
+			formatStr = formatRE.exec(modif)[1]
+			return date.f(formatStr.trim())
+		} else {
+			return date.getTime()
+		}
+		
 	} else {
 		return str
 	}
-	return date.getTime()
 }
