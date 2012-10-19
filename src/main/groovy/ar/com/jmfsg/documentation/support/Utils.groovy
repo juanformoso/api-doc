@@ -55,6 +55,13 @@ class Utils {
 			assert data.value.requestMapping, "RequestMapping should be defined as Method is a String"
 			data.value.method = [ (data.value.method) : data.value.requestMapping ]
 		}
+		
+		//Sets all method keys to lower case
+		def methods = [:]
+		data.value.method.each { k, v ->
+			methods[k.toLowerCase()] = v
+		}
+		data.value.method = methods
 	}
 	
 	public static String obtainMethodName(def a) {
