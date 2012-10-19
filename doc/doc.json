@@ -30,6 +30,7 @@
                  "longDescription" : { "type" : "string", "description" : "Description of the method to be used in the detailed page." },
                  "shortName" : { "type" : "string", "description" : "If defined, used to show the method in the method list"}, 
                  "implemented" : { "type" : "boolean", "description" : "If false, adds -not implemented- disclaimer in main list.", "defaultValue" : false},
+                 "tags" : { "type" : "array", "description" : "List of tags to show in the method description. Methods should be within the 'tags' dictionary.", "items" : "string" },
                  "method" : { "description" : "String type is for retro-compatibility. As String defines the type of http action used to access the method (e.g. 'post', 'get', 'put'). Is used by the main page when it displays the list of methods. If String, requires 'requestMapping' to be defined.",
                  			  "required" : true,
                  			  "type" : [ "string",
