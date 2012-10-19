@@ -85,7 +85,7 @@
  </#function>
  
  <#-- Macro to get a method item for the index page -->
- <#macro indexPageMethodIndex method support>
+ <#macro indexPageMethodIndex method support tagsClass>
  			<#if method.shortName?has_content>
  				<li><a href="${p.relativePath + '/docs/method/' + support.internalMethodName}">${method.shortName}</a>
  			<#elseif method.friendlyName == "">
@@ -100,7 +100,7 @@
 		    </#if>
 		    <sub><sub><b>
     			[ <#list method.method?keys as k> ${k?lower_case} </#list> ]
-    		</b></sub></sub><#if method.implemented?has_content && !method.implemented><span class="not-implemented" title="This method is not currently implemented but will be included in a future release. Parameters and responses are subject to change in the final version.">not implemented</span></#if> &ndash; ${method.description}</li>
+    		</b></sub></sub><#if method.implemented?has_content && !method.implemented><span class="not-implemented" title="This method is not currently implemented but will be included in a future release. Parameters and responses are subject to change in the final version.">not implemented</span></#if><#if method.tags?has_content>${renderTags(method.tags, tagsClass)}</#if> &ndash; ${method.description}</li>
  </#macro>
  
  <#-- Function that gets parameters names from the list and their children recursively -->
@@ -119,5 +119,20 @@
  			<#local ret = ret + obtainAllParamsAux(o.children)>
  		</#if>
  	</#list>
+ 	<#return ret>
+ </#function>
+ 
+<#-- Function render tags extracted from utils and index -->
+ <#function renderTags methodTags class>
+	<#local ret = ''>
+ 	
+ 	<#list methodTags as tag>
+ 		<#if tags?has_content && tags?keys?seq_contains(tag)>
+ 			<#local ret = ret + '<span class="' + class + '" title="' + tags[tag].title +'" style="background-color:' + tags[tag].color +'">' + tags[tag].name + '</span>'>
+ 		<#else>
+ 			<#local ret = ret + '<span class="'+ class + '" title="' + tag +'" style="background-color:#EEEEEE">' + tag + '</span>'>
+ 		</#if>
+ 	</#list> 	
+ 	
  	<#return ret>
  </#function>

@@ -72,6 +72,7 @@ $(document).ready(function() {
 
     <div class="subheader">
         <h1>Usage of ${m.friendlyName}</h1>
+        <#if m.tags?has_content>${u.renderTags(m.tags, 'tags-big')}</#if>
     </div>
 
     <div class="content-page">
@@ -294,3 +295,4 @@ meta: {
         </div>
     </div>
 </@c.fixedBodyFor>
+

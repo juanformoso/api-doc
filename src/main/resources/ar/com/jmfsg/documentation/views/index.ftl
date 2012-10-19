@@ -42,7 +42,8 @@
 		    </#if> 
 		    	-->
 
-	    	<@u.indexPageMethodIndex m.data m.support />
+	    	<@u.indexPageMethodIndex m.data m.support 'tags' />
+
         </#list>
     </ul>
     
@@ -65,7 +66,7 @@
 			    </#if>
 			    	-->
 	
-		    	<@u.indexPageMethodIndex m.data m.support />
+		    	<@u.indexPageMethodIndex m.data m.support 'tags' />
 	        </#list>
 	    </ul>
 	    </div>

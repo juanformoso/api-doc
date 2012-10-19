@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -37,6 +38,7 @@ public class DocumentationController
         ModelAndView modelAndView = this.createView("index");
         modelAndView.addObject("controllers", this.documentationByGroup);
         modelAndView.addObject("general", this.getDocumentationLoader().getGeneralDoc());
+        modelAndView.addObject("tags", this.documentationLoader.getTags());
         return modelAndView;
     }
 
@@ -58,6 +60,7 @@ public class DocumentationController
         modelAndView.addObject("m", this.documentationByMethod.get(method));
         modelAndView.addObject("general", this.getDocumentationLoader().getGeneralDoc());
         modelAndView.addObject("dictionary", this.getDocumentationLoader().getDictionary());
+        modelAndView.addObject("tags", this.documentationLoader.getTags());
         return modelAndView;
     }
 
@@ -69,7 +72,8 @@ public class DocumentationController
     }
 
     @RequestMapping(value = "/docs/jsonResult/", method = RequestMethod.GET)
-    public String jsonResult() {
+    public String jsonResult(Model model) {
+    	model.addAttribute("status" , "loading response...");
     	return "rawJsonView";
     }
     
