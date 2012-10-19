@@ -1,5 +1,9 @@
 <#import "/spring.ftl" as s />
 <#import "/library/container.ftl" as c />
+<#import "/library/tabbedConsole.ftl" as tc />
+<#import "/library/examples.ftl" as e />
+<#import "/library/optParameters.ftl" as o />
+<#import "/library/utils.ftl" as u />
 
 <@c.fixedHeadFor >
 
@@ -9,55 +13,58 @@
 	<#assign relativePath = "">
 </#if>
 
-<script type="text/javascript" src="<@s.url "${relativePath}/static/js/console.js?v=3" />"></script>
-<script type="text/javascript">
-        function showConsole() {
-            var x = $('#console');
-            var method= "<@s.url "${relativePath + m.requestMapping?replace(':.+', '')}" />";
-            var parameters = [<#if m.request?has_content>
-            	<#if m.request.parameters?has_content>
-	            	<#list m.request.parameters as p>'${p.name}',</#list>
-	            </#if>
-	            <#if m.request.filters?has_content>
-	            	<#list m.request.filters as p>'${p.name}',</#list>
-	            </#if>
-	            <#if m.request.options?has_content>
-	            	<#list m.request.options as p>'${p.name}',</#list>
-	            </#if>
-	            <#if m.request.facets?has_content>
-	            	<#list m.request.facets as p>'${p.name}',</#list>
-	            </#if>
-	            <#if m.request.paginable?has_content>'page','pagesize',</#if>
-	            <#if m.request.sortable?has_content>'sort','order',</#if>
-            </#if>];
+<#if general.methodPath?has_content>
+   	<#assign methodPath = "${general.methodPath}">
+<#else>
+	<#assign methodPath = relativePath>
+</#if>
 
-			var apiUrl = "http://" + window.location.host;
-            console.build(x, method, parameters, {<#if m.request?has_content && m.request.parameters?has_content><#list m.request.parameters as p><#if p.vectorized?has_content && p.vectorized>'${p.name}':true<#if p_has_next>,</#if></#if></#list></#if>}, apiUrl);
-        }
-        
-        $(document).ready(function() {
-	        $('.toggle-parent').mouseover(function () {
-					$(this).css('cursor', 'pointer');
-			});
-			
-	        $('.toggle-parent').click(function(e) {
-	        
-	       	  if($(e.target).is("div.toggle-child ul li a")) {
-		  		return;
-		  	  }
-	        
-			  $(this).parent().children('.toggle-child').slideToggle(400, function() {
-			    // Animation complete.
-			  });
-			  
-			  // TODO: JMF: Mejorar esto :P
-			  if ($(this).text().trim().charAt(0) == "+")
-			    $(this).html('<h2>'+$(this).text().replace("+", "-")+'</h2>');
-	 		  else
-			    $(this).html('<h2>'+$(this).text().replace("-", "+")+'</h2>');
-			});
-		});
+<script type="text/javascript" src="<@s.url "${relativePath}/static/js/console.js?v=3" />" > </script>
+<script type="text/javascript" src="<@s.url "${relativePath}/static/js/detail.js?v=3" />"  > </script>
+<script type="text/javascript" src="<@s.url "${relativePath}/static/js/codemirror-compressed.js"/>" > </script>
+<script type="text/javascript" src="<@s.url "${relativePath}/static/js/dynamicDate.js"/>" > </script>
+<script type="text/javascript" src="<@s.url "${relativePath}/static/js/date.f-0.5.0-min.js"/>" > </script>
+<script type="text/javascript">
+//Javascript associated with detail view
+var postCodeMirror;
+
+function showConsole() {
+    <#if m.method?keys?seq_contains('get')>
+    var x = $('#getConsole');
+    var method= "<@s.url "${methodPath + m.method['get']?replace(':.+', '')}" />";
+    var parameters = <#if m.request?has_content && m.request.parameters?has_content>
+	    				${u.obtainAllParams(m.request.parameters)}
+	    			 <#else> [] </#if> ;
+    var extraParams = [ <#if m.request?has_content>
+    	<#if m.request.filters?has_content>
+        	<#list m.request.filters as p>'${p.name}',</#list>
+        </#if>
+        <#if m.request.options?has_content>
+        	<#list m.request.options as p>'${p.name}',</#list>
+        </#if>
+        <#if m.request.facets?has_content>
+        	<#list m.request.facets as p>'${p.name}',</#list>
+        </#if>
+        <#if m.request.paginable?has_content>'page','pagesize',</#if>
+        <#if m.request.sortable?has_content>'sort','order',</#if> 
+        	</#if> ];
+
+	parameters = parameters.concat(extraParams)
+	var apiUrl = "http://" + window.location.host;
+	var optParameters = <#if m.request?has_content && m.request.optParameters?has_content>${u.toJSString(m.request.optParameters)}<#else>{}</#if>
+    console.build(x, method, parameters, {<#if m.request?has_content && m.request.parameters?has_content><#list m.request.parameters as p><#if p.vectorized?has_content && p.vectorized>'${p.name}':true<#if p_has_next>,</#if></#if></#list></#if>}, apiUrl, optParameters);
+    </#if>
+}
+
+$(document).ready(function() {
+    registerToggleFunction();
+    // setup ul.tabs to work as tabs for each div directly under div.panes
+    $("ul.tabs").tabs("div.panes > div");
+    // setup json post console
+    myCodeMirror = CodeMirror.fromTextArea($('#postTextArea')[0], {name: "javascript", json: true});
+});
 </script>
+
 <title>Usage of ${m.friendlyName}</title>
 </@c.fixedHeadFor>
 
@@ -65,7 +72,7 @@
 
     <div class="subheader">
         <h1>Usage of ${m.friendlyName}</h1>
-        <#if m.tags?has_content>${renderTags(m.tags)}</#if>
+        <#if m.tags?has_content>${u.renderTags(m.tags, 'tags-big')}</#if>
     </div>
 
     <div class="content-page">
@@ -76,6 +83,7 @@
  <#else>
  <p>${m.description}<p>
  </#if>
+ <#-- Depricated as POST was implemented --
  <#if m.method?has_content && (m.method == "POST" || m.method == "PUT")>
  <p>
  This method receives a <b>POST</b> or <b>PUT</b>. The console is not supported at the moment for these methods. <br/> 
@@ -91,7 +99,7 @@
 	}
 }</pre></code>
  
-</#if>
+</#if> -->
         </div>
 
         <#if m.request?has_content && m.request.parameters?has_content>
@@ -102,8 +110,14 @@
 			<div class="toggle-child" >
 			<p>Parameters may refer to values in the URL, entity properies posted as json, or both.</p>
                 <ul>
-                	${render_object(m.request.parameters)}
+                	${u.render_object(m.request.parameters)}
+                	
+            	<#-- Parametros opcionales -->
+            	<@o.optParameters />
             </div>
+            
+            
+            
             </div>
             </#if>
             
@@ -116,7 +130,7 @@
 				<p>Filters are a list of values that are used to narrow down the search. They are always required unless otherwise stated</p>
                 <ul>
                 <#list m.request.filters as f>
-					<li><b>${f.name}</b> &ndash; ${resolve_description(f)}</li>
+					<li><b>${f.name}</b> &ndash; ${u.resolve_description(f)}</li>
 				</#list>
 				</ul>
 				</div>
@@ -141,7 +155,7 @@
             	</#if>
             	<#if m.request.options?has_content>
                 <#list m.request.options as o>
-					<li><b>${o.name}</b> &ndash; ${resolve_description(o)} <i>${o.type}</i>
+					<li><b>${o.name}</b> &ndash; ${u.resolve_description(o)} <#if o.type?has_content><i>${o.type}</i></#if>
 					<#if o.longDescription?has_content>
 						<ul><li>${o.longDescription}</li></ul>
 					</#if>
@@ -158,13 +172,13 @@
             
             <#if m.request?has_content && m.request.facets?has_content>
             <div>
-        <div id="filters" class="toggle-parent">
+        <div id="facets" class="toggle-parent">
                 <h2>- Facets</h2>
                 </div>
                 <div class="toggle-child">
 				<p>Facets are extra filters that modify the original request. The list of available facets and their types and possible values are included in the service response. <br> This service supports the following ones.</p>
                 <ul>
-                	${render_object(m.request.facets)}
+                	${u.render_object(m.request.facets)}
 				</ul>
 				</div>
             </div>
@@ -188,12 +202,12 @@
 		                		<#list m.dynamicResponse as op>
 		                			<ul>
 		                				<h3>${op.name}</h3>
-		                				${render_object(op.response)}
+		                				${u.render_object(op.response)}
 		                			</ul>
 		                		</#list>
 		                		</li>
 		                	<#else>
-		                		${render_object(m.response)}
+		                		${u.render_object(m.response)}
 		                	</#if>
 						</ul>
 					</div>
@@ -208,55 +222,15 @@
 	                <div class="toggle-child" style="display: none;">
 	                	<p>These are the fields returned by this method as a summary of its execution. There may be additional ones not documented here, but these will always be present (if they have values, otherwise they are ignored).</p>
 	                	<ul>
-	                		${render_object(m.responseSummary)}
+	                		${u.render_object(m.responseSummary)}
 	                	</ul>
 					</div>
 			</div>
           </#if>
             
-<#function render_object col>
-	<#local ret = ''>
-	<#list col as c>
-		<#local ret = ret + '<li><b>' + c.name + '</b>'>
-		<#if c.isList?has_content && c.isList>
-			<#local ret = ret + ' &ndash; <i>List</i>'>
-		</#if>
-		<#local description = resolve_description(c) >
-		<#if description?has_content>
-			<#local ret = ret + ' &ndash; ' + description>
-		</#if>
-		<#if c.type?has_content>
-			<#local ret = ret + ' &ndash; <i>' + c.type + '</i>'>
-		</#if>
-		<#if c.optional?has_content>
-			<#local ret = ret + ' &ndash; <i>Optional</i>.'>
-		</#if>
-		<#if c.vectorized?has_content && c.vectorized>
-			<ul><li>This is a <b>vectorized parameter</b>, multiple ids can be sent in a single request if delimitted with a comma string.</li></ul>
-		</#if>
-		<#if c.children?has_content>
-			<#local ret = ret + '<ul>' + render_object(c.children) + '</ul>' >	
-		</#if>
-		<#local ret = ret + '</li>'>
-	</#list>
-    <#return ret>
- </#function>
+            <#-- Agrego ejemplos -->
+            <@e.examples/>
 
- <#function resolve_description field>
- 	
- 	<#local ret = ''>
- 	
- 	<#if field.description?has_content>
- 		<#local ret = field.description >
- 	<#elseif field.descriptionKey?has_content && dictionary?keys?seq_contains(field.descriptionKey)>
- 		<#local ret = dictionary[field.descriptionKey] >
- 	<#elseif dictionary?keys?seq_contains(field.name)>
- 		<#local ret = dictionary[field.name]>
- 	</#if>
- 	
- 	<#return ret>
- </#function>
- 
           
             <#if m.facets?has_content>
             <div>
@@ -297,7 +271,7 @@ meta: {
 				 <p>
                 <ul>
                 <#list m.request.facets as f>
-					<li><b>${f.name}</b> &ndash; ${resolve_description(f)} <i>${f.type}</i>
+					<li><b>${f.name}</b> &ndash; ${u.resolve_description(f)} <#if f.type?has_content>><i>${f.type}</i></#if>
 					</li>
 				</#list>
 				</ul>
@@ -308,9 +282,10 @@ meta: {
             
             <div>
 
-		<#if !m.method?has_content || m.method == "GET" || (m.implemented?has_content && m.implemented) >
+		<#-- if !m.method?has_content || m.method == "GET" || (m.implemented?has_content && m.implemented) -->
+		<#if m.method?has_content && m.method?keys?size &gt; 0>
             <h2>Try it!</h2>
-            <div id="console"><input type="button" value="Show Console" onclick="showConsole()" /></div>
+            <@tc.consoles />
 		</#if>
         </div>
             
@@ -321,17 +296,3 @@ meta: {
     </div>
 </@c.fixedBodyFor>
 
-
-<#function renderTags methodTags>
-	<#local ret = ''>
-
- 	<#list methodTags as tag>
- 		<#if tags?has_content && tags?keys?seq_contains(tag)>
- 			<#local ret = ret + '<span class="tags-big" title="' + tags[tag].title +'" style="background-color:' + tags[tag].color +'">' + tags[tag].name + '</span>'>
- 		<#else>
- 			<#local ret = ret + '<span class="tags-big" title="' + tag +'" style="background-color:#EEEEEE">' + tag + '</span>'>
- 		</#if>
- 	</#list> 	
- 	
- 	<#return ret>
- </#function>

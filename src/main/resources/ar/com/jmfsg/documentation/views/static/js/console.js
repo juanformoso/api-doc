@@ -2,7 +2,7 @@ var console = function () {
     var _targetUrl;
 
     return {
-        build: function (div, route, parameters, vectParameters, url) {
+        build: function (div, route, parameters, vectParameters, url, optParameters) {
             $(div).empty();
 
             _targetUrl = url;
@@ -27,39 +27,60 @@ var console = function () {
                 $(div).append(table);
             }
 
+            //Agrego seccion de parametros opcionales
+            if (typeof optParameters != "undefined" && optParameters.length > 0) {
+            	var optDiv = $('<div id="optDiv" style="height:auto"></div>');
+            	var optHeadDiv = $('<div id="optHeadDiv" class="toggle-parent"></div>');
+                $(optHeadDiv).append($('<h4 > -Optional Parameters</h4>'));
+
+            	var optParamDiv = $('<div id="optParamDiv" style="padding-left:20px" class="toggle-child" ></div>')
+                var table = $('<table width="90%"></table>');
+
+                for (var i = 0; i < optParameters.length; i++) {
+                    var p = $('<tr><td><b>' + optParameters[i]["name"] + '</b>&nbsp;' + '</td><td style="margin-left:20px;"><input type="text" id="p-' + optParameters[i]["name"] + '" /></td></tr>');
+
+                    paramFields[paramFields.length] = { name: optParameters[i]["name"] };
+
+                    $(table).append(p);
+                }
+                
+                //Agrego estos nuevos elementos al div original
+                $(optDiv).append(optHeadDiv);
+                $(optParamDiv).append(table);
+                $(optDiv).append(optParamDiv);
+                $(div).append(optDiv);
+
+                //Registro la función de colapsado para los nuevos componente 
+                registerToggleFunction();
+            }
+            
             var result = $('<div id="result"></div>');
 
             var doIt = $('<input type="button" id="doIt" value="Call Method" />');
 
+            
+            
+            var doItNew = $('<img src="../../static/img/externalLink.png">' )
+
             $(div).append(result);
             $(div).append(doIt);
+            $(div).append(doItNew);
 
             doIt.click(
                 function () {
                     console.makeCall(route, paramFields, result, doIt);
                 });
+            
+            doItNew.click(
+            		function() {
+            			var toCall = console.getToCall(route, paramFields);
+            			OpenWindow = window.open(toCall, "_blank");
+            		});            
         },
         makeCall: function (toCall, withParams, writeTo, actionButton) {
             actionButton.attr('disabled', 'true');
 
-            var toCall = _targetUrl + toCall;
-
-            var firstP = true;
-
-            for (var i = 0; i < withParams.length; i++) {
-                var value = $('#p-' + withParams[i].name).val();
-
-                if (!value) continue;
-
-                var newCall = console.replace(toCall, '{' + withParams[i].name + '}', encodeURIComponent(value));
-
-                if (newCall == toCall) {
-                    toCall = toCall + (firstP ? '?' : '&') + withParams[i].name + '=' + encodeURIComponent(value);
-                    firstP = false;
-                } else {
-                    toCall = newCall;
-                }
-            }
+            toCall = console.getToCall(toCall, withParams);
 
             $.ajax(
                 {
@@ -91,6 +112,28 @@ var console = function () {
             }
 
             return text;
+        },
+        getToCall: function(toCall, withParams) {
+            var toCall = _targetUrl + toCall;
+
+            var firstP = true;
+
+            for (var i = 0; i < withParams.length; i++) {
+                var value = $('#p-' + withParams[i].name).val();
+                value = dynamicDate(value);
+
+                if (!value) continue;
+
+                var newCall = console.replace(toCall, '{' + withParams[i].name + '}', encodeURIComponent(value));
+
+                if (newCall == toCall) {
+                    toCall = toCall + (firstP ? '?' : '&') + withParams[i].name + '=' + encodeURIComponent(value);
+                    firstP = false;
+                } else {
+                    toCall = newCall;
+                }
+            }
+            return toCall;
         }
     };
 } ();

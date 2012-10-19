@@ -1,0 +1,163 @@
+{
+    "id" : "doc",
+    "description" : "Json with the information about the api and the methods in the api",
+    "properties" : {
+       "general" : {
+           "type" : "object",
+           "descrption" : "General attributes of the api being documented",
+           "properties" : {
+                "projectName" : { "type" : "string", "description" : "Name of the proyect being documented", "required" : true },
+                "projectSummary" : { "type" : "string/html", "description" : "Summary of the proyect being documented" },
+                "methodSummary" : { "type" : "string/html", "description" : "Description of the methods" },
+                "twitterUsername" : { "description" : "unknown" },
+                "relativePath" : {},
+                "methodPath" : {},
+                "resourcesPath" : {}
+           }
+       },
+       "methods" : {
+           "type" : "array",
+           "description" : "List of all methods in the api",
+           "items" : {
+             "id" : "method",
+             "description" : "A method documentation",
+             "properties" : {
+                 "group" : { "type" : "string" , "description" : "Defines the group to which the method belongs.", "required" : true },
+                 "friendlyName" : { "type" : "string", "description" : "String used in the url to this method detailed documentation. If empty, no link to the detailed page is given.", "required" : true },
+                 "order" : { "type" : "natural", "description" : "Unknown", "required" : true },
+                 "subGroup" : { "type" : "string", "description" : "Defines de subgroup to which the method belongs."},
+                 "description" : { "type" : "string", "description" : "Description of the method to be used in the main page." },
+                 "longDescription" : { "type" : "string", "description" : "Description of the method to be used in the detailed page." },
+                 "shortName" : { "type" : "string", "description" : "If defined, used to show the method in the method list"}, 
+                 "implemented" : { "type" : "boolean", "description" : "If false, adds -not implemented- disclaimer in main list.", "defaultValue" : false},
+                 "tags" : { "type" : "array", "description" : "List of tags to show in the method description. Methods should be within the 'tags' dictionary.", "items" : "string" },
+                 "method" : { "description" : "String type is for retro-compatibility. As String defines the type of http action used to access the method (e.g. 'post', 'get', 'put'). Is used by the main page when it displays the list of methods. If String, requires 'requestMapping' to be defined.",
+                 			  "required" : true,
+                 			  "type" : [ "string",
+                 			  			 {  "description" : "If method is an object then it defines in itself both method (POST, GET, etc.) and mapping URI. If method is an object,  'requestMapping' is ignored. All properties are optional but must have at least one defined. The URI defined will be shown in the webpage.",
+                 			  			    "id" : "mappingObject", 
+                 			  			    "properties" : {
+                 			  			    	"get" : { "type" : "string/uri" },
+                 			  			    	"put" : { "type" : "string/uri" },
+                 			  			    	"post" : { "type" : "string/uri" },
+                 			  			    	"delete" : { "type" : "string/uri" }
+                 			  			    }
+                 			  			 } 
+									   ], 
+                              "default" : "get",
+                            },
+                 "preferredMethod" : { "type" : "string", "enum" : [ "get", "put", "post", "delete" ], 
+									   "description" : "If defined and no 'shortName', defines which uri from 'method' to used in the main index. SHOULD be set if method has more than one property." },
+                 "supportedMappings" : { "type" : "array",
+                 						 "depricated" : true,
+                                         "items" : { "enum" : [ "POST", "GET" ] },
+                                         "description" : "List of supported mappings for the method. Since revision, a method can have more than one mapping for itself. Currently only POST and GET are supported. Each supportedMapping defines different requiered properties for the method. Is used to define which consoles are shown and built.",
+                                         "default" : [ "GET" ] },
+                 "requestMapping" : { "type" : "string", 
+                                      "description" : "URI relative to 'relativePath' that must be equivalent to a spring method mapping for REST interface. Requiered if method supports GET. Should match the requestMapping used in the controller for the method that is to be called via GET."
+                                    },
+                 "postMapping" : { "type" : "string", "description" : "URI relative to 'relativePath' to be used by POST interface. Support for REST parameters??", "depricated" : true },
+                 "facets" : { "type" : "any" , "description" : "If set, facet description is shown. 'request.facets' must be defined." },
+                 "request" : {
+                     "description" : "Defines de request made, either by POST or GET, the semantics should be the same.",
+                     "properties" : {
+                         "parameters" : { "type" : "array", 
+                                          "items" : {
+                                          	  "description" : "The items in the list of parameters are named as 'objects' and are rendered by the 'render_objects' function in 'utils.ftl'. They can have inner objects under the property 'children'." },
+                                              "id" : "object" ,
+                                              "properties" : { 
+                                              		"name" : { "type" : "string", "description" : "If the name is within the keys of the dictionary and 'description' is not defined, description equals dictionary[name].", "required" : true } , 
+	                                    			"description" : { "type" : "string" },
+	                                    			"descriptionKey" : { "type" : "string", "description" : "If present and within the keys of dictionary, description is replaced by description in dictionary[descriptionKey]." }, 
+                                              		"description" : { "type" : "string" },  
+												    "children" : { "type" : "array", "items" : { "id" : "object" } },
+												    "optional" : { "type" : "boolean", "description" : "If set and true, adds an 'optional' tag to the parameter." },
+												    "type" : { "type" : "string", "description" : "If set, appends the type to the description." },
+												    "isList" : { "type" : "boolean", "description" : "If set and true, appends a 'list' tag to the parameter." }
+                                          }
+						 },
+						 "filters" : {
+						 	"description" : "Filters are a list of values that are used to narrow down the search.",
+						 	"type" : "array",
+						 	"items" : {
+							 	"properties" : {
+							 	  		"name" : { "type" : "string", "description" : "If the name is within the keys of the dictionary and 'description' is not defined, description equals dictionary[name].", "required" : true } , 
+	                                    "description" : { "type" : "string" },
+	                                    "descriptionKey" : { "type" : "string", "description" : "If present and within the keys of dictionary, description is replaced by description in dictionary[descriptionKey]." }
+								}
+							}
+						 },
+						 "facets" : {
+						 	"type" : "array",
+						 	"items" : { 
+								"properties" : {
+							 	  		"name" : { "type" : "string", "description" : "If the name is within the keys of the dictionary and 'description' is not defined, description equals dictionary[name].", "required" : true } , 
+	                                    "description" : { "type" : "string" },
+	                                    "descriptionKey" : { "type" : "string", "description" : "If present and within the keys of dictionary, description is replaced by description in dictionary[descriptionKey]." },
+	                                    "type" : { "type" : "string" },
+								}
+						 	}
+						 },
+						 "options" : {
+						 	"description" : "Options are a list of values that are used to customize the resultset.",
+						 	"type" : "array",
+						 	"items" : {
+							 	"properties" : {
+							 		"name" : { "type" : "string", "description" : "If the name is within the keys of the dictionary and 'description' is not defined, description equals dictionary[name].", "required" : true } , 
+	                                "description" : { "type" : "string" },
+	                                "descriptionKey" : { "type" : "string", "description" : "If present and within the keys of dictionary, description is replaced by description in dictionary[descriptionKey]." },
+							 		"type" : { "type" : "string" },
+							 		"longDescription" : "Long description that is added below the parameter description.",
+							 		"defaultValue" : "Default value of the parameter."
+							 	}
+						 	}
+						 },
+						 "paginable" : { "type" : "boolean" },
+						 "sortable" : { "properties" : { "possibleValues" : { "type" : "array", 
+						 													  "description" : "Possible values for sorting", 
+						 													  "items" : { "type" : "string" } 
+						 													 } } },
+                         "optParameters" : {
+                             "type" : "array",
+                             "items" : { "id" : "object" }
+                         }
+                    }
+                 },
+                 "examples" : { "type" : "array",
+                                "items" : {
+                                    "description" : "Information about an example for the method. May have both data for GET request and POST request. This data should be set according to the parent's 'supportedMappings'.", 
+                                    "properties" : {
+                                        "postFile" : { "type" : "string", "description" : "Path to json file with the parameters for the POST request. Path should be relative to 'resourcesPath'." },
+                                        "getParams" : { "type" : "object", "description" : "Object properties should have as key the same name defined in 'request.parameters', and values should all be strings. Date string parameters may use %$d notation defined in dynamicDate.js to generate dynamic dates" }
+        	                            }
+                                }
+                 },
+                 "responseIsList" : { "type" : "boolean", "description" : "Defines whether the response is a list. Used to add 'The method returns a list' in the result description."  },
+                 "response" : { "type" : "array",
+                 				"description" : "List of result parameters",
+                 				"items" : { "id" : "object" }
+                 },
+                 "dynamicResponse" : { "type" : "array",
+                 					   "description" : "If has content, means this response varies depending on some variable specific to the method. If has content, response is not used.",
+                 					   "items" : {
+                 					   		"properties" : {
+                 					   			"name" : { "type" : "string" },
+                 					   			"response" : { "id" : "object" }
+                 					   		}
+                 					   }
+            	 }
+	           }
+	       }
+  	   },
+  	   "dictionary" : {
+  	   		"description" : "This dictionary contains general descriptions accessible by elements described above.", 
+  	   		"type" : "array",
+  	   		"items" : {
+  	   			"properties" : {
+  	   				"key" : { "type" : "string" },
+  	   				"description" : { "type" : "string" }
+  	   			}
+  	   		}
+  	   }
+  	}
+}
