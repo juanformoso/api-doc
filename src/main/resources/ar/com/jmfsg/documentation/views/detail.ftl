@@ -26,7 +26,10 @@
 <script type="text/javascript" src="<@s.url "${relativePath}/static/js/date.f-0.5.0-min.js"/>" > </script>
 <script type="text/javascript">
 //Javascript associated with detail view
-var postCodeMirror;
+
+//Este diccionario tiene el nombre de los textAreas que contendrán los codeMirror.
+//Luego reemplazaremos los strings por el codemirror propiamente dicho
+var codeMirrors = { "put" : "putTextArea", "post" : "postTextArea" }; 
 
 function showConsole() {
     <#if m.method?keys?seq_contains('get')>
@@ -60,8 +63,12 @@ $(document).ready(function() {
     registerToggleFunction();
     // setup ul.tabs to work as tabs for each div directly under div.panes
     $("ul.tabs").tabs("div.panes > div");
-    // setup json post console
-    myCodeMirror = CodeMirror.fromTextArea($('#postTextArea')[0], {name: "javascript", json: true});
+    // setup json consoles
+    for (key in codeMirrors) {
+    	if ($('#' + codeMirrors[key]).length > 0) {
+	    	codeMirrors[key] = CodeMirror.fromTextArea($('#'+codeMirrors[key])[0], {name: "javascript", json: true});
+	    }
+    }
 });
 </script>
 
@@ -283,8 +290,7 @@ meta: {
             <div>
 
 		<#-- if !m.method?has_content || m.method == "GET" || (m.implemented?has_content && m.implemented) -->
-		<#if m.method?has_content && m.method?keys?size &gt; 0>
-            <h2>Try it!</h2>
+		<#if m.method?has_content && m.method?keys?size &gt; 0> <#-- Se hacen otras validaciones en consoles() -->
             <@tc.consoles />
 		</#if>
         </div>

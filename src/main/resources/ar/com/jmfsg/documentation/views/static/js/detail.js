@@ -48,11 +48,11 @@ function registerToggleFunction() {
 }
 
 // Metodo para realizar el post
-function postConsoleJson(url, resultName) {
+function httpConsoleJson(url, method, resultName) {
 	$.ajax({
 		url : url,
-		type : "POST",
-		data : parseDynamicDate(myCodeMirror.getValue()),
+		type : method.toUpperCase(),
+		data : parseDynamicDate(codeMirrors[method.toLowerCase()].getValue()),
 		contentType : "application/json; charset=utf-8",
         success: function (data, status, req) {
         	var result = $('#'+resultName);
@@ -70,14 +70,14 @@ function postConsoleJson(url, resultName) {
 	})
 }
 
-// Metodo para realizar el post en otra ventana
-function postNewJson(url) {
+// Metodo para realizar post o put en otra ventana. Recibe 'put' o 'post' como method.
+function httpNewJson(url, method) {
 	var OpenWindow = window.open("../jsonResult/", "_blank")
 	OpenWindow.onload = function() {
 		$.ajax({
 			url : url,
-			type : "POST",
-			data : parseDynamicDate(myCodeMirror.getValue()),
+			type : method.toUpperCase(),
+			data : parseDynamicDate(codeMirrors[method.toLowerCase()].getValue()),
 			contentType : "application/json; charset=utf-8",
 	        success: function (data, status, req) {
 	    		OpenWindow.document.write(JSON.stringify(data, null, 1))
