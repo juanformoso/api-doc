@@ -19,20 +19,24 @@
 <#-- Imprime los ejemplos, prepara el codigo para llenar la consola -->
 <#function render_examples egs>
 	<#local ret = ''>
+	<#local count = 1>
 	<#list egs as e>
-		<#local count = 1>
 		<#local exampleId = 'example' + count?string>
 		<#local ret = ret + "<div id=${exampleId} class='example'>" >
 		<#local ret = ret + '<h3> ${exampleId} </h3>' />
-		<#list e.getParams?keys as k>
-			<#local ret = ret + '<li><b>' + k + '</b>'>
-			<#local ret = ret + ' &ndash; ' + e.getParams[k]>
-			<#local ret = ret + '</li>'>
-		 </#list>
+		<#local parameters = "[]">
+		<#if e.getParams?has_content >
+			<#list e.getParams?keys as k>
+				<#local ret = ret + '<li><b>' + k + '</b>'>
+				<#local ret = ret + ' &ndash; ' + e.getParams[k]>
+				<#local ret = ret + '</li>'>
+			 </#list>
+			 <#local parameters = u.toJSString(e.getParams)>
+		 </#if>
 		<#-- Muy fea la construcción de parametros, buscar alternativa -->
-		<#local parameters = u.toJSString(e.getParams)>
 		<#local postFile = e.postFile?has_content?string(u.toJSString(e.postFile), "")>
-		<#local ret = ret + "<input type='button' value='Use Example' onclick='useExample(${parameters}, ${postFile}, ${u.toJSString(p.resourcesPath)})' />" >
+		<#local putFile = e.putFile?has_content?string(u.toJSString(e.putFile), "")>
+		<#local ret = ret + "<input type='button' value='Use Example' onclick='useExample(${parameters}, ${postFile}, ${putFile}, ${u.toJSString(p.resourcesPath)})' />" >
 		<#local ret = ret + "</div>" >
 		<#local count = count + 1>
 	</#list>
