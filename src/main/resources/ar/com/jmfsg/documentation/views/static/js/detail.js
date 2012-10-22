@@ -45,6 +45,12 @@ function registerToggleFunction() {
 		else
 			header.text(header.text().replace("-", "+"));
 	});
+	
+	$('.toggle-parent').each(function(index, e){
+		if($(e).attr('closed')) {
+			$(e).click()
+		}
+	})
 }
 
 // Metodo para realizar el post
