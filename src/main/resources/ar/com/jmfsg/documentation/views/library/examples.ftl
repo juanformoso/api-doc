@@ -32,10 +32,16 @@
 				<#local ret = ret + '</li>'>
 			 </#list>
 			 <#local parameters = u.toJSString(e.getParams)>
-		 </#if>
+		</#if>
 		<#-- Muy fea la construcción de parametros, buscar alternativa -->
-		<#local postFile = e.postFile?has_content?string(u.toJSString(e.postFile), "")>
-		<#local putFile = e.putFile?has_content?string(u.toJSString(e.putFile), "")>
+		<#local postFile = "\"\"">
+		<#local putFile = "\"\"">
+		<#if e.putFile?has_content>
+			<#local postFile = u.toJSString(e.postFile)>
+		</#if>
+		<#if e.putFile?has_content>
+			<#local putFile =  u.toJSString(e.putFile)>
+		</#if>
 		<#local ret = ret + "<input type='button' value='Use Example' onclick='useExample(${parameters}, ${postFile}, ${putFile}, ${u.toJSString(p.resourcesPath)})' />" >
 		<#local ret = ret + "</div>" >
 		<#local count = count + 1>
