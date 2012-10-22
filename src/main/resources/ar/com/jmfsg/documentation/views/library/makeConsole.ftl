@@ -16,7 +16,7 @@
 <#local mapping = "${p.methodPath}" + "${m.method[methodName]}" > 
 <#local buttonName = methodName + 'Button' >
 <#local ret = ret + '<div id="${divName}">' > 
-<#local ret = ret + '<input type="button" id="${buttonName}" value="${methodName}!" onclick="${consoleFunction}(\'${mapping}\', \'${methodName}\', \'${resultName}\')"/>\n' >
+<#local ret = ret + '<input type="button" id="${buttonName}" value="${methodName?capitalize} !" onclick="${consoleFunction}(\'${mapping}\', \'${methodName}\', \'${resultName}\')"/>\n' >
 <#local ret = ret + '<img src="../../static/img/externalLink.png" onClick="${newFunction}(\'${mapping}\',  \'${methodName}\')" >\n' >
 <#local ret = ret + '<textarea id="${methodName}TextArea"></textarea>'>
 <#local ret = ret + '<div id="${resultName}"></div>' >
