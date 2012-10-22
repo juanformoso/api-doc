@@ -1,5 +1,5 @@
 // Code for examples
-function useExample(parameters, postFileName, resourcesPath) {
+function useExample(parameters, postFileName, putFileName, resourcesPath) {
 	// Lleno la consola get si hay parámetros para usar
 	if (typeof parameters != undefined && parameters != []) {
 		var paramsKeys = Object.keys(parameters);
@@ -16,7 +16,15 @@ function useExample(parameters, postFileName, resourcesPath) {
 	if (typeof postFileName != "undefined" && postFileName != "") {
 		$.get(resourcesPath + postFileName, success = function(data, textStatus,
 				jqXHR) {
-			myCodeMirror.setValue(data);
+			codeMirrors['post'].setValue(data);
+		});
+	}
+	
+	// Lleno la consola post si hay nombre de putFile
+	if (typeof putFileName != "undefined" && putFileName != "") {
+		$.get(resourcesPath + putFileName, success = function(data, textStatus,
+				jqXHR) {
+			codeMirrors['put'].setValue(data);
 		});
 	}
 }
