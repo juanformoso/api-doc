@@ -14,14 +14,19 @@
 	<#if general.longDescription?has_content>
 		${general.longDescription?replace("##BASE_URL##", relativePath + springMacroRequestContext.getContextPath())}
 	</#if>
-	
-    <h2>General</h2>
+	<div id="general" class="toggle-parent"> 
+	    <h2><span class="toggle-title">- General</span></h2>
+	    <div class="toggle-child">
+	   		${general.projectSummary?replace("##BASE_URL##", relativePath + springMacroRequestContext.getContextPath())}
+		</div>
+	</div>
+	<div id="methods" class="toggle-parent">
+    	<h2><span class="toggle-title">-Methods</span></h2>
+    	<div class="toggle-child">
 
-   	${general.projectSummary?replace("##BASE_URL##", relativePath + springMacroRequestContext.getContextPath())}
-
-    <h2>Methods</h2>
-
-   	${general.methodSummary?replace("##BASE_URL##", relativePath + springMacroRequestContext.getContextPath())}
+   			${general.methodSummary?replace("##BASE_URL##", relativePath + springMacroRequestContext.getContextPath())}
+   		</div>
+   	</div>
 
 <#list controllers?keys?sort as key>
 	<div id="${key}" class="toggle-parent">
@@ -41,14 +46,13 @@
 		    	<#assign method = "get">
 		    </#if> 
 		    	-->
-
 	    	<@u.indexPageMethodIndex m.data m.support 'tags' />
 
         </#list>
     </ul>
     
     <#list controllers[key].subGroups?keys?sort as subKey>
-		<div id="${key}" class="toggle-parent">	
+		<div id="${key}" class="toggle-parent" closed="true">	
 		<h4><a href="#${subKey}" name="${subKey}"><span class="toggle-title">- ${subKey}</span></a>&nbsp;<#if controllers[key].subGroups[subKey].extraInfo?has_content><a href="${relativePath + springMacroRequestContext.getContextPath()}/docs/page/${controllers[key].subGroups[subKey].extraInfo}" class="more_info">[+]</a> </#if></h4>
 		
 		<div class="toggle-child">
@@ -67,6 +71,7 @@
 			    	-->
 	
 		    	<@u.indexPageMethodIndex m.data m.support 'tags' />
+
 	        </#list>
 	    </ul>
 	    </div>
@@ -102,5 +107,12 @@
 		    
 		  return false;
 		});
+		
+		$('.toggle-parent').each(function(index, e){
+			if($(e).attr('closed')) {
+				$(e).click()
+			}
+		})
+		
 	});
 </script>

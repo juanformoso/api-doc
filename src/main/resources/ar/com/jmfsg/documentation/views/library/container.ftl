@@ -31,7 +31,7 @@
     <div class="container">        
         <div id="header">
 	        <#if general?has_content && general.headerImageUrl?has_content && general.headerImageSize?has_content>
-    	        <a href="<@s.url "${relativePath}/docs" />" class="logo" style="background:url(${general.headerImageUrl});width:${general.headerImageSize}"></a>
+    	        <a href="<@s.url "${relativePath}/docs" />" class="logo" style="background:url(<@s.url "${general.headerImageUrl}"/>);width:${general.headerImageSize}"></a>
     	    <#else>
     	    	<a href="<@s.url "${relativePath}/docs" />" class="logo"></a>
            </#if>
