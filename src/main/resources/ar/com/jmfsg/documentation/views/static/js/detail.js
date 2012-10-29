@@ -1,5 +1,8 @@
 // Code for examples
 function useExample(parameters, postFileName, putFileName, resourcesPath) {
+	// Limpio todos los parámetros de la consola
+	console.clean();
+	
 	// Lleno la consola get si hay parámetros para usar
 	if (typeof parameters != undefined && parameters != []) {
 		var paramsKeys = Object.keys(parameters);

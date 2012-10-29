@@ -49,7 +49,7 @@
                  "preferredMethod" : { "type" : "string", "enum" : [ "get", "put", "post", "delete" ], 
 									   "description" : "If defined and no 'shortName', defines which uri from 'method' to used in the main index. SHOULD be set if method has more than one property." },
                  "supportedMappings" : { "type" : "array",
-                 						 "depricated" : true,
+                 						 "deprecated" : true,
                                          "items" : { "enum" : [ "POST", "GET" ] },
                                          "description" : "List of supported mappings for the method. Since revision, a method can have more than one mapping for itself. Currently only POST and GET are supported. Each supportedMapping defines different requiered properties for the method. Is used to define which consoles are shown and built.",
                                          "default" : [ "GET" ] },
@@ -73,7 +73,9 @@
 												    "children" : { "type" : "array", "items" : { "id" : "object" } },
 												    "optional" : { "type" : "boolean", "description" : "If set and true, adds an 'optional' tag to the parameter." },
 												    "type" : { "type" : "string", "description" : "If set, appends the type to the description." },
-												    "isList" : { "type" : "boolean", "description" : "If set and true, appends a 'list' tag to the parameter." }
+												    "isList" : { "type" : "boolean", "description" : "If set and true, appends a 'list' tag to the parameter." },
+												    "vectorized" : { "type" : "boolean" , "description" : "Adds 'vectorized' tag in the console." },
+												    "isPhony" : { "type" : "boolean", "description" : "Defines if the parameters is a phony parameter. If defined and true, get console does not show an input field for it." } 
                                           }
 						 },
 						 "filters" : {

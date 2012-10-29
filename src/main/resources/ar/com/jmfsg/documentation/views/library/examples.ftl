@@ -36,7 +36,7 @@
 		<#-- Muy fea la construcción de parametros, buscar alternativa -->
 		<#local postFile = "\"\"">
 		<#local putFile = "\"\"">
-		<#if e.putFile?has_content>
+		<#if e.postFile?has_content>
 			<#local postFile = u.toJSString(e.postFile)>
 		</#if>
 		<#if e.putFile?has_content>
