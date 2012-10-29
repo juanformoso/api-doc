@@ -129,9 +129,11 @@ var console = function () {
             return toCall;
         },
         clean: function() {
-        	for (var i = 0; i < _paramFields.length; i++) {
-                $('#p-' + _paramFields[i].name).val("");
-            }
+        	if (typeof _paramFields != 'undefined') {
+	        	for (var i = 0; i < _paramFields.length; i++) {
+	                $('#p-' + _paramFields[i].name).val("");
+	            }
+        	}
         },
         appendParameters: function(appender, parameters, indent) {
             for (var i = 0; i < parameters.length; i++) {
