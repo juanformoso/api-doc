@@ -74,7 +74,8 @@
 												    "optional" : { "type" : "boolean", "description" : "If set and true, adds an 'optional' tag to the parameter." },
 												    "type" : { "type" : "string", "description" : "If set, appends the type to the description." },
 												    "isList" : { "type" : "boolean", "description" : "If set and true, appends a 'list' tag to the parameter." },
-												    "vectorized" : { "type" : "boolean" , "description" : "Adds 'vectorized' tag in the console." }
+												    "vectorized" : { "type" : "boolean" , "description" : "Adds 'vectorized' tag in the console." },
+												    "isPhony" : { "type" : "boolean", "description" : "Defines if the parameters is a phony parameter. If defined and true, get console does not show an input field for it." } 
                                           }
 						 },
 						 "filters" : {
