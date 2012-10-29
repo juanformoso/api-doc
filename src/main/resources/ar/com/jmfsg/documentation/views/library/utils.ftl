@@ -86,21 +86,35 @@
  
  <#-- Macro to get a method item for the index page -->
  <#macro indexPageMethodIndex method support tagsClass>
- 			<#if method.shortName?has_content>
- 				<li><a href="${p.relativePath + '/docs/method/' + support.internalMethodName}">${method.shortName}</a>
- 			<#elseif method.friendlyName == "">
-	    		<li>${method.method?values?first}
-	    	<#else>
-	    		<#if method.preferredMethod?has_content && method.method?keys?seq_contains(method.preferredMethod) >
-	    			<#local preferredMethod =  method.method[method.preferredMethod] >
-	    		<#else>
-	    			<#local preferredMethod =  method.method?values?first >
-	    		</#if>	
-		        <li><a href="${p.relativePath + '/docs/method/' + support.internalMethodName}">${preferredMethod?replace(":.+", "")}</a>
-		    </#if>
-		    <sub><sub><b>
-    			[ <#list method.method?keys as k> ${k?lower_case} </#list> ]
-    		</b></sub></sub><#if method.implemented?has_content && !method.implemented><span class="not-implemented" title="This method is not currently implemented but will be included in a future release. Parameters and responses are subject to change in the final version.">not implemented</span></#if><#if method.tags?has_content>${renderTags(method.tags, tagsClass)}</#if> &ndash; ${method.description}</li>
+    		<li class="service-row">
+    			<div class="service-methods"><sub><sub><b>[ <#list method.method?keys as k> ${k?lower_case} </#list> ]</b></sub></sub></div>    			
+    			<#if method.shortName?has_content>
+    				<div class="service-url" title="${method.shortName}">
+	 					<a href="<@s.url "${p.relativePath + '/docs/method/' + support.internalMethodName}"/>">${method.shortName}</a>
+	 				</div>
+	 			<#elseif method.friendlyName == "">
+	 				<div class="service-url" title="${method.method?values?first}">
+		    			${method.method?values?first}
+		    		</div>
+		    	<#else>
+		    		<#if method.preferredMethod?has_content && method.method?keys?seq_contains(method.preferredMethod) >
+		    			<#local preferredMethod =  method.method[method.preferredMethod] >
+		    		<#else>
+		    			<#local preferredMethod =  method.method?values?first >
+		    		</#if>	
+		    		<div class="service-url" title="${preferredMethod?replace(":.+", "")}">
+			        	<a href="<@s.url "${p.relativePath + '/docs/method/' + support.internalMethodName}"/>">${preferredMethod?replace(":.+", "")}</a>
+			        </div>
+			    </#if>    				
+    			
+    			<div class="service-description">${method.description}</div>
+    			<div class="service-tags">
+    				<#if method.tags?has_content>${renderTags(method.tags, tagsClass)}</#if>
+    				<#if method.implemented?has_content && !method.implemented><span class="not-implemented" title="This method is not currently implemented but will be included in a future release. Parameters and responses are subject to change in the final version.">not implemented</span></#if>
+    			</div>
+    			<div style="clear: both;">
+    		</li>
+    		
  </#macro>
  
  <#-- Function that gets parameters names from the list and their children recursively -->

@@ -240,3 +240,28 @@ code pre {
 	padding-bottom: 5px;
 	padding-left: 20px;
 }
+
+.service-row {
+	border-bottom: 1px solid #DDD;
+}
+
+.service-url {
+	width: 300px;
+	float: left;
+	overflow:hidden; 
+	text-overflow:ellipsis;
+}
+
+.service-description {
+	width: 400px;
+	float: left;
+}
+
+.service-methods {
+	float:left;
+	width:70px;
+}
+
+.service-tags {
+	float:left;	
+}
