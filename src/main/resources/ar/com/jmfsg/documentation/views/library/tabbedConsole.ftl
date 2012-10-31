@@ -1,5 +1,6 @@
 <#-- Armamos el div con los tabs y las consolas pertinentes. 
 	 Llama a makeConsole.ftl para las consolas. -->
+<#-- http://jquerytools.org/demos/tabs/index.html -->
 <#import "/library/makeConsole.ftl" as pc />
 <#import "/library/utils.ftl" as u />
 	 

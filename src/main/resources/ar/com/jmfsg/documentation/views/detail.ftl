@@ -63,6 +63,7 @@ $(document).ready(function() {
     registerToggleFunction();
     // setup ul.tabs to work as tabs for each div directly under div.panes
     $("ul.tabs").tabs("div.panes > div");
+    
     // setup json consoles
     for (key in codeMirrors) {
     	if ($('#' + codeMirrors[key]).length > 0) {
