@@ -1,5 +1,9 @@
 // Code for examples
 function useExample(parameters, postFileName, putFileName, resourcesPath) {
+	// Limpio todos los parámetros de la consola
+	if (typeof console._targetUrl === "undefined") showConsole()
+	console.clean();
+	
 	// Lleno la consola get si hay parámetros para usar
 	if (typeof parameters != undefined && parameters != []) {
 		var paramsKeys = Object.keys(parameters);
@@ -27,6 +31,7 @@ function useExample(parameters, postFileName, putFileName, resourcesPath) {
 			codeMirrors['put'].setValue(data);
 		});
 	}
+	
 }
 
 // Funcion para registrar los métodos de toggle de colapsables
@@ -38,8 +43,14 @@ function registerToggleFunction() {
 	$('.toggle-parent').click(function(e) {
 
 		var header = $(this).children()
+		
+		//Backward compatibilty para el feature de los botones en los ejemplos
+		if (header.children().length > 0) {  
+			header = header.children()
+			header = $(header[0])
+		}
 
-		if ($(e.target).is("div.toggle-child ul li a")) {
+		if ($(e.target).is("div.toggle-child ul li a") || $(e.target).is("img")) {
 			return;
 		}
 
@@ -79,19 +90,20 @@ function httpConsoleJson(url, method, resultName) {
         dataType: 'json',
         error: function (req, status, e) {
         	var result = $('#'+ resultName);
-            result.html('From calling: ' + url + '<br/>An Error Occured:<br/>' + e);
+            result.html('From calling: <a href="' + url + '">' + url + '</a> <br/>An Error Occured:<br/>' + e);
         }
 	})
 }
 
-// Metodo para realizar post o put en otra ventana. Recibe 'put' o 'post' como method.
-function httpNewJson(url, method) {
-	var OpenWindow = window.open("../jsonResult/", "_blank")
+// Metodo para realizar post o put en otra ventana. Recibe 'put' o 'post' como method. Si data 
+function httpNewJson(url, method, sendData, OpenWindow) {
+	sendData = (typeof sendData === "undefined") ? parseDynamicDate(codeMirrors[method.toLowerCase()].getValue()) : parseDynamicDate(sendData);  
+	OpenWindow = (typeof OpenWindow === "undefined") ? window.open("../jsonResult/", "_blank") : OpenWindow;
 	OpenWindow.onload = function() {
 		$.ajax({
 			url : url,
 			type : method.toUpperCase(),
-			data : parseDynamicDate(codeMirrors[method.toLowerCase()].getValue()),
+			data : sendData,
 			contentType : "application/json; charset=utf-8",
 	        success: function (data, status, req) {
 	    		OpenWindow.document.write(JSON.stringify(data, null, 1))
@@ -99,9 +111,48 @@ function httpNewJson(url, method) {
 	        },
 	        dataType: 'json',
 	        error: function (req, status, e) {
-	        	var result = $('#'+ resultName);
-	            result.html('From calling: ' + url + '<br/>An Error Occured:<br/>' + e);
+	            OpenWindow.document.write('From calling: ' + url + ' An Error Occured: ' + e +"\m");
+	            OpenWindow.document.write("Request:\n");
+	            OpenWindow.document.write(sendData);
+	            OpenWindow.document.close();
 	        }
 		})
 	}
+}
+
+//Función para ejecutar un ejemplo sin utilizar la consola
+function execute_example(mapping, preferredMethod, example, resourcesPath) {
+	var toCall = "http://" + window.location.host + mapping;
+	if (preferredMethod == "get") {
+		var toCall = getToCall(toCall, example.getParams);
+		OpenWindow = window.open(toCall, "_blank");
+	} else if (preferredMethod == "post" || preferredMethod == "put") {
+		var fileName = (preferredMethod == "post") ? example.postFile : example.putFile;
+		var OpenWindow = window.open("../jsonResult/", "_blank");
+		$.get(resourcesPath + fileName, success = function(data, textStatus,
+				jqXHR) {
+			httpNewJson(toCall, preferredMethod, data, OpenWindow);
+		})
+	} 
+}
+
+//Función que dado un mapping y un diccionario { "varName" : "varValue" } genera el string REST para el get
+function getToCall(toCall, params) {
+    var firstP = true;
+
+    for (var key in params) {
+        var value = dynamicDate(params[key]);
+
+        if (!value) continue;
+
+        var newCall = console.replace(toCall, '{' + key + '}', encodeURIComponent(value));
+
+        if (newCall == toCall) {
+            toCall = toCall + (firstP ? '?' : '&') + key + '=' + encodeURIComponent(value);
+            firstP = false;
+        } else {
+            toCall = newCall;
+        }
+    }
+    return toCall;
 }

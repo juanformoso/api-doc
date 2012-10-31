@@ -1,5 +1,6 @@
 var console = function () {
     var _targetUrl;
+    var _paramFields;
 
     return {
         build: function (div, route, parameters, vectParameters, url, optParameters) {
@@ -7,23 +8,15 @@ var console = function () {
 
             _targetUrl = url;
 
-            var paramFields = [];
+            _paramFields = parameters;
 
             if (parameters.length > 0) {
                 $(div).append($('<h3>Parameters</h3>'));
 
                 var table = $('<table width="100%"></table>');
 
-                for (var i = 0; i < parameters.length; i++) {
-                    var vect = vectParameters[parameters[i]] ? "<span class='vectorized' title='This parameter takes multiple values, if comma delimitted'>vectorized</span>" : "";
-
-                    var p = $('<tr><td><b>' + parameters[i] + '</b>&nbsp;' + vect + '</td><td style="margin-left:10px;"><input type="text" id="p-' + parameters[i] + '" /></td></tr>');
-
-                    paramFields[paramFields.length] = { name: parameters[i] };
-
-                    $(table).append(p);
-                }
-
+                console.appendParameters($(table), parameters, 0);
+                
                 $(div).append(table);
             }
 
@@ -39,7 +32,7 @@ var console = function () {
                 for (var i = 0; i < optParameters.length; i++) {
                     var p = $('<tr><td><b>' + optParameters[i]["name"] + '</b>&nbsp;' + '</td><td style="margin-left:20px;"><input type="text" id="p-' + optParameters[i]["name"] + '" /></td></tr>');
 
-                    paramFields[paramFields.length] = { name: optParameters[i]["name"] };
+                    _paramFields[_paramFields.length] = { name: optParameters[i]["name"] };
 
                     $(table).append(p);
                 }
@@ -68,12 +61,12 @@ var console = function () {
 
             doIt.click(
                 function () {
-                    console.makeCall(route, paramFields, result, doIt);
+                    console.makeCall(route, _paramFields, result, doIt);
                 });
             
             doItNew.click(
             		function() {
-            			var toCall = console.getToCall(route, paramFields);
+            			var toCall = console.getToCall(route, _paramFields);
             			OpenWindow = window.open(toCall, "_blank");
             		});            
         },
@@ -134,6 +127,31 @@ var console = function () {
                 }
             }
             return toCall;
+        },
+        clean: function() {
+        	if (typeof _paramFields != 'undefined') {
+	        	for (var i = 0; i < _paramFields.length; i++) {
+	                $('#p-' + _paramFields[i].name).val("");
+	            }
+        	}
+        },
+        appendParameters: function(appender, parameters, indent) {
+            for (var i = 0; i < parameters.length; i++) {
+                var vect = parameters[i].vectorized ? "<span class='vectorized' title='This parameter takes multiple values, if comma delimitted'>vectorized</span>" : "";
+                var input = !parameters[i].isPhony ? '<input type="text" id="p-' + parameters[i].name + '" /></td></tr>' : "";
+                
+                var space = ''
+                var sCount = indent * 2;
+                for (var s = sCount; s; s--) { space = space + '&nbsp;' } 
+                
+                var p = $('<tr><td><b>' + space + parameters[i].name + '</b>&nbsp;' + vect + '</td><td style="margin-left:10px;">' + input);
+                
+                appender.append(p);
+                
+                if (typeof parameters[i].children != 'undefined') {
+                	console.appendParameters(appender, parameters[i].children, indent + 1);
+                }
+            }
         }
     };
 } ();
