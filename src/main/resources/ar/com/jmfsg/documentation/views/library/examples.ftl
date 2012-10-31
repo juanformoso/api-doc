@@ -21,7 +21,7 @@
 	<#local ret = ''>
 	<#local count = 1>
 	<#list egs as e>
-		<#local exampleId = '+ #' + count?string>
+		<#local exampleId = '+ #' + count?string + " - " + example_title(e, method) + " - ">
 		<#local ret = ret + "<div id=${exampleId} class='example'> <div class='toggle-parent' closed='true'>" >
 		<#local ret = ret + "<h4> <div style='float:left'> ${exampleId} </div>" >
 		
@@ -75,4 +75,35 @@
 		<#local count = count + 1>
 	</#list>
 	<#return ret>
+</#function>
+
+<#function example_title example method>
+	<#if example.title?has_content> <#-- Si el ejemplo tiene título -->
+		<#return example.title>
+	<#else>
+		<#local methodType = method.method?keys?first>
+		<#if method.preferredMethod?has_content>  <#-- Si hay un método preferido -->
+			<#local methodType = method.preferredMethod >
+		</#if>
+		<#-- Según el método devuelvo la descripción automática -->
+		<#if methodType?lower_case == "get">
+			<#local getInfo = "">
+			<#if example.getParams?has_content >
+				<#list example.getParams?keys as k>
+					<#local getInfo = getInfo + "${example.getParams[k]}" + "/" > 
+				</#list>
+			</#if>
+			<#return getInfo>
+		<#elseif methodType?lower_case == "post" >
+			<#if example.postFile?has_content>
+				<#return example.postFile>
+			</#if>
+		<#elseif methodType?lower_case == "put" >
+			<#if example.putFile?has_content>
+				<#return example.putFile>
+			</#if>
+		</#if>
+	</#if>
+	
+	<#return "">
 </#function>
