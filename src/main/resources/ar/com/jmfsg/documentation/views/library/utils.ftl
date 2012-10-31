@@ -90,7 +90,7 @@
     			<div class="service-methods"><sub><sub><b>[ <#list method.method?keys as k> ${k?lower_case} </#list> ]</b></sub></sub></div>    			
     			<#if method.shortName?has_content>
     				<div class="service-url" title="${method.shortName}">
-	 					<a href="<@s.url "${p.relativePath + '/docs/method/' + support.internalMethodName}"/>">${method.shortName}</a>
+	 					<a href="${p.relativePath + '/docs/method/' + support.internalMethodName}">${method.shortName}</a>
 	 				</div>
 	 			<#elseif method.friendlyName == "">
 	 				<div class="service-url" title="${method.method?values?first}">
@@ -103,7 +103,7 @@
 		    			<#local preferredMethod =  method.method?values?first >
 		    		</#if>	
 		    		<div class="service-url" title="${preferredMethod?replace(":.+", "")}">
-			        	<a href="<@s.url "${p.relativePath + '/docs/method/' + support.internalMethodName}"/>">${preferredMethod?replace(":.+", "")}</a>
+			        	<a href="${p.relativePath + '/docs/method/' + support.internalMethodName}">${preferredMethod?replace(":.+", "")}</a>
 			        </div>
 			    </#if>    				
     			

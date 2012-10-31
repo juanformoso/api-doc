@@ -5,7 +5,9 @@
 	   	<@s.url "${general.relativePath}" />
    	</#assign>
 <#else>
-	<#assign relativePath = "">
+	<#assign relativePath>
+		<@s.url "" />
+	</#assign>
 </#if>
 
 <#if general.methodPath?has_content>
@@ -13,7 +15,7 @@
    		<@s.url "${general.methodPath}" />
    	</#assign>
 <#else>
-	<#assign methodPath = "">
+	<#assign methodPath = relativePath />
 </#if>
 
 <#if general.resourcesPath?has_content>

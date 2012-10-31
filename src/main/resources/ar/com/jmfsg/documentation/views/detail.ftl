@@ -36,7 +36,7 @@ function showConsole() {
     var x = $('#getConsole');
     var method= "<@s.url "${methodPath + m.method['get']?replace(':.+', '')}" />";
     var parameters = <#if m.request?has_content && m.request.parameters?has_content>
-	    				${u.obtainAllParams(m.request.parameters)}
+	    				${u.toJSString(m.request.parameters)}
 	    			 <#else> [] </#if> ;
     var extraParams = [ <#if m.request?has_content>
     	<#if m.request.filters?has_content>
@@ -63,6 +63,7 @@ $(document).ready(function() {
     registerToggleFunction();
     // setup ul.tabs to work as tabs for each div directly under div.panes
     $("ul.tabs").tabs("div.panes > div");
+    
     // setup json consoles
     for (key in codeMirrors) {
     	if ($('#' + codeMirrors[key]).length > 0) {
