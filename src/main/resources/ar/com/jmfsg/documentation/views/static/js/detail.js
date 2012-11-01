@@ -99,7 +99,7 @@ function httpConsoleJson(url, method, resultName) {
 function httpNewJson(url, method, sendData, OpenWindow) {
 	sendData = (typeof sendData === "undefined") ? parseDynamicDate(codeMirrors[method.toLowerCase()].getValue()) : parseDynamicDate(sendData);  
 	OpenWindow = (typeof OpenWindow === "undefined") ? window.open("../jsonResult/", "_blank") : OpenWindow;
-	OpenWindow.onload = function() {
+	$(OpenWindow).ready( function() {
 		$.ajax({
 			url : url,
 			type : method.toUpperCase(),
@@ -117,7 +117,7 @@ function httpNewJson(url, method, sendData, OpenWindow) {
 	            OpenWindow.document.close();
 	        }
 		})
-	}
+	});
 }
 
 //Función para ejecutar un ejemplo sin utilizar la consola
