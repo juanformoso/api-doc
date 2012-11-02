@@ -20,7 +20,7 @@ function useExample(parameters, postFileName, putFileName, resourcesPath) {
 	if (typeof postFileName != "undefined" && postFileName != "") {
 		$.get(resourcesPath + postFileName, success = function(data, textStatus,
 				jqXHR) {
-			codeMirrors['post'].setValue(data);
+			codeMirrors['post'].setValue(jqXHR.responseText);
 		});
 	}
 	
@@ -28,7 +28,7 @@ function useExample(parameters, postFileName, putFileName, resourcesPath) {
 	if (typeof putFileName != "undefined" && putFileName != "") {
 		$.get(resourcesPath + putFileName, success = function(data, textStatus,
 				jqXHR) {
-			codeMirrors['put'].setValue(data);
+			codeMirrors['put'].setValue(jqXHR.responseText);
 		});
 	}
 	
@@ -129,10 +129,19 @@ function execute_example(mapping, preferredMethod, example, resourcesPath) {
 	} else if (preferredMethod == "post" || preferredMethod == "put") {
 		var fileName = (preferredMethod == "post") ? example.postFile : example.putFile;
 		var OpenWindow = window.open("../jsonResult/", "_blank");
-		$.get(resourcesPath + fileName, success = function(data, textStatus,
+		var request = $.get(resourcesPath + fileName, success = function(data, textStatus,
 				jqXHR) {
-			httpNewJson(toCall, preferredMethod, data, OpenWindow);
+			httpNewJson(toCall, preferredMethod, jqXHR.responseText, OpenWindow);
 		})
+		request.error(function(jqXHR, textStatus, errorThrown) {
+		  if (textStatus == 'timeout')
+		    console.log('The server is not responding');
+		
+		  if (textStatus == 'error')
+		    console.log('errorThrown');
+		
+		  // Etc
+		});
 	} 
 }
 
