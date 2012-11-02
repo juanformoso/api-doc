@@ -131,7 +131,7 @@ function execute_example(mapping, preferredMethod, example, resourcesPath) {
 		var OpenWindow = window.open("../jsonResult/", "_blank");
 		var request = $.get(resourcesPath + fileName, success = function(data, textStatus,
 				jqXHR) {
-			httpNewJson(toCall, preferredMethod, data, OpenWindow);
+			httpNewJson(toCall, preferredMethod, jqXHR.responseText, OpenWindow);
 		})
 		request.error(function(jqXHR, textStatus, errorThrown) {
 		  if (textStatus == 'timeout')
