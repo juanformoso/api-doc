@@ -21,9 +21,8 @@
 		</div>
 	</div>
 	<div id="methods" class="toggle-parent">
-    	<h2><span class="toggle-title">-Methods</span></h2>
+    	<h2><span class="toggle-title">- Methods</span></h2>
     	<div class="toggle-child">
-
    			${general.methodSummary?replace("##BASE_URL##", relativePath + springMacroRequestContext.getContextPath())}
    		</div>
    	</div>
@@ -39,15 +38,7 @@
 
     <ul>
     	<#list controllers[key].methods as m>
-	    	   <#-- This default assign is controlled by new definition of method and implemented at Utils.groovy
-    		<#if m.data.method?has_content>
-		    	<#assign method = "${m.data.method?lower_case}">
-		    <#else>
-		    	<#assign method = "get">
-		    </#if> 
-		    	-->
 	    	<@u.indexPageMethodIndex m.data m.support 'tags' />
-
         </#list>
     </ul>
     
@@ -62,16 +53,7 @@
 	
 	    <ul class="subGroup">
 	    	<#list controllers[key].subGroups[subKey].methods as m>
-	    			<#-- This default assign is controlled by new definition of method and implemented at Utils.groovy
-	    		<#if m.data.method?has_content>
-			    	<#assign method = "${m.data.method?lower_case}">
-			    <#else>
-			    	<#assign method = "get">
-			    </#if>
-			    	-->
-	
 		    	<@u.indexPageMethodIndex m.data m.support 'tags' />
-
 	        </#list>
 	    </ul>
 	    </div>
@@ -91,7 +73,7 @@
 		
         $('.toggle-parent').click(function(e) {
 		  
-		  if($(e.target).is("div.toggle-child ul li a")) {
+		  if($(e.target).is("div.toggle-child a")) {
 		  	return;
 		  }
 		  
