@@ -109,6 +109,8 @@ var console = function () {
         getToCall: function(toCall, withParams) {
             var toCall = _targetUrl + toCall;
 
+            withParams = console.flattenParameters(withParams);
+            
             var firstP = true;
 
             for (var i = 0; i < withParams.length; i++) {
@@ -148,10 +150,22 @@ var console = function () {
                 
                 appender.append(p);
                 
-                if (typeof parameters[i].children != 'undefined') {
+                if (parameters[i].children) {
                 	console.appendParameters(appender, parameters[i].children, indent + 1);
                 }
             }
+        },
+        flattenParameters: function(withParams, appender) {
+        	if (typeof appender === 'undefined') {
+        		appender = [];
+        	}
+        	for (var i = 0; i < withParams.length; i++) {
+    			appender[appender.length] = withParams[i]
+    			if (withParams[i].children) {
+    				console.flattenParameters(withParams[i].children, appender);
+    			}
+        	}
+        	return appender;
         }
     };
 } ();
