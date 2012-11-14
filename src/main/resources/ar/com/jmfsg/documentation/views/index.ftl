@@ -66,35 +66,43 @@
 </@c.containerFor>
 
 <script type="text/javascript">
+	
 	$(document).ready(function() {
+	
         $('.toggle-parent').mouseover(function () {
 				$(this).css('cursor', 'pointer');
 		});
 		
+		// Bind toggle behavior on parent elements click event
         $('.toggle-parent').click(function(e) {
-		  
-		  if($(e.target).is("div.toggle-child a")) {
-		  	return;
-		  }
-		  
-		  $(this).children('.toggle-child').slideToggle(400, function() {
-		    // Animation complete.
-		  });
-		  
-		  // TODO: JMF: Mejorar esto :P
-		  if ($(this).find('.toggle-title:first').text().trim().charAt(0) == "+")
-		    $(this).find('.toggle-title:first').text($(this).find('.toggle-title:first').text().replace("+", "-"));
- 		  else
-		    $(this).find('.toggle-title:first').text($(this).find('.toggle-title:first').text().replace("-", "+"));
-		    
-		  return false;
+		  return toggleChildren($(this),e,400);
 		});
-		
+
+		// Toggle parent elements at loading page time	
 		$('.toggle-parent').each(function(index, e){
 			if($(e).attr('closed')) {
-				$(e).click()
+				toggleChildren($(this),e,0);
 			}
 		})
 		
+		// Toggle behavior for parent elements
+		function toggleChildren(parent,e,delay) {
+		
+			if($(e.target).is("div.toggle-child a")) {
+				return;
+			}
+		  
+			parent.children('.toggle-child').slideToggle(delay, function() {
+				// Animation complete.
+			});
+		  
+			// TODO: JMF: Mejorar esto :P
+			if (parent.find('.toggle-title:first').text().trim().charAt(0) == "+")
+				parent.find('.toggle-title:first').text(parent.find('.toggle-title:first').text().replace("+", "-"));
+			else
+				parent.find('.toggle-title:first').text(parent.find('.toggle-title:first').text().replace("-", "+"));
+		    
+		  	return false;
+		}
 	});
 </script>
