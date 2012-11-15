@@ -38,21 +38,24 @@ function showConsole() {
     var parameters = <#if m.request?has_content && m.request.parameters?has_content>
 	    				${u.toJSString(m.request.parameters)}
 	    			 <#else> [] </#if> ;
-    var extraParams = [ <#if m.request?has_content>
+    var extraParams = [];
+     <#if m.request?has_content>
     	<#if m.request.filters?has_content>
-        	<#list m.request.filters as p>'${p.name}',</#list>
+        	extraParams = extraParams.concat( ${u.toJSString(m.request.filters)} );
         </#if>
         <#if m.request.options?has_content>
-        	<#list m.request.options as p>'${p.name}',</#list>
+        	extraParams = extraParams.concat( ${u.toJSString(m.request.options)} );
         </#if>
         <#if m.request.facets?has_content>
-        	<#list m.request.facets as p>'${p.name}',</#list>
+        	extraParams = extraParams.concat( ${u.toJSString(m.request.facets)} );
         </#if>
-        <#if m.request.paginable?has_content>'page','pagesize',</#if>
-        <#if m.request.sortable?has_content>'sort','order',</#if> 
-        	</#if> ];
+        <#if m.request.paginable?has_content>
+        	extraParams.concat( [ { 'name' : 'page' }, { 'name' : 'pagesize' } ] );</#if>
+        <#if m.request.sortable?has_content>
+        	extraParams.concat( [ { 'name' : 'sort' }, { 'name' : 'order' } ] );</#if> 
+      </#if>
 
-	parameters = parameters.concat(extraParams)
+	parameters = parameters.concat(extraParams);
 	var apiUrl = "http://" + window.location.host;
 	var optParameters = <#if m.request?has_content && m.request.optParameters?has_content>${u.toJSString(m.request.optParameters)}<#else>{}</#if>
     console.build(x, method, parameters, {<#if m.request?has_content && m.request.parameters?has_content><#list m.request.parameters as p><#if p.vectorized?has_content && p.vectorized>'${p.name}':true<#if p_has_next>,</#if></#if></#list></#if>}, apiUrl, optParameters);
