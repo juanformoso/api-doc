@@ -33,7 +33,7 @@ public class DocumentationController
         return new ModelAndView(name);
     }
 
-    @RequestMapping(value = {"*", "/docs"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/", "/docs"}, method = RequestMethod.GET)
     public ModelAndView getIndex() {
         ModelAndView modelAndView = this.createView("index");
         modelAndView.addObject("controllers", this.documentationByGroup);
