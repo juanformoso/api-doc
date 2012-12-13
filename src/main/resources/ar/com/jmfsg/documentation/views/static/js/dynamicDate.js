@@ -17,7 +17,7 @@
  * Ejemplos:
  * 
  * 	%d now +1d+2y d% :: Imprime la fecha de mañana más un año, con long
- *  %d 1-1-1990 +1d+2y %f yyyy-MM-dd d% :: Imprime 2-1-1992
+ *  %d 1-1-1990 +1d+2y %f yyyy-MM-dd f% d% :: Imprime 2-1-1992
  *  %d 2-1-1990 %fyyyyMMf% d%,%d 4-1-1990 %fyyyyMMf% d% :: Imprime 199002,199002
  */
 
