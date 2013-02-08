@@ -49,7 +49,8 @@
         <div class="footerwrap">
             <div id="footer-menu">
                 <a href="<@s.url "${relativePath}/docs/page/faq" />">faq</a>
-                <div id="footer-sites">
+                <div align="right">
+                	<sub>Powered by <a href="http://jmfsg.com.ar/">api-doc</a></sub>
                 </div>
             </div>
             <div id="footer-flair">

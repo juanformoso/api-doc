@@ -15,7 +15,7 @@ All you need to do, is
     <dependency>
         <groupId>ar.com.jmfsg</groupId>
         <artifactId>api-doc</artifactId>
-        <version>0.0.1</version>
+        <version>0.0.27</version>
     </dependency>
 
 2) Import the component context in your application context
@@ -33,16 +33,9 @@ When you run your application, you'll see your pretty documentation
 
 ![](https://raw.github.com/juanformoso/api-doc/master/img/screenshot.png)
 
-Main features
--------------
-
-// TODO
-
 Stuff I know is wrong and plan on fixing
 ----------------------------------------
 
 - The *sections* supported in the detailed view are kind of hardcoded (they are optional, but hardcoded) to what we used internally -- parameters, filters, options, and facets. I plan on making it generic so you can define your own sections somewhere in the doc file, and specify the field list for them. (this will probably break compatibility, but I don't expect it to be that difficult)
-
-- The console only supports trying the service for the GET method. I plan on adding support for other methods as well.
 
 - The toggle is suboptimal code, there's a TODO in there.
