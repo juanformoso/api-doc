@@ -12,8 +12,6 @@
 		   http://www.springframework.org/schema/task
    http://www.springframework.org/schema/task/spring-task-3.0.xsd">
 
-	<context:annotation-config />
-
 	<mvc:resources mapping="/static/**"
 		location="classpath:ar/com/jmfsg/documentation/views/static/**"
 		order="-1" />
