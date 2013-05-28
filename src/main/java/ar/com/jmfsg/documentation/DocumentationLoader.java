@@ -74,7 +74,7 @@ public class DocumentationLoader
             JSONObject doc = this.readDoc(d.getResource());
 
             String modulePrefix = StringUtils.isEmpty(d.getModulePrefix()) ? "" : d.getModulePrefix();
-            this.rawDoc = doc;
+            appendRaw(doc);
             if (doc.has("general")) {
                 this.getGeneralDoc().accumulateAll(doc.getJSONObject("general"));
             }
@@ -127,7 +127,33 @@ public class DocumentationLoader
         }
     }
 
-    private void addToGroupDocs(JSONObject jsonObject) {
+    private void appendRaw(JSONObject doc) {
+		if(this.rawDoc == null) {
+			this.rawDoc = new JSONObject();
+		}
+		mergeJSONObjects(this.rawDoc, doc);
+	}
+
+	private void mergeJSONObjects(JSONObject rawDoc, JSONObject doc) {
+		Set<String> updateKeys = doc.keySet();
+		for (String key : updateKeys) {
+			if(rawDoc.containsKey(key)) {
+				Object object = rawDoc.get(key);
+				if(object instanceof JSONObject && !((JSONObject)object).isNullObject()) {
+					mergeJSONObjects((JSONObject) object, doc.getJSONObject(key));
+				} else if (object instanceof JSONArray) {
+					((JSONArray)object).addAll(doc.getJSONArray(key));
+				} else {
+					//TODO: Define strategy for regular objects, for now, last is accepted
+					rawDoc.put(key, doc.get(key));
+				}
+			}else {
+				rawDoc.put(key, doc.get(key));
+			}
+		}		
+	}
+
+	private void addToGroupDocs(JSONObject jsonObject) {
         for (Object group : jsonObject.keySet()) {
             JSONObject doc = (JSONObject) jsonObject.get(group);
             this.groupDocs.put((String) group, doc);
