@@ -3,10 +3,14 @@ package ar.com.jmfsg.documentation.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -43,9 +47,15 @@ public class DocumentationController
     }
 
     @RequestMapping(value = "/docs/raw", method = RequestMethod.GET)
-    public ModelAndView getRaw() {
+    public ModelAndView getRaw(HttpServletResponse response, @RequestHeader(value = "If-None-Matches", required = false) String ifNoneMatches) {
+    	String Etag = String.valueOf(this.getDocumentationLoader().getRawDoc().hashCode());
+    	if(ifNoneMatches != null && Etag.equals(ifNoneMatches)) {
+    		response.setStatus(HttpStatus.NOT_MODIFIED.value());
+    		return null;
+    	}
         ModelAndView modelAndView = this.createView("rawJsonView");
         modelAndView.addObject("data", this.getDocumentationLoader().getRawDoc());
+        response.addHeader("ETag", Etag);
         return modelAndView;
     }
 

@@ -132,6 +132,7 @@ public class DocumentationLoader
 			this.rawDoc = new JSONObject();
 		}
 		mergeJSONObjects(this.rawDoc, doc);
+		
 	}
 
 	private void mergeJSONObjects(JSONObject rawDoc, JSONObject doc) {
