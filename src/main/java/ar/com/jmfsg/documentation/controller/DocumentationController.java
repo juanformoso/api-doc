@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
+import ar.com.jmfsg.documentation.DocumentationListener;
 import ar.com.jmfsg.documentation.DocumentationLoader;
 import ar.com.jmfsg.documentation.support.Utils;
 
@@ -28,7 +29,7 @@ import ar.com.jmfsg.documentation.support.Utils;
 
 @Controller
 public class DocumentationController
-    implements InitializingBean {
+    implements InitializingBean, DocumentationListener {
 
     private Map<String, Object> documentationByGroup = new HashMap<String, Object>();
     private Map<String, Object> documentationByMethod = new HashMap<String, Object>();
@@ -91,8 +92,8 @@ public class DocumentationController
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        Utils.normalizeDocumentationData(this.getDocumentationLoader().getDocumentation(), this.getDocumentationLoader()
-            .getGroupDocs(), this.documentationByGroup, this.documentationByMethod);
+    	documentationChanged(documentationLoader);
+        this.documentationLoader.addDocumentationListener(this);
     }
 
     public DocumentationLoader getDocumentationLoader() {
@@ -102,4 +103,10 @@ public class DocumentationController
     public void setDocumentationLoader(DocumentationLoader documentationLoader) {
         this.documentationLoader = documentationLoader;
     }
+
+	@Override
+	public void documentationChanged(DocumentationLoader loader) {
+		Utils.normalizeDocumentationData(this.getDocumentationLoader().getDocumentation(), this.getDocumentationLoader()
+	            .getGroupDocs(), this.documentationByGroup, this.documentationByMethod);
+	}
 }
