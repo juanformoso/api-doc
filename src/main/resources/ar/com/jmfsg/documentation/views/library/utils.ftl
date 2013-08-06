@@ -3,7 +3,9 @@
 <#-- Funcion para convertir valores Freemarker a string de js (soporta scalares, collection, sequence y extended hashes) -->
 <#function toJSString obj>
 	<#local ret = ''>
-	<#if obj?is_string>
+	<#if obj?is_hash_ex && obj.name?has_content> //it's a Field object
+		<#local ret = ret + "\"" + obj.name?js_string + "\"">
+	<#elseif obj?is_string>
 		<#local ret = ret + "\"" + obj?js_string + "\"">
 	<#elseif obj?is_number || obj?is_boolean || obj?is_date >
 		<#local ret = ret + "\"" + obj?string?js_string + "\"">

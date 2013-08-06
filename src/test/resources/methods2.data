@@ -1,0 +1,20 @@
+{
+	"methods" : [
+		{
+			"methodName1_1": {
+				"group": "methodGroup1"
+			},
+			"methodName1_2": {
+				"group": "methodGroup1"
+			}
+		},
+		{
+			"methodName2_1": {
+				"group": "methodGroup2"
+			},
+			"methodName2_2": {
+				"group": "methodGroup2"
+			}
+		}
+	]
+}

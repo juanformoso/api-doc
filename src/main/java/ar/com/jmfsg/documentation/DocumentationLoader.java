@@ -1,7 +1,7 @@
 package ar.com.jmfsg.documentation;
 
 import java.io.IOException;
-import java.lang.reflect.Method;
+import java.lang.annotation.Annotation;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -14,6 +14,9 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import org.apache.commons.lang.StringUtils;
+import org.codehaus.jackson.map.DeserializationConfig;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 import org.reflections.Reflections;
 import org.reflections.scanners.MethodAnnotationsScanner;
 import org.reflections.util.ClasspathHelper;
@@ -24,7 +27,12 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.io.Resource;
 
-import ar.com.jmfsg.documentation.annotation.Documentation;
+import ar.com.jmfsg.documentation.model.DictionaryEntry;
+import ar.com.jmfsg.documentation.model.Documentation;
+import ar.com.jmfsg.documentation.model.General;
+import ar.com.jmfsg.documentation.model.Group;
+import ar.com.jmfsg.documentation.model.Method;
+import ar.com.jmfsg.documentation.model.Tag;
 
 /**
  * Loads all {@link DocumentationDescriptor} with the actual documentation
@@ -35,23 +43,35 @@ import ar.com.jmfsg.documentation.annotation.Documentation;
 
 public class DocumentationLoader implements InitializingBean,
 		ApplicationContextAware {
-	private Map<String, JSONArray> docByModule;
+	private General general = new General();
 	private Map<String, String> dictionary = new HashMap<String, String>();
-	private Map<String, JSONObject> tags = new HashMap<String, JSONObject>();
-	private Map<String, JSONObject> groupDocs = new HashMap<String, JSONObject>();
-	private JSONObject generalDoc = new JSONObject();
+	private Map<String, Tag> tags = new HashMap<String, Tag>();
+	private Map<String, List<Method>> methodsByModule = new HashMap<String, List<Method>>();
+	private Map<String, Group> groups = new HashMap<String, Group>();
+
 	private JSONObject rawDoc;
 
 	private Map<String, DocumentationDescriptor> documentationDescriptors = new HashMap<String, DocumentationDescriptor>();
 
+	private ObjectMapper objectMapper = new ObjectMapper();
+
 	private List<DocumentationListener> listeners = new LinkedList<DocumentationListener>();
-	
-	public JSONArray getDocumentationForModule(String prefix) {
-		return this.docByModule.get(prefix);
+
+	{
+		objectMapper
+				.configure(
+						DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES,
+						false);
+		objectMapper.setSerializationInclusion(Inclusion.NON_NULL);
+		
 	}
 
-	public Map<String, JSONArray> getDocumentation() {
-		return this.docByModule;
+	public List<Method> getDocumentationForModule(String prefix) {
+		return this.methodsByModule.get(prefix);
+	}
+
+	public Map<String, List<Method>> getDocumentation() {
+		return this.methodsByModule;
 	}
 
 	public boolean hasDocumentationDescriptor(String beanName) {
@@ -69,52 +89,41 @@ public class DocumentationLoader implements InitializingBean,
 		String[] beanNamesForType = ctx
 				.getBeanNamesForType(DocumentationDescriptor.class);
 		for (String beanName : beanNamesForType) {
-			this.addDocumentationDescriptor(beanName, (DocumentationDescriptor) ctx.getBean(beanName));
+			this.addDocumentationDescriptor(beanName,
+					(DocumentationDescriptor) ctx.getBean(beanName));
 		}
 	}
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
 
-		this.docByModule = new HashMap<String, JSONArray>();
+		this.general = new General();
 		this.dictionary = new HashMap<String, String>();
-		this.tags = new HashMap<String, JSONObject>();
-		this.groupDocs = new HashMap<String, JSONObject>();
-		this.generalDoc = new JSONObject();
+		this.dictionary = new HashMap<String, String>();
+		this.tags = new HashMap<String, Tag>();
+		this.methodsByModule = new HashMap<String, List<Method>>();
+		this.groups = new HashMap<String, Group>();
 		this.rawDoc = null;
-		
+
 		for (DocumentationDescriptor d : documentationDescriptors.values()) {
 			JSONObject doc = this.readDoc(d.getResource());
 
 			String modulePrefix = StringUtils.isEmpty(d.getModulePrefix()) ? ""
 					: d.getModulePrefix();
 			appendRaw(doc);
-			if (doc.has("general")) {
-				this.getGeneralDoc()
-						.accumulateAll(doc.getJSONObject("general"));
-			}
 
-			if (doc.has("dictionary")) {
-				this.addToDictionary(doc.getJSONArray("dictionary"));
-			}
+			Documentation documentation = objectMapper.readValue(
+					doc.toString(), Documentation.class);
 
-			if (doc.has("groups")) {
-				this.addToGroupDocs(doc.getJSONObject("groups"));
-			}
+			this.addToGeneral(documentation.general);
 
-			if (doc.has("tags")) {
-				this.addToTags(doc.getJSONArray("tags"));
-			}
+			this.addToDictionary(documentation.dictionary);
 
-			if (doc.has("methods")) {
-				if (this.docByModule.containsKey(d.getModulePrefix())) {
-					this.docByModule.get(modulePrefix).addAll(
-							doc.getJSONArray("methods"));
-				} else {
-					this.docByModule.put(modulePrefix,
-							doc.getJSONArray("methods"));
-				}
-			}
+			this.addToGroupDocs(documentation.groups);
+
+			this.addToTags(documentation.tags);
+
+			this.addModuleMethods(modulePrefix, documentation.methods);
 
 			// Check if there are complements via annotations
 			if (d.getPackagesToScan() != null) {
@@ -124,32 +133,78 @@ public class DocumentationLoader implements InitializingBean,
 									.setUrls(ClasspathHelper.forPackage(pack))
 									.setScanners(new MethodAnnotationsScanner()));
 
-					Set<Method> annotated = reflections
-							.getMethodsAnnotatedWith(Documentation.class);
+					Set<java.lang.reflect.Method> annotated = reflections
+							.getMethodsAnnotatedWith(ar.com.jmfsg.documentation.annotation.Documentation.class);
 
-					Iterator<Method> it = annotated.iterator();
+					Iterator<java.lang.reflect.Method> it = annotated
+							.iterator();
 
 					while (it.hasNext()) {
-						Method m = it.next();
-						JSONObject o = JSONObject.fromObject(m.getAnnotation(
-								Documentation.class).data());
+						java.lang.reflect.Method m = it.next();
+						JSONObject o = JSONObject
+								.fromObject(m
+										.getAnnotation(
+												ar.com.jmfsg.documentation.annotation.Documentation.class)
+										.data());
 
-						JSONObject original = this
-								.getObjectLoadedFromResource(
-										this.docByModule.get(modulePrefix),
-										m.getName());
-
-						if (original != null) {
-							original.accumulateAll(o);
-						} else {
-							this.docByModule.get(modulePrefix).add(o);
-						}
+						Method method = objectMapper.readValue(o.toString(),
+								Method.class);
+						this.addModuleMethod(modulePrefix, method);
 					}
 				}
 			}
 		}
 		for (DocumentationListener listener : listeners) {
 			listener.documentationChanged(this);
+		}
+	}
+
+	private void addModuleMethod(String modulePrefix, Method method) {
+		if(method!=null ) {
+			if(!this.methodsByModule.containsKey(modulePrefix)) {
+				this.methodsByModule.put(modulePrefix, new LinkedList<Method>());
+			}
+			List<Method> moduleMethods = this.methodsByModule.get(modulePrefix);
+			moduleMethods.add(method);
+		}
+	}
+
+	private void addModuleMethods(String modulePrefix,
+			List<Map<String, Method>> methods) {
+		if(methods != null) {
+			if(!this.methodsByModule.containsKey(modulePrefix)) {
+				this.methodsByModule.put(modulePrefix, new LinkedList<Method>());
+			}
+			List<Method> moduleMethods = this.methodsByModule.get(modulePrefix);
+			for (Map<String, Method> methodMap : methods) {
+				moduleMethods.addAll(methodMap.values());	
+			}
+		}
+	}
+
+	private void addToGeneral(General general) {
+		if (general != null) {
+			if (general.headerImageUrl != null) {
+				this.general.headerImageUrl = general.headerImageUrl;
+			}
+			if (general.headerImageSize != null) {
+				this.general.headerImageSize = general.headerImageSize;
+			}
+			if (general.longDescription != null) {
+				this.general.longDescription = general.longDescription;
+			}
+			if (general.methodSummary != null) {
+				this.general.methodSummary = general.methodSummary;
+			}
+			if (general.projectName != null) {
+				this.general.projectName = general.projectName;
+			}
+			if (general.projectSummary != null) {
+				this.general.projectSummary = general.projectSummary;
+			}
+			if (general.twitterUsername != null) {
+				this.general.twitterUsername = general.twitterUsername;
+			}
 		}
 	}
 
@@ -183,42 +238,29 @@ public class DocumentationLoader implements InitializingBean,
 		}
 	}
 
-	private void addToGroupDocs(JSONObject jsonObject) {
-		for (Object group : jsonObject.keySet()) {
-			JSONObject doc = (JSONObject) jsonObject.get(group);
-			this.groupDocs.put((String) group, doc);
-		}
-	}
-
-	private void addToDictionary(JSONArray jsonArray) {
-		for (int i = 0; i < jsonArray.size(); i++) {
-			JSONObject o = (JSONObject) jsonArray.get(i);
-			if (o.has("key") && o.has("description")) {
-				this.getDictionary().put(o.getString("key"),
-						o.getString("description"));
+	private void addToGroupDocs(List<Map<String, Group>> groups) {
+		if (groups != null) {
+			for (Map<String, Group> map : groups) {
+				this.groups.putAll(map);
 			}
 		}
 	}
 
-	private void addToTags(JSONArray jsonArray) {
-		for (int i = 0; i < jsonArray.size(); i++) {
-			JSONObject o = (JSONObject) jsonArray.get(i);
-			if (o.has("name") && o.has("color")) {
-				this.getTags().put(o.getString("name"), o);
+	private void addToDictionary(List<DictionaryEntry> dictionary) {
+		if (dictionary != null) {
+			for (DictionaryEntry dictionaryEntry : dictionary) {
+				this.getDictionary().put(dictionaryEntry.key,
+						dictionaryEntry.description);
 			}
 		}
 	}
 
-	private JSONObject getObjectLoadedFromResource(JSONArray jsonArray,
-			String name) {
-		for (int i = 0; i < jsonArray.size(); i++) {
-			JSONObject o = (JSONObject) jsonArray.get(i);
-			if (o.has(name)) {
-				return o.getJSONObject(name);
+	private void addToTags(List<Tag> tags) {
+		if (tags != null) {
+			for (Tag tag : tags) {
+				this.tags.put(tag.name, tag);
 			}
 		}
-
-		return null;
 	}
 
 	private JSONObject readDoc(Resource r) throws IOException,
@@ -254,8 +296,8 @@ public class DocumentationLoader implements InitializingBean,
 		return content.toString();
 	}
 
-	public JSONObject getGeneralDoc() {
-		return this.generalDoc;
+	public General getGeneral() {
+		return this.general;
 	}
 
 	public JSONObject getRawDoc() {
@@ -266,14 +308,14 @@ public class DocumentationLoader implements InitializingBean,
 		return this.dictionary;
 	}
 
-	public Map<String, JSONObject> getGroupDocs() {
-		return this.groupDocs;
+	public Map<String, Group> getGroups() {
+		return this.groups;
 	}
 
-	public Map<String, JSONObject> getTags() {
+	public Map<String, Tag> getTags() {
 		return tags;
 	}
-	
+
 	public void addDocumentationListener(DocumentationListener listener) {
 		this.listeners.add(listener);
 	}

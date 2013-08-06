@@ -35,9 +35,9 @@ function showConsole() {
     <#if m.method?keys?seq_contains('get')>
     var x = $('#getConsole');
     var method= "<@s.url "${methodPath + m.method['get']?replace(':.+', '')}" />";
-    var parameters = <#if m.request?has_content && m.request.parameters?has_content>
-	    				${u.toJSString(m.request.parameters)}
-	    			 <#else> [] </#if> ;
+    //This should put a list of strings
+    var parameters = <#if m.request?has_content && m.request.parameters?has_content> ${u.toJSString(m.request.parameters)}  <#else> [] </#if> ;
+    
     var extraParams = [];
      <#if m.request?has_content>
     	<#if m.request.filters?has_content>
@@ -50,15 +50,22 @@ function showConsole() {
         	extraParams = extraParams.concat( ${u.toJSString(m.request.facets)} );
         </#if>
         <#if m.request.paginable?has_content>
-        	extraParams.concat( [ { 'name' : 'page' }, { 'name' : 'pagesize' } ] );</#if>
+        	extraParams = extraParams.concat( [ 'page','pagesize'  ] );</#if>
         <#if m.request.sortable?has_content>
-        	extraParams.concat( [ { 'name' : 'sort' }, { 'name' : 'order' } ] );</#if> 
+        	extraParams = extraParams.concat( [ 'sort', 'order' ] );</#if> 
       </#if>
 
 	parameters = parameters.concat(extraParams);
+	
+	// Parameters is a simple list, I need a list of objects. 
+	var mapParameters = [parameters.length]
+	for (i=0;i<parameters.length;i++) {
+		mapParameters[i]= { name : parameters[i]};
+	}
+	
 	var apiUrl = "http://" + window.location.host;
 	var optParameters = <#if m.request?has_content && m.request.optParameters?has_content>${u.toJSString(m.request.optParameters)}<#else>{}</#if>
-    console.build(x, method, parameters, {<#if m.request?has_content && m.request.parameters?has_content><#list m.request.parameters as p><#if p.vectorized?has_content && p.vectorized>'${p.name}':true<#if p_has_next>,</#if></#if></#list></#if>}, apiUrl, optParameters);
+    console.build(x, method, mapParameters, {<#if m.request?has_content && m.request.parameters?has_content><#list m.request.parameters as p><#if p.vectorized?has_content && p.vectorized>'${p.name}':true<#if p_has_next>,</#if></#if></#list></#if>}, apiUrl, optParameters);
     </#if>
 }
 

@@ -33,9 +33,16 @@ public class Method {
 	public String longDescription;
 	
 	/**
-	 * Http method of the service [GET|PUT|POST|DELETE|...]
+	 * Http method or methods of the service [GET|PUT|POST|DELETE|...]<br>
+	 * Supports a <b>single String</b> with the Http method or a <b>Map</b> containing the method as key and the requestMapping for that method as value, for example
+	 * <pre>
+	 *    {
+	 *       "GET" : "/service/object/{id}",
+	 *       "POST" : "/service/object"
+	 *    }
+	 * </pre>
 	 */
-	public String method;
+	public RequestMethods method;
 	
 	/**
 	 * Method request mapping (relative to the documentation context)
@@ -55,7 +62,7 @@ public class Method {
 	/**
 	 * Wheter the expected response is a list or a single object. <br>
 	 */
-	public boolean responseIsList = false;
+	public Boolean responseIsList = false;
 	
 	/**
 	 * List of fields returned as a response item. <br>
@@ -72,4 +79,69 @@ public class Method {
 	 * List of {@link Tag} names that should be applied to this method
 	 */
 	public List<String> tags;
+
+	/**
+	 * Label to show in the index page instead of the requestMapping. It's an optional value.
+	 */
+	public String shortName;
+
+	// FREEMARKER NEEDS GETTERS
+	
+	public String getFriendlyName() {
+		return friendlyName;
+	}
+
+	public String getGroup() {
+		return group;
+	}
+
+	public String getSubGroup() {
+		return subGroup;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public String getLongDescription() {
+		return longDescription;
+	}
+
+	public RequestMethods getMethod() {
+		return method;
+	}
+
+	public String getRequestMapping() {
+		return requestMapping;
+	}
+
+	public int getOrder() {
+		return order;
+	}
+
+	public Request getRequest() {
+		return request;
+	}
+
+	public List<Field> getResponse() {
+		return response;
+	}
+
+	public List<Field> getResponseSummary() {
+		return responseSummary;
+	}
+
+	public List<String> getTags() {
+		return tags;
+	}
+
+	public String getShortName() {
+		return shortName;
+	}
+
+	public Boolean getResponseIsList() {
+		return responseIsList;
+	}
+	
+	
 }

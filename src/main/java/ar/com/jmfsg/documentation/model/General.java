@@ -32,5 +32,38 @@ public class General {
 	 */
 	public String headerImageUrl;
 	
-	public String hearImageSize;
+	public String headerImageSize;
+
+	
+	//FREEMARKER NEEDS GETTERS (N)
+	
+	public String getProjectName() {
+		return projectName;
+	}
+
+	public String getLongDescription() {
+		return longDescription;
+	}
+
+	public String getProjectSummary() {
+		return projectSummary;
+	}
+
+	public String getMethodSummary() {
+		return methodSummary;
+	}
+
+	public String getTwitterUsername() {
+		return twitterUsername;
+	}
+
+	public String getHeaderImageUrl() {
+		return headerImageUrl;
+	}
+
+	public String getHeaderImageSize() {
+		return headerImageSize;
+	}
+
+	
 }

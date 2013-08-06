@@ -18,6 +18,7 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import ar.com.jmfsg.documentation.DocumentationListener;
 import ar.com.jmfsg.documentation.DocumentationLoader;
+import ar.com.jmfsg.documentation.model.Method;
 import ar.com.jmfsg.documentation.support.Utils;
 
 
@@ -31,8 +32,8 @@ import ar.com.jmfsg.documentation.support.Utils;
 public class DocumentationController
     implements InitializingBean, DocumentationListener {
 
-    private Map<String, Object> documentationByGroup = new HashMap<String, Object>();
-    private Map<String, Object> documentationByMethod = new HashMap<String, Object>();
+    private Map<String, Map<String, Object>> documentationByGroup = new HashMap<String, Map<String, Object>>();
+    private Map<String, Method> documentationByMethod = new HashMap<String, Method>();
 
     private ModelAndView createView(String name) {
         return new ModelAndView(name);
@@ -42,7 +43,7 @@ public class DocumentationController
     public ModelAndView getIndex() {
         ModelAndView modelAndView = this.createView("index");
         modelAndView.addObject("controllers", this.documentationByGroup);
-        modelAndView.addObject("general", this.getDocumentationLoader().getGeneralDoc());
+        modelAndView.addObject("general", this.getDocumentationLoader().getGeneral());
         modelAndView.addObject("tags", this.documentationLoader.getTags());
         return modelAndView;
     }
@@ -69,7 +70,7 @@ public class DocumentationController
     public ModelAndView getDetail(@PathVariable String method) {
         ModelAndView modelAndView = this.createView("detail");
         modelAndView.addObject("m", this.documentationByMethod.get(method));
-        modelAndView.addObject("general", this.getDocumentationLoader().getGeneralDoc());
+        modelAndView.addObject("general", this.getDocumentationLoader().getGeneral());
         modelAndView.addObject("dictionary", this.getDocumentationLoader().getDictionary());
         modelAndView.addObject("tags", this.documentationLoader.getTags());
         return modelAndView;
@@ -78,7 +79,7 @@ public class DocumentationController
     @RequestMapping(value = "/docs/page/{name}", method = RequestMethod.GET)
     public ModelAndView getPage(@PathVariable String name) {
         ModelAndView modelAndView = this.createView(name);
-        modelAndView.addObject("general", this.getDocumentationLoader().getGeneralDoc());
+        modelAndView.addObject("general", this.getDocumentationLoader().getGeneral());
         return modelAndView;
     }
 
@@ -107,6 +108,6 @@ public class DocumentationController
 	@Override
 	public void documentationChanged(DocumentationLoader loader) {
 		Utils.normalizeDocumentationData(this.getDocumentationLoader().getDocumentation(), this.getDocumentationLoader()
-	            .getGroupDocs(), this.documentationByGroup, this.documentationByMethod);
+	            .getGroups(), this.documentationByGroup, this.documentationByMethod);
 	}
 }

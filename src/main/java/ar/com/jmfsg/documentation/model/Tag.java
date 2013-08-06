@@ -17,4 +17,20 @@ public class Tag {
 	 * It will be shown on hovering over the tag.
 	 */
 	public String title;
+
+	// FREEMARKER NEEDS GETTERS
+	
+	public String getName() {
+		return name;
+	}
+
+	public String getColor() {
+		return color;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+	
+	
 }

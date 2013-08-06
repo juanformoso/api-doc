@@ -24,7 +24,7 @@ public class Field {
 	 * Whether it accepts a vectorized parameter.<br>
 	 * In case it is true, a comma separated list of values can be send.
 	 */
-	public boolean vectorized = false;
+	public Boolean vectorized = false;
 	
 	/**
 	 * Only valid for options and filters.<br>
@@ -36,7 +36,7 @@ public class Field {
 	 * If it has children, wether the object returned is a list or a sinlge item. <br>
 	 * This element is only valid for responses and post/put request parameters
 	 */
-	public boolean isList = false;
+	public Boolean isList = false;
 	
 	
 	/**
@@ -44,5 +44,39 @@ public class Field {
 	 * This element is only valid for responses and post/put request parameters
 	 */
 	public List<Field> children;
+
+
+	//FREEMARKER NEEDS GETTERS
 	
+	public String getName() {
+		return name;
+	}
+
+
+	public String getDescription() {
+		return description;
+	}
+
+
+	public String getType() {
+		return type;
+	}
+
+	public String getDefaultValue() {
+		return defaultValue;
+	}
+
+	public List<Field> getChildren() {
+		return children;
+	}
+
+
+	public Boolean getVectorized() {
+		return vectorized;
+	}
+
+
+	public Boolean getIsList() {
+		return isList;
+	}
 }

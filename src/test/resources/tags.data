@@ -1,0 +1,19 @@
+{ 
+	"tags": [
+		{
+			"name": "Beta",
+			"color": "#66FF66",
+			"title": "This service is in beta and, as such, the returned fields could change"
+		},
+		{
+			"name": "Deprecated",
+			"color": "#FF3333",
+			"title": "This service is deprecated and, as such, maintenance is no longer assured. Check documentation to see which new service to use"
+		},
+		{
+			"name": "Private",
+			"color": "#3366FF",
+			"title": "This service is only accesible to some ApiKeys and cannot be used with the online console."
+		}
+	]
+}

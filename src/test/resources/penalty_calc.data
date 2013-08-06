@@ -1,0 +1,58 @@
+{
+	"methods":[
+		{
+			"flightCancellationPenalty":{
+				"group":"Penalty Calc",
+				"description":"Calculates flight cancellation penalty",
+				"friendlyName":"Flight Cancellation Penalty",
+				"order":1,
+				"requestMapping":"/flightCancellation/penalty/{transactionId}/{adults}/{childs}/{infants}/{currencyCode}/{country}/{language}",
+				"request":{
+					"parameters":[
+						{"name":"transactionId"},
+						{"name":"adults"},
+						{"name":"childs"},
+						{"name":"infants"},
+						{"name":"currencyCode"},
+						{"name":"country"},
+						{"name":"language"}
+					]
+				},
+				"response":[
+					{"name":"code","description":"The response code."},
+					{"name":"errorMessage","description":"The error message (optional)."},
+					{"name":"causes","description":"A list of Strings with the causes for this response."}
+				],
+				"method":"GET"
+			},
+			"flightCancellationPenalty2":{
+				"group":"Penalty Calc",
+				"description":"Calculates flight cancellation penalty",
+				"friendlyName":"Flight Cancellation Penalty",
+				"order":1,
+				"requestMapping":"/flightCancellation/penalty/{transactionId}/{adults}/{childs}/{infants}/{currencyCode}/{country}/{language}",
+				"request":{
+					"parameters":[
+						{"name":"transactionId"},
+						{"name":"adults"},
+						{"name":"childs"},
+						{"name":"infants"},
+						{"name":"currencyCode"},
+						{"name":"country"},
+						{"name":"language"}
+					]
+				},
+				"response":[
+					{"name":"code","description":"The response code."},
+					{"name":"errorMessage","description":"The error message (optional)."},
+					{"name":"causes","description":"A list of Strings with the causes for this response."}
+				],
+				"method": {
+				  	"GET" : "/flightCancellation/penalty/{transactionId}/{adults}/{childs}/{infants}/{currencyCode}/{country}/{language}",
+				  	"POST" : "/flightCancellation/penalty/{transactionId}/{adults}/{childs}/{infants}/{currencyCode}/{country}/{language}"
+				}
+			}
+		}
+	]
+}
+		

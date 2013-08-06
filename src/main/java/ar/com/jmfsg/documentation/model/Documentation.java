@@ -26,6 +26,11 @@ public class Documentation {
 	public List<Tag> tags;
 	
 	/**
+	 * Group specific documentation
+	 */
+	public List<Map<String, Group>> groups;
+	
+	/**
 	 * Globally defined dictionary. <br>
 	 * Any property defined here will have the description expanded the same way anywhere in the documentation.
 	 */
