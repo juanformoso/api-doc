@@ -83,7 +83,6 @@ public class DocumentationLoader implements InitializingBean,
 		this.documentationDescriptors.put(beanName, documentationDescriptor);
 	}
 
-	@Override
 	public void setApplicationContext(ApplicationContext ctx)
 			throws BeansException {
 		String[] beanNamesForType = ctx
@@ -94,7 +93,6 @@ public class DocumentationLoader implements InitializingBean,
 		}
 	}
 
-	@Override
 	public void afterPropertiesSet() throws Exception {
 
 		this.general = new General();

@@ -91,7 +91,6 @@ public class DocumentationController
     
     private DocumentationLoader documentationLoader;
 
-    @Override
     public void afterPropertiesSet() throws Exception {
     	documentationChanged(documentationLoader);
         this.documentationLoader.addDocumentationListener(this);
@@ -105,7 +104,6 @@ public class DocumentationController
         this.documentationLoader = documentationLoader;
     }
 
-	@Override
 	public void documentationChanged(DocumentationLoader loader) {
 		Utils.normalizeDocumentationData(this.getDocumentationLoader().getDocumentation(), this.getDocumentationLoader()
 	            .getGroups(), this.documentationByGroup, this.documentationByMethod);

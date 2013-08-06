@@ -19,7 +19,6 @@ import ar.com.jmfsg.documentation.model.RequestMethods;
 public class Utils {
 
 	private static Comparator<? super MethodHolder> methodComparator = new Comparator<MethodHolder>() {
-		@Override
 		public int compare(MethodHolder o1, MethodHolder o2) {
 			return (o1.data.order == o2.data.order) ?
 				obtainMethodName(o1.data).compareTo(obtainMethodName(o2.data)) 
