@@ -25,3 +25,37 @@
 </#if>
 <#return ret>
 </#function>
+
+<#macro createUriForm >
+	<div id="uriForm">
+	<h3>Parameters</h3>
+	<table width="100%">
+		<@appendParameters m.request.parameters 0 />
+	</table>
+	</div>
+</#macro>
+
+<#macro appendParameters parameters indent>
+	<#local space = '${createIndent(indent)}'>
+	<#list parameters as p>
+		<tr><td><b> ${space} ${p.name} </b>&nbsp;
+		<#if p.vectorized?? && p.vectorized> <span class='vectorized' title='This parameter takes multiple values, if comma delimitted'>vectorized</span> </#if> 
+		</td><td style="margin-left:10px;">
+		<#if !p.isPhony?? || !p.isPhony>
+			<input type="text" id="p-${p.name}" /></td></tr>
+		</#if>
+		
+		<#if p.children??>
+			<#local newIndent = indent + 1>
+			<@appendParameters p.children newIndent />
+		</#if>
+	</#list>
+</#macro>
+
+<#function createIndent indent>
+	<#local ret = ''>
+	<#list 0..indent as i>
+		<#local ret = ret + '&nbsp;' + '&nbsp;'>
+	</#list>
+	<#return ret>
+</#function>

@@ -13,26 +13,27 @@
 >
 
 <#macro consoles>
-<#local supportedMappings = m.method?keys>
-<#local canMakeConsole = false>
-
-<#list supportedMappings as m> <#-- Verifico que haya algún mapping con consola -->
-	<#if consolesInfo?keys?seq_contains(m)>
-		<#local canMakeConsole = true>
+	<#local supportedMappings = m.method?keys>
+	<#local canMakeConsole = false>
+	
+	<#list supportedMappings as m> <#-- Verifico que haya algún mapping con consola -->
+		<#if consolesInfo?keys?seq_contains(m)>
+			<#local canMakeConsole = true>
+		</#if>
+	</#list>
+	
+	<#if canMakeConsole>
+		<h2>Try it!</h2>
+		<div id="consoles">
+			<ul class="tabs">
+				${obtain_tabs(supportedMappings)}
+			</ul>
+			<@pc.createUriForm />
+			<div class="panes">
+				${obtain_panes(supportedMappings)}
+		    </div>
+		</div>
 	</#if>
-</#list>
-
-<#if canMakeConsole>
-	<h2>Try it!</h2>
-	<div id="consoles">
-		<ul class="tabs">
-			${obtain_tabs(supportedMappings)}
-		</ul>
-		<div class="panes">
-			${obtain_panes(supportedMappings)}
-	    </div>
-	</div>
-</#if>
 </#macro>
 
 <#function obtain_tabs supportedMappings>
