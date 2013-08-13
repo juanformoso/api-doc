@@ -203,6 +203,9 @@ public class DocumentationLoader implements InitializingBean,
 			if (general.twitterUsername != null) {
 				this.general.twitterUsername = general.twitterUsername;
 			}
+			if (general.relativePath != null) {
+				this.general.relativePath = general.relativePath;
+			}
 		}
 	}
 

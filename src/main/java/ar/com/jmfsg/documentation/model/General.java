@@ -34,6 +34,11 @@ public class General {
 	
 	public String headerImageSize;
 
+	/**
+	 * Relative path prefix used for resources. Needed if doc servlet is not mapped to /*.
+	 */
+	public String relativePath;
+	
 	
 	//FREEMARKER NEEDS GETTERS (N)
 	
@@ -63,6 +68,10 @@ public class General {
 
 	public String getHeaderImageSize() {
 		return headerImageSize;
+	}
+	
+	public String getRelativePath() {
+		return relativePath;
 	}
 
 	
