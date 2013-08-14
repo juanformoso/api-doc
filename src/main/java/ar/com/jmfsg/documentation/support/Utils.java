@@ -85,12 +85,16 @@ public class Utils {
 	 */
 	private static void processRequestMethodRetrocompatibility(Method method) {
 		RequestMethods normalizedMethod = new RequestMethods();
-		for(String key : method.method.keySet()) {
-			if(StringUtils.isEmpty( method.method.get(key))) {
-				normalizedMethod.put(key.toLowerCase(), method.requestMapping);
-			} else {
-				normalizedMethod.put(key.toLowerCase(), method.method.get(key));
+		if(method.method != null) {
+			for(String key : method.method.keySet()) {
+				if(StringUtils.isEmpty( method.method.get(key))) {
+					normalizedMethod.put(key.toLowerCase(), method.requestMapping);
+				} else {
+					normalizedMethod.put(key.toLowerCase(), method.method.get(key));
+				}
 			}
+		} else {
+			normalizedMethod.put("get", method.requestMapping);
 		}
 		method.method = normalizedMethod;
 	}
