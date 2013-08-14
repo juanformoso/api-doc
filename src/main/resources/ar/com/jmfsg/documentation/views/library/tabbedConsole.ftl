@@ -24,11 +24,18 @@
 	
 	<#if canMakeConsole>
 		<h2>Try it!</h2>
+		
 		<div id="consoles">
 			<ul class="tabs">
 				${obtain_tabs(supportedMappings)}
 			</ul>
-			<@pc.createUriForm />
+				<#if m.request??>
+					<div id="uriForm">
+					<h3>Parameters</h3>
+					<@pc.createUriForm />
+					<@pc.createBodyConsole />
+					</div>
+				</#if>
 			<div class="panes">
 				${obtain_panes(supportedMappings)}
 		    </div>

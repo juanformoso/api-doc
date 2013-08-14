@@ -80,6 +80,8 @@ $(document).ready(function() {
 	    	codeMirrors[key] = CodeMirror.fromTextArea($('#'+codeMirrors[key])[0], {name: "javascript", json: true});
 	    }
     }
+    
+    CodeMirror.fromTextArea($('#consoleTextArea')[0], {name: "javascript", json: true});
 });
 </script>
 
