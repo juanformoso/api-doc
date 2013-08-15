@@ -4,20 +4,21 @@
 <#import "/library/makeConsole.ftl" as pc />
 <#import "/library/utils.ftl" as u />
 	 
-<#assign consolesInfo =  
+<#assign consoleButtons =  
 	{ 
-		"get" : '<div id="getConsole"><input type="button" value="Show Console" onclick="showConsole()" /></div>',
-		"post" : pc.postConsole('postConsole'),
-		"put" : pc.putConsole('putConsole')
+		"head" : createConsoleButton('head'),
+		"get" : createConsoleButton('get'),
+		"post" : createConsoleButton('post'),
+		"put" : createConsoleButton('put')
 	}
 >
 
 <#macro consoles>
-	<#local supportedMappings = m.method?keys>
+	<#local supportedMappings = m.method?keys>f
 	<#local canMakeConsole = false>
 	
 	<#list supportedMappings as m> <#-- Verifico que haya algún mapping con consola -->
-		<#if consolesInfo?keys?seq_contains(m)>
+		<#if consoleButtons?keys?seq_contains(m)>
 			<#local canMakeConsole = true>
 		</#if>
 	</#list>
@@ -45,7 +46,7 @@
 
 <#function obtain_tabs supportedMappings>
 <#local ret = ''>
-<#list consolesInfo?keys as k>
+<#list consoleButtons?keys as k>
 	<#if supportedMappings?seq_contains(k) >
 		<#local ret = ret + '<li><a href="#">${k?upper_case}</a></li>' >
 	</#if>
@@ -55,10 +56,14 @@
 
 <#function obtain_panes supportedMappings>
 <#local ret = ''>
-<#list consolesInfo?keys as k>
+<#list consoleButtons?keys as k>
 	<#if supportedMappings?seq_contains(k) >
-		<#local ret = ret + consolesInfo[k]>
+		<#local ret = ret + consoleButtons[k]>
 	</#if>
 </#list>
 <#return ret>
+</#function>
+
+<#function createConsoleButton methodName>
+	<#return '<input type="button" id="${methodName}Button" value="${methodName?capitalize} !" onclick="consoleBehaviour.execute(\'${methodName}\')"/>\n' >
 </#function>

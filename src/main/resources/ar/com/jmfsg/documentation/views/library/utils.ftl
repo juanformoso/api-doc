@@ -4,7 +4,11 @@
 <#function toJSString obj>
 	<#local ret = ''>
 	<#if obj?is_hash_ex && obj.name?has_content> //it's a Field object
-		<#local ret = ret + "\"" + obj.name?js_string + "\"">
+		<#local ret = ret + "{ \"name\" : \"" + obj.name?js_string + "\"">
+		<#if obj.children?has_content> //We also need it's children
+			<#local ret = ret + ", \"children\" : " + toJSString(obj.children)  >
+		</#if>
+		<#local ret = ret + "}">
 	<#elseif obj?is_string>
 		<#local ret = ret + "\"" + obj?js_string + "\"">
 	<#elseif obj?is_number || obj?is_boolean || obj?is_date >

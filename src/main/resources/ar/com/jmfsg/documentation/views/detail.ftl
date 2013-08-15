@@ -19,25 +19,22 @@
 	<#assign methodPath = relativePath>
 </#if>
 
-<script type="text/javascript" src="<@s.url "${relativePath}/static/js/console.js?v=3" />" > </script>
+<script type="text/javascript" src="<@s.url "${relativePath}/static/js/consoleBehaviour.js?v=3" />" > </script>
 <script type="text/javascript" src="<@s.url "${relativePath}/static/js/detail.js?v=3" />"  > </script>
 <script type="text/javascript" src="<@s.url "${relativePath}/static/js/codemirror-compressed.js"/>" > </script>
 <script type="text/javascript" src="<@s.url "${relativePath}/static/js/dynamicDate.js"/>" > </script>
 <script type="text/javascript" src="<@s.url "${relativePath}/static/js/date.f-0.5.0-min.js"/>" > </script>
 <script type="text/javascript">
+var editor;
 //Javascript associated with detail view
-
-//Este diccionario tiene el nombre de los textAreas que contendrán los codeMirror.
-//Luego reemplazaremos los strings por el codemirror propiamente dicho
-var codeMirrors = { "put" : "putTextArea", "post" : "postTextArea" }; 
-
-function showConsole() {
-    <#if m.method?keys?seq_contains('get')>
-    var x = $('#getConsole');
-    var method= "<@s.url "${methodPath + m.method['get']?replace(':.+', '')}" />";
-    //This should put a list of strings
-    var parameters = <#if m.request?has_content && m.request.parameters?has_content> ${u.toJSString(m.request.parameters)}  <#else> [] </#if> ;
+$(document).ready(function() {
+    registerToggleFunction();
+    // setup ul.tabs to work as tabs for each div directly under div.panes
+    $("ul.tabs").tabs("div.panes > div");
     
+    editor = CodeMirror.fromTextArea($('#consoleTextArea')[0], {name: "javascript", json: true});
+
+    var parameters = <#if m.request?has_content && m.request.parameters?has_content> ${u.toJSString(m.request.parameters)}  <#else> [] </#if> ;
     var extraParams = [];
      <#if m.request?has_content>
     	<#if m.request.filters?has_content>
@@ -54,34 +51,21 @@ function showConsole() {
         <#if m.request.sortable?has_content>
         	extraParams = extraParams.concat( [ 'sort', 'order' ] );</#if> 
       </#if>
-
 	parameters = parameters.concat(extraParams);
 	
 	// Parameters is a simple list, I need a list of objects. 
 	var mapParameters = [parameters.length]
 	for (i=0;i<parameters.length;i++) {
-		mapParameters[i]= { name : parameters[i]};
+		if (typeof parameters[i] === "string") {
+			mapParameters[i] = { name : parameters[i]};
+		} else {
+			mapParameters[i] = parameters[i];
+		}
 	}
 	
 	var apiUrl = "http://" + window.location.host;
 	var optParameters = <#if m.request?has_content && m.request.optParameters?has_content>${u.toJSString(m.request.optParameters)}<#else>{}</#if>
-    console.build(x, method, mapParameters, {<#if m.request?has_content && m.request.parameters?has_content><#list m.request.parameters as p><#if p.vectorized?has_content && p.vectorized>'${p.name}':true<#if p_has_next>,</#if></#if></#list></#if>}, apiUrl, optParameters);
-    </#if>
-}
-
-$(document).ready(function() {
-    registerToggleFunction();
-    // setup ul.tabs to work as tabs for each div directly under div.panes
-    $("ul.tabs").tabs("div.panes > div");
-    
-    // setup json consoles
-    for (key in codeMirrors) {
-    	if ($('#' + codeMirrors[key]).length > 0) {
-	    	codeMirrors[key] = CodeMirror.fromTextArea($('#'+codeMirrors[key])[0], {name: "javascript", json: true});
-	    }
-    }
-    
-    CodeMirror.fromTextArea($('#consoleTextArea')[0], {name: "javascript", json: true});
+    consoleBehaviour.build(apiUrl+'<@s.url "${methodPath}" />', ${u.toJSString(m.method)}, mapParameters, editor);
 });
 </script>
 
