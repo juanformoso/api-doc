@@ -206,6 +206,9 @@ public class DocumentationLoader implements InitializingBean,
 			if (general.relativePath != null) {
 				this.general.relativePath = general.relativePath;
 			}
+			if (general.methodPath != null) {
+				this.general.methodPath = general.methodPath;
+			}
 		}
 	}
 

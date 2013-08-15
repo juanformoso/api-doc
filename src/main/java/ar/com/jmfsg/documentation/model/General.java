@@ -1,47 +1,54 @@
 package ar.com.jmfsg.documentation.model;
 
 public class General {
-	
+
 	/**
-	 * Application name as it should appear in the documentation page Header and title
+	 * Application name as it should appear in the documentation page Header and
+	 * title
 	 */
 	public String projectName;
-	
+
 	/**
 	 * Main application description
 	 */
 	public String longDescription;
-	
+
 	/**
 	 * Technical summary of the application, if needed.
 	 */
 	public String projectSummary;
-	
+
 	/**
 	 * Technical summary of the methods.
 	 */
 	public String methodSummary;
-	
+
 	/**
 	 * If avaiable, twitter username to set in the documentation page.
 	 */
 	public String twitterUsername;
-	
+
 	/**
 	 * Header Image url. Should be a url relative to the project's main context.
 	 */
 	public String headerImageUrl;
-	
+
 	public String headerImageSize;
 
 	/**
-	 * Relative path prefix used for resources. Needed if doc servlet is not mapped to /*.
+	 * Relative path prefix used for resources. Needed if doc servlet is not
+	 * mapped to /*.
 	 */
 	public String relativePath;
-	
-	
-	//FREEMARKER NEEDS GETTERS (N)
-	
+
+	/**
+	 * Relative path prefix used for methods. Needed if doc servlet is not
+	 * mapped to /*.
+	 */
+	public String methodPath;
+
+	// FREEMARKER NEEDS GETTERS (N)
+
 	public String getProjectName() {
 		return projectName;
 	}
@@ -69,10 +76,12 @@ public class General {
 	public String getHeaderImageSize() {
 		return headerImageSize;
 	}
-	
+
 	public String getRelativePath() {
 		return relativePath;
 	}
 
-	
+	public String getMethodPath() {
+		return methodPath;
+	}
 }
