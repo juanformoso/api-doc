@@ -44,7 +44,7 @@ $(document).ready(function() {
         <#if m.request.facets?has_content>
         	extraParams = extraParams.concat( ${u.toJSString(m.request.facets)} );
         </#if>
-        <#if m.request.paginable?has_content>
+        <#if m.request.paginable>
         	extraParams = extraParams.concat( [ 'page','pagesize'  ] );</#if>
         <#if m.request.sortable?has_content>
         	extraParams = extraParams.concat( [ 'sort', 'order' ] );</#if> 
@@ -151,36 +151,36 @@ $(document).ready(function() {
             </div>
             </#if>
             
-            <#if m.request?has_content && (m.request.options?has_content || m.request.paginable?has_content || m.request.sortable?has_content)>
+            <#if m.request?has_content && (m.request.options?has_content || m.request.paginable || m.request.sortable?has_content)>
             <div>
-        <div id="options" class="toggle-parent">
-                <h2>- Options</h2>
-                </div>
-                <div class="toggle-child">
-				<p>Options are a list of values that are used to customize the resultset. They are usually optional and have default values</p>
-                <ul>
-            	<#if m.request.paginable?has_content && m.request.paginable>
-            		<li><b>page</b> &ndash; The pagination offset for the current collection. Affected by the specified pagesize. <i>32-bit signed integer</i><ul><li><b>default value</b>: 1</li></ul></li>
-					<li><b>pagesize</b> &ndash; The number of collection results to display during pagination. Should be between 0 and 100 inclusive. <i>32-bit signed integer</i><ul><li><b>default value</b>: 30</li></ul></li>
-            	</#if>
-            	<#if m.request.sortable?has_content>
-	            	<li><b>sort</b> &ndash; How a collection should be sorted. <i>one of <#list m.request.sortable.possibleValues as v>${v}&nbsp;</#list></i><ul><li><b>default value</b>: none</li></ul></li>
-					<li><b>order</b> &ndash; How the current sort should be ordered. <i>one of asc, or desc</i><ul><li><b>default value</b>: asc</li></ul></li>
-            	</#if>
-            	<#if m.request.options?has_content>
-                <#list m.request.options as o>
-					<li><b>${o.name}</b> &ndash; ${u.resolve_description(o)} <#if o.type?has_content><i>${o.type}</i></#if>
-					<#if o.longDescription?has_content>
-						<ul><li>${o.longDescription}</li></ul>
-					</#if>
-					<#if o.defaultValue?has_content>
-						<ul><li><b>default value</b>: ${o.defaultValue}</li></ul> 
-					</#if>
-					</li>
-				</#list>
-				</#if>
-				</ul>
-			</div>
+		        <div id="options" class="toggle-parent">
+		                <h2>- Options</h2>
+		                </div>
+		                <div class="toggle-child">
+						<p>Options are a list of values that are used to customize the resultset. They are usually optional and have default values</p>
+		                <ul>
+		            	<#if m.request.paginable?has_content && m.request.paginable>
+		            		<li><b>page</b> &ndash; The pagination offset for the current collection. Affected by the specified pagesize. <i>32-bit signed integer</i><ul><li><b>default value</b>: 1</li></ul></li>
+							<li><b>pagesize</b> &ndash; The number of collection results to display during pagination. Should be between 0 and 100 inclusive. <i>32-bit signed integer</i><ul><li><b>default value</b>: 30</li></ul></li>
+		            	</#if>
+		            	<#if m.request.sortable?has_content>
+			            	<li><b>sort</b> &ndash; How a collection should be sorted. <i>one of <#list m.request.sortable.possibleValues as v>${v}&nbsp;</#list></i><ul><li><b>default value</b>: none</li></ul></li>
+							<li><b>order</b> &ndash; How the current sort should be ordered. <i>one of asc, or desc</i><ul><li><b>default value</b>: asc</li></ul></li>
+		            	</#if>
+		            	<#if m.request.options?has_content>
+		                <#list m.request.options as o>
+							<li><b>${o.name}</b> &ndash; ${u.resolve_description(o)} <#if o.type?has_content><i>${o.type}</i></#if>
+							<#if o.longDescription?has_content>
+								<ul><li>${o.longDescription}</li></ul>
+							</#if>
+							<#if o.defaultValue?has_content>
+								<ul><li><b>default value</b>: ${o.defaultValue}</li></ul> 
+							</#if>
+							</li>
+						</#list>
+						</#if>
+						</ul>
+					</div>
             </div>
             </#if>
             

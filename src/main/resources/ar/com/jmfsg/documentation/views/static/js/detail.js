@@ -121,13 +121,13 @@ function httpNewJson(url, method, sendData, OpenWindow) {
 }
 
 //Función para ejecutar un ejemplo sin utilizar la consola
-function execute_example(mapping, preferredMethod, example, resourcesPath) {
+function execute_example(mapping, preferredMethod, uriParams, bodyFileName, resourcesPath) {
 	var toCall = "http://" + window.location.host + mapping;
 	if (preferredMethod == "get") {
-		var toCall = getToCall(toCall, example.getParams);
+		var toCall = getToCall(toCall, uriParams);
 		OpenWindow = window.open(toCall, "_blank");
 	} else if (preferredMethod == "post" || preferredMethod == "put") {
-		var fileName = (preferredMethod == "post") ? example.postFile : example.putFile;
+		var fileName = bodyFileName;
 		var OpenWindow = window.open("../jsonResult/", "_blank");
 		var request = $.get(resourcesPath + fileName, success = function(data, textStatus,
 				jqXHR) {
@@ -154,7 +154,7 @@ function getToCall(toCall, params) {
 
         if (!value) continue;
 
-        var newCall = console.replace(toCall, '{' + key + '}', encodeURIComponent(value));
+        var newCall = replace(toCall, '{' + key + '}', encodeURIComponent(value));
 
         if (newCall == toCall) {
             toCall = toCall + (firstP ? '?' : '&') + key + '=' + encodeURIComponent(value);
@@ -164,4 +164,18 @@ function getToCall(toCall, params) {
         }
     }
     return toCall;
+}
+
+var replace = function (text, target, replaceWith) {
+    // IE regex differs from... everything else
+    //   Arguably, it makes more sense but still
+    if (!$.browser.msie) {
+        replaceWith = replaceWith.replace(/\$/g, "$$$");
+    }
+
+    while (text.indexOf(target) != -1) {
+        text = text.replace(target, replaceWith);
+    }
+
+    return text;
 }

@@ -35,7 +35,7 @@ public class Request {
 	 * be returned once the facet is applied.
 	 */
 	public List<Field> facets;
-
+	
 	//FREEMARKER NEED GETTERS
 	
 	public Sortable getSortable() {
@@ -61,6 +61,5 @@ public class Request {
 	public Boolean getPaginable() {
 		return paginable;
 	}
-	
 	
 }

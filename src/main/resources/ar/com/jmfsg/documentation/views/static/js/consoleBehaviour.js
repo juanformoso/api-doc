@@ -7,20 +7,6 @@ var consoleBehaviour = function() {
 	var _bodyConsole = null;
 	var _noBodyMethodNames = ['GET', 'HEAD'];
 
-	var replace = function (text, target, replaceWith) {
-        // IE regex differs from... everything else
-        //   Arguably, it makes more sense but still
-        if (!$.browser.msie) {
-            replaceWith = replaceWith.replace(/\$/g, "$$$");
-        }
-
-        while (text.indexOf(target) != -1) {
-            text = text.replace(target, replaceWith);
-        }
-
-        return text;
-    }
-	
     var getToCall = function(toCall, withParams) {
         var toCall = _host + toCall;
 
@@ -107,6 +93,29 @@ var consoleBehaviour = function() {
 	    	} else {
 	    		_bodyConsole.style.display = 'block'
 	    	}
+	    },
+	    
+	    useExample : function (parameters, bodyFileName, resourcesPath) {
+	    	// Lleno la consola get si hay parámetros para usar
+	    	if (typeof parameters != undefined && parameters != []) {
+	    		var paramsKeys = Object.keys(parameters);
+	    		for ( var i = 0; i < paramsKeys.length; i++) {
+	    			var name = paramsKeys[i];
+	    			var field = document.getElementById('p-' + name);
+	    			if (typeof field !== "undefined" && field !== null) {
+	    				field.value = parameters[paramsKeys[i]];
+	    			}
+	    		}
+	    	}
+
+	    	// Lleno la consola post si hay nombre de postFile
+	    	if (typeof bodyFileName != "undefined" && bodyFileName != "") {
+	    		$.get(resourcesPath + bodyFileName, success = function(data, textStatus,
+	    				jqXHR) {
+	    			_editor.setValue(jqXHR.responseText);
+	    		});
+	    	}
+	    	
 	    }
 	}
 }();

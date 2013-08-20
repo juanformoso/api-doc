@@ -26,18 +26,14 @@
 		<#local ret = ret + "<h4> <div style='float:left'> ${exampleId} </div>" >
 		
 		<#local parameters = "[]">
-		<#if e.getParams?has_content >
-			<#local parameters = u.toJSString(e.getParams)>
+		<#if e.uriParams?has_content >
+			<#local parameters = u.toJSString(e.uriParams)>
 		</#if>
 		
 		<#-- Muy fea la construcción de parametros, buscar alternativa -->
-		<#local postFile = "\"\"">
-		<#local putFile = "\"\"">
-		<#if e.postFile?has_content>
-			<#local postFile = u.toJSString(e.postFile)>
-		</#if>
-		<#if e.putFile?has_content>
-			<#local putFile =  u.toJSString(e.putFile)>
+		<#local bodyFile = "\"\"">
+		<#if e.bodyFile?has_content>
+			<#local bodyFile = u.toJSString(e.bodyFile)>
 		</#if>
 		
 		<#if m.preferredMethod?has_content>
@@ -49,9 +45,9 @@
 		<#local ret2>
 				<div style='float:right;margin-right:1%'> 
 					<a href='#consoles'>
-						<img src='../../static/img/terminal_icon1.png' style='vertical-align:middle; height:25px' onclick='useExample(${parameters}, ${postFile}, ${putFile}, ${u.toJSString(p.resourcesPath)})' />
+						<img src='../../static/img/terminal_icon1.png' style='vertical-align:middle; height:25px' onclick='consoleBehaviour.useExample(${parameters}, ${bodyFile}, ${u.toJSString(p.resourcesPath)})' />
 					</a>
-					<img src='../../static/img/externalLink.png' style='vertical-align:middle;' onclick='execute_example("${mapping}", "${preferredMethod}", ${u.toJSString(e)}, ${u.toJSString(p.resourcesPath)})'>
+					<img src='../../static/img/externalLink.png' style='vertical-align:middle;' onclick='execute_example("${mapping}", "${preferredMethod}", ${u.toJSString(e.uriParams!"")}, ${u.toJSString(e.bodyFile!"")}, ${u.toJSString(p.resourcesPath)})'>
 			 	</div>
 				<div style='clear:both'> </div>
 			</h4>
@@ -60,16 +56,16 @@
 		<#local ret = ret + ret2>
 		
 		<#local ret = ret + "<div class='toggle-child' style='margin-left:2.5%; margin-bottom:2.5%' >" >
-		<#if e.getParams?has_content >
-			<#list e.getParams?keys as k>
+		<#if e.uriParams?has_content >
+			<#list e.uriParams?keys as k>
 				<#local ret = ret + '<li><b>' + k + '</b>'>
-				<#local ret = ret + ' &ndash; ' + e.getParams[k]>
+				<#local ret = ret + ' &ndash; ' + e.uriParams[k]>
 				<#local ret = ret + '</li>'>
 			 </#list>
 			 
 		</#if>
 		
-		<#local ret = ret + "<input type='button' value='Use Example' onclick='useExample(${parameters}, ${postFile}, ${putFile}, ${u.toJSString(p.resourcesPath)})' />" >
+		<#local ret = ret + "<input type='button' value='Use Example' onclick='useExample(${parameters}, ${bodyFile}, ${u.toJSString(p.resourcesPath)})' />" >
 		<#local ret = ret + "</div>" >
 		<#local ret = ret + "</div>" >
 		<#local count = count + 1>
@@ -88,19 +84,15 @@
 		<#-- Según el método devuelvo la descripción automática -->
 		<#if methodType?lower_case == "get">
 			<#local getInfo = "">
-			<#if example.getParams?has_content >
-				<#list example.getParams?keys as k>
-					<#local getInfo = getInfo + "${example.getParams[k]}" + "/" > 
+			<#if example.uriParams?has_content >
+				<#list example.uriParams?keys as k>
+					<#local getInfo = getInfo + "${example.uriParams[k]}" + "/" > 
 				</#list>
 			</#if>
 			<#return getInfo>
-		<#elseif methodType?lower_case == "post" >
-			<#if example.postFile?has_content>
-				<#return example.postFile>
-			</#if>
-		<#elseif methodType?lower_case == "put" >
-			<#if example.putFile?has_content>
-				<#return example.putFile>
+		<#elseif methodType?lower_case == "post" || methodType?lower_case == "put">
+			<#if example.bodyFile?has_content>
+				<#return example.bodyFile>
 			</#if>
 		</#if>
 	</#if>

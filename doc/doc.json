@@ -130,9 +130,8 @@
                                     "description" : "Information about an example for the method. May have both data for GET request and POST request. This data should be set according to the parent's 'supportedMappings'.", 
                                     "properties" : {
                                     	"title" : { "type" : "string" , "description" : "Title for the example. If not defined the title will be defined from the preferredMethod. If that is not defined a method type will be chosend and used to create a title.", "optional" : true },
-                                        "postFile" : { "type" : "string", "description" : "Path to json file with the parameters for the POST request. Path should be relative to 'resourcesPath'." },
-                                        "putFile" : { "type" : "string", "description" : "Path to json file with the parameters for the PUT request. Path should be relative to 'resourcesPath'." },
-                                        "getParams" : { "type" : "object", "description" : "Object properties should have as key the same name defined in 'request.parameters', and values should all be strings. Date string parameters may use %$d notation defined in dynamicDate.js to generate dynamic dates" }
+                                        "bodyFile" : { "type" : "string", "description" : "Path to json file with the body of the request. Path should be relative to 'resourcesPath'." },
+                                        "uriParams" : { "type" : "object", "description" : "Object properties should have as key the same name defined in 'request.parameters', and values should all be strings. Date string parameters may use %$d notation defined in dynamicDate.js to generate dynamic dates" }
         	                            }
                                 }
                  },
