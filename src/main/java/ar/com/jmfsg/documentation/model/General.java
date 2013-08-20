@@ -36,16 +36,19 @@ public class General {
 	public String headerImageSize;
 
 	/**
-	 * Relative path prefix used for resources. Needed if doc servlet is not
-	 * mapped to /*.
+	 * Relative path to which doc is mapped (may differ from /*)
 	 */
 	public String relativePath;
 
 	/**
-	 * Relative path prefix used for methods. Needed if doc servlet is not
-	 * mapped to /*.
+	 * Relative path to which methods are mapped (may differ from prefix url to documentation)
 	 */
 	public String methodPath;
+	
+	/**
+	 * Relative path to which resources are mapped (may differ from prefix url to documentation)
+	 */
+	public String resourcesPath;
 
 	// FREEMARKER NEEDS GETTERS (N)
 
@@ -83,5 +86,9 @@ public class General {
 
 	public String getMethodPath() {
 		return methodPath;
+	}
+	
+	public String getResourcesPath() {
+		return resourcesPath;
 	}
 }

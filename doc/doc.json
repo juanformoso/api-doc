@@ -10,9 +10,9 @@
                 "projectSummary" : { "type" : "string/html", "description" : "Summary of the proyect being documented" },
                 "methodSummary" : { "type" : "string/html", "description" : "Description of the methods" },
                 "twitterUsername" : { "description" : "unknown" },
-                "relativePath" : {},
-                "methodPath" : {},
-                "resourcesPath" : {}
+                "relativePath" : { "type" : "string/html", "description" : "Relative path to which doc is mapped (may differ from /*)" },
+                "methodPath" : { "type" : "string/html", "description" : "Relative path to which methods are mapped (may differ from prefix url to documentation)" },
+                "resourcesPath" : { "type" : "string/html", "description" : "Relative path to which resources are mapped (may differ from prefix url to documentation)" }
            }
        },
        "methods" : {

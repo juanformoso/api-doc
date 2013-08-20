@@ -1,9 +1,5 @@
 // Code for examples
-function useExample(parameters, postFileName, putFileName, resourcesPath) {
-	// Limpio todos los parámetros de la consola
-	if (typeof console._targetUrl === "undefined") showConsole()
-	console.clean();
-	
+function useExample(parameters, bodyFileName, resourcesPath) {
 	// Lleno la consola get si hay parámetros para usar
 	if (typeof parameters != undefined && parameters != []) {
 		var paramsKeys = Object.keys(parameters);
@@ -17,21 +13,12 @@ function useExample(parameters, postFileName, putFileName, resourcesPath) {
 	}
 
 	// Lleno la consola post si hay nombre de postFile
-	if (typeof postFileName != "undefined" && postFileName != "") {
-		$.get(resourcesPath + postFileName, success = function(data, textStatus,
+	if (typeof bodyFileName != "undefined" && bodyFileName != "") {
+		$.get(resourcesPath + bodyFileName, success = function(data, textStatus,
 				jqXHR) {
 			codeMirrors['post'].setValue(jqXHR.responseText);
 		});
 	}
-	
-	// Lleno la consola post si hay nombre de putFile
-	if (typeof putFileName != "undefined" && putFileName != "") {
-		$.get(resourcesPath + putFileName, success = function(data, textStatus,
-				jqXHR) {
-			codeMirrors['put'].setValue(jqXHR.responseText);
-		});
-	}
-	
 }
 
 // Funcion para registrar los métodos de toggle de colapsables
@@ -123,8 +110,8 @@ function httpNewJson(url, method, sendData, OpenWindow) {
 //Función para ejecutar un ejemplo sin utilizar la consola
 function execute_example(mapping, preferredMethod, uriParams, bodyFileName, resourcesPath) {
 	var toCall = "http://" + window.location.host + mapping;
+	toCall = getToCall(toCall, uriParams);
 	if (preferredMethod == "get") {
-		var toCall = getToCall(toCall, uriParams);
 		OpenWindow = window.open(toCall, "_blank");
 	} else if (preferredMethod == "post" || preferredMethod == "put") {
 		var fileName = bodyFileName;
