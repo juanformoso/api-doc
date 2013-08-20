@@ -28,12 +28,10 @@
 var editor;
 //Javascript associated with detail view
 $(document).ready(function() {
-    registerToggleFunction();
-    // setup ul.tabs to work as tabs for each div directly under div.panes
-    $("ul.tabs").tabs("div.panes > div");
-    
+	//Setting up body console with CodeMirror
     editor = CodeMirror.fromTextArea($('#consoleTextArea')[0], {name: "javascript", json: true});
 
+	//Extracting parameters information from ModelAndView context
     var parameters = <#if m.request?has_content && m.request.parameters?has_content> ${u.toJSString(m.request.parameters)}  <#else> [] </#if> ;
     var extraParams = [];
      <#if m.request?has_content>
@@ -65,7 +63,19 @@ $(document).ready(function() {
 	
 	var apiUrl = "http://" + window.location.host;
 	var optParameters = <#if m.request?has_content && m.request.optParameters?has_content>${u.toJSString(m.request.optParameters)}<#else>{}</#if>
-    consoleBehaviour.build(apiUrl+'<@s.url "${methodPath}" />', ${u.toJSString(m.method)}, mapParameters, editor);
+	
+	//Initializing consoleBehaviour so it is binded with the HTML console
+    consoleBehaviour.build(apiUrl+'<@s.url "${methodPath}" />', ${u.toJSString(m.method)}, mapParameters, editor, "uriForm", "bodyConsole");
+    
+    //Registering toggle function on togglable elements
+    registerToggleFunction();
+    
+    // setup ul.tabs to work as tabs for each div directly under div.panes
+    $("ul.tabs").tabs("div.pane", { onClick: function( event, tabIndex ) { 
+    		return consoleBehaviour.managePanes(this);
+    	} 
+   	});
+    
 });
 </script>
 

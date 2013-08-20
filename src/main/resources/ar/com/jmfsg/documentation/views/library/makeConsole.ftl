@@ -35,28 +35,30 @@
 
 <#-- Creates form with parameters that goes on the URI of the request --> 
 <#macro createUriForm >
-		<table width="100%" style="margin-bottom:10px">
-			<#if m.request.parameters??>
-				<@appendParameters m.request.parameters 0 />
-			</#if>
-	    	<#if m.request.filters?has_content>
-	        	<@appendParameters m.request.filters 0 />
-	        </#if>
-	        <#if m.request.options?has_content>
-	        	<@appendParameters m.request.options 0 />
-	        </#if>
-	        <#if m.request.facets?has_content>
-	        	<@appendParameters m.request.facets 0 />
-	        </#if>
-	        <#if m.request.paginable?has_content>
-	        	<#local pageOption = [{'name': 'page'}, {'name': 'pagesize'}] />
-	        	<@appendParameters pageOption 0 />
-	        </#if>
-	        <#if m.request.sortable?has_content>
-		        <#local sortOption = [{'name': 'sort'}, {'name':'order'}] />
-				<@appendParameters sortOption 0 />
-	      	</#if>
-		</table>
+		<div id="uriForm">
+			<table width="100%" style="margin-bottom:10px">
+				<#if m.request.parameters??>
+					<@appendParameters m.request.parameters 0 />
+				</#if>
+		    	<#if m.request.filters?has_content>
+		        	<@appendParameters m.request.filters 0 />
+		        </#if>
+		        <#if m.request.options?has_content>
+		        	<@appendParameters m.request.options 0 />
+		        </#if>
+		        <#if m.request.facets?has_content>
+		        	<@appendParameters m.request.facets 0 />
+		        </#if>
+		        <#if m.request.paginable?has_content>
+		        	<#local pageOption = [{'name': 'page'}, {'name': 'pagesize'}] />
+		        	<@appendParameters pageOption 0 />
+		        </#if>
+		        <#if m.request.sortable?has_content>
+			        <#local sortOption = [{'name': 'sort'}, {'name':'order'}] />
+					<@appendParameters sortOption 0 />
+		      	</#if>
+			</table>
+		</div>
 </#macro>
 
 <#-- Given a parameter, generates the fields in the form for itself and recursively for its children -->

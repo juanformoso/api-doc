@@ -14,7 +14,7 @@
 >
 
 <#macro consoles>
-	<#local supportedMappings = m.method?keys>f
+	<#local supportedMappings = m.method?keys>
 	<#local canMakeConsole = false>
 	
 	<#list supportedMappings as m> <#-- Verifico que haya algún mapping con consola -->
@@ -31,7 +31,7 @@
 				${obtain_tabs(supportedMappings)}
 			</ul>
 				<#if m.request??>
-					<div id="uriForm">
+					<div id="console">
 					<h3>Parameters</h3>
 					<@pc.createUriForm />
 					<@pc.createBodyConsole />
@@ -65,5 +65,5 @@
 </#function>
 
 <#function createConsoleButton methodName>
-	<#return '<input type="button" id="${methodName}Button" value="${methodName?capitalize} !" onclick="consoleBehaviour.execute(\'${methodName}\')"/>\n' >
+	<#return '<div class="pane"><input type="button" id="${methodName}Button" value="${methodName?capitalize} !" onclick="consoleBehaviour.execute(\'${methodName}\')"/></div>\n' >
 </#function>
