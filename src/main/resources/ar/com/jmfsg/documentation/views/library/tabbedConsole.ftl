@@ -27,19 +27,21 @@
 		<h2>Try it!</h2>
 		
 		<div id="consoles">
-			<ul class="tabs">
-				${obtain_tabs(supportedMappings)}
-			</ul>
+			<div id="tabsDiv">
+				<ul class="tabs">
+					${obtain_tabs(supportedMappings)}
+				</ul>
+				<div class="panes">
+					${obtain_panes(supportedMappings)}
+			    </div>
+			</div>
 				<#if m.request??>
 					<div id="console">
-					<h3>Parameters</h3>
-					<@pc.createUriForm />
-					<@pc.createBodyConsole />
+						<h3>Parameters</h3>
+						<@pc.createUriForm />
+						<@pc.createBodyConsole />
 					</div>
 				</#if>
-			<div class="panes">
-				${obtain_panes(supportedMappings)}
-		    </div>
 		</div>
 	</#if>
 </#macro>
@@ -48,7 +50,7 @@
 <#local ret = ''>
 <#list consoleButtons?keys as k>
 	<#if supportedMappings?seq_contains(k) >
-		<#local ret = ret + '<li><a href="#">${k?upper_case}</a></li>' >
+		<#local ret = ret + '<li><a href="#" class="tabButton">${k?upper_case}</a></li>' >
 	</#if>
 </#list>
 <#return ret>
@@ -65,5 +67,5 @@
 </#function>
 
 <#function createConsoleButton methodName>
-	<#return '<div class="pane"><input type="button" id="${methodName}Button" value="${methodName?capitalize} !" onclick="consoleBehaviour.execute(\'${methodName}\')"/></div>\n' >
+	<#return '<div class="pane"><input type="button" class="execButton" id="${methodName}Button" value="${methodName?capitalize} !" onclick="consoleBehaviour.execute(\'${methodName}\')"/></div>\n' >
 </#function>

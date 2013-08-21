@@ -91,6 +91,7 @@
 	${headerNewRelicScript}
 </#if>
 <link rel="stylesheet" href="<@s.url "${relativePath}/static/css/all.css" />" />
+<link rel="stylesheet" href="<@s.url "${relativePath}/static/css/console.css" />" />
 <link rel="stylesheet" href="<@s.url "${relativePath}/static/css/tabs.css" />" />
 <link rel="stylesheet" href="<@s.url "${relativePath}/static/css/tabs-panes.css" />" />
 <link rel="stylesheet" href="<@s.url "${relativePath}/static/css/codemirror.css" />" />
