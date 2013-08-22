@@ -1,11 +1,10 @@
 
 /* tab pane styling */
-.panes > div {
-    display:none;
-    padding:15px 10px;
-    border:1px solid #999;
+.pane {
+    display:block;
     border-top:0;
     height:auto;
     font-size:14px;
     background-color:#fff;
+    text-align:center;
 }

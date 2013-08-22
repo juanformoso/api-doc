@@ -84,6 +84,11 @@ public class Method {
 	 * Label to show in the index page instead of the requestMapping. It's an optional value.
 	 */
 	public String shortName;
+	
+	/**
+	 * Service examples.
+	 */
+	public List<Example> examples;
 
 	// FREEMARKER NEEDS GETTERS
 	
@@ -143,5 +148,7 @@ public class Method {
 		return responseIsList;
 	}
 	
-	
+	public List<Example> getExamples() {
+		return examples;
+	}
 }

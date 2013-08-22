@@ -28,7 +28,7 @@
 <#macro fixedBodyFor>
 <body>
     <div id="custom-header"></div>
-    <div class="container">        
+    <div class="container">
         <div id="header">
 	        <#if general?has_content && general.headerImageUrl?has_content && general.headerImageSize?has_content>
     	        <a href="<@s.url "${relativePath}/docs" />" class="logo" style="background:url(<@s.url "${general.headerImageUrl}"/>);width:${general.headerImageSize}"></a>
@@ -91,6 +91,7 @@
 	${headerNewRelicScript}
 </#if>
 <link rel="stylesheet" href="<@s.url "${relativePath}/static/css/all.css" />" />
+<link rel="stylesheet" href="<@s.url "${relativePath}/static/css/console.css" />" />
 <link rel="stylesheet" href="<@s.url "${relativePath}/static/css/tabs.css" />" />
 <link rel="stylesheet" href="<@s.url "${relativePath}/static/css/tabs-panes.css" />" />
 <link rel="stylesheet" href="<@s.url "${relativePath}/static/css/codemirror.css" />" />
