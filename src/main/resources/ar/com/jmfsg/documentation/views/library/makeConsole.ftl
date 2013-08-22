@@ -49,7 +49,7 @@
 		        <#if m.request.facets?has_content>
 		        	<@appendParameters m.request.facets 0 />
 		        </#if>
-		        <#if m.request.paginable?has_content>
+		        <#if m.request.paginable>
 		        	<#local pageOption = [{'name': 'page'}, {'name': 'pagesize'}] />
 		        	<@appendParameters pageOption 0 />
 		        </#if>

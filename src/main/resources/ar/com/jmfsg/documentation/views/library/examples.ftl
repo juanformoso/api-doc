@@ -64,7 +64,7 @@
 			 </#list>
 
 		</#if>
-		<#local ret = ret + "<input type='button' value='Use Example' onclick='useExample(${parameters}, ${bodyFile}, ${u.toJSString(p.resourcesPath)})' />" >
+		<#local ret = ret + "<input type='button' value='Use Example' onclick='consoleBehaviour.useExample(${parameters}, ${bodyFile}, ${u.toJSString(p.resourcesPath)})' />" >
 		<#local ret = ret + "</div>" >
 		<#local ret = ret + "</div>" >
 		<#local count = count + 1>
