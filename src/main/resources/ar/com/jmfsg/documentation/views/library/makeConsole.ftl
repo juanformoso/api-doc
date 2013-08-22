@@ -1,14 +1,6 @@
 <#-- Archivo con los macros para armar la consola de post -->
 <#import "/library/paths.ftl" as p>
 
-<#function postConsole divName>
-	<#return createConsole(divName, 'post', 'httpConsoleJson', 'httpNewJson', 'postResult')>
-</#function>
-
-<#function putConsole divName>
-	<#return createConsole(divName, 'put', 'httpConsoleJson', 'httpNewJson', 'putResult')>
-</#function>
-
 <#-- Arma la consola de post, recibe el nombre del div al cual agregar la consola -->
 <#function createConsole divName methodName consoleFunction newFunction resultName>
 <#local ret = ''>

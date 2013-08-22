@@ -1,26 +1,3 @@
-// Code for examples
-function useExample(parameters, bodyFileName, resourcesPath) {
-	// Lleno la consola get si hay parámetros para usar
-	if (typeof parameters != undefined && parameters != []) {
-		var paramsKeys = Object.keys(parameters);
-		for ( var i = 0; i < paramsKeys.length; i++) {
-			var name = paramsKeys[i];
-			var field = document.getElementById('p-' + name);
-			if (typeof field !== "undefined" && field !== null) {
-				field.value = parameters[paramsKeys[i]];
-			}
-		}
-	}
-
-	// Lleno la consola post si hay nombre de postFile
-	if (typeof bodyFileName != "undefined" && bodyFileName != "") {
-		$.get(resourcesPath + bodyFileName, success = function(data, textStatus,
-				jqXHR) {
-			codeMirrors['post'].setValue(jqXHR.responseText);
-		});
-	}
-}
-
 // Funcion para registrar los métodos de toggle de colapsables
 function registerToggleFunction() {
 	$('.toggle-parent').mouseover(function() {
@@ -58,30 +35,6 @@ function registerToggleFunction() {
 		}
 	})
 }
-
-// Metodo para realizar el post
-function httpConsoleJson(url, method, resultName) {
-	$.ajax({
-		url : url,
-		type : method.toUpperCase(),
-		data : parseDynamicDate(codeMirrors[method.toLowerCase()].getValue()),
-		contentType : "application/json; charset=utf-8",
-        success: function (data, status, req) {
-        	var result = $('#'+resultName);
-
-            var value = '<p>From calling: <a href="' + url+ '">' + url + '</a></p>';
-            value += '<code class="json"><pre>' + JSON.stringify(data, null, 1) + '</pre></code>';
-
-            result.html(value);
-        },
-        dataType: 'json',
-        error: function (req, status, e) {
-        	var result = $('#'+ resultName);
-            result.html('From calling: <a href="' + url + '">' + url + '</a> <br/>An Error Occured:<br/>' + e);
-        }
-	})
-}
-
 
 // Metodo para realizar post o put en otra ventana. Recibe 'put' o 'post' como method. Si data
 function httpNewJson(url, method, sendData, OpenWindow) {
