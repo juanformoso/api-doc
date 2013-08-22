@@ -146,7 +146,7 @@ $(document).ready(function() {
 				<p>Filters are a list of values that are used to narrow down the search. They are always required unless otherwise stated</p>
                 <ul>
                 <#list m.request.filters as f>
-					<li><b>${f.name}</b> &ndash; ${u.resolve_description(f)}</li>
+					<li><span class="span2"><b>${f.name}</b></span><span class="span9">${u.resolve_description(f)}</span></li>
 				</#list>
 				</ul>
 				</div>

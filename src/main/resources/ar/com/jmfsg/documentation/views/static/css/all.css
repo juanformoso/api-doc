@@ -1,3 +1,4 @@
+@import url(http://fonts.googleapis.com/css?family=Droid+Sans);
 /* RESET STYLES ---------------------------------------- */
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td
 	{
@@ -19,6 +20,7 @@ sub,sup {
 
 body {
 	line-height: 1;
+	font-family: 'Droid Sans', sans-serif !important;
 }
 
 ol,ul {
@@ -49,7 +51,7 @@ table {
 
 /* GENERAL STYLES ---------------------------------------- */
 body {
-	background: #E9EAEE;
+	background: #E9EAEE !important;
 	color: #444;
 	font-family: sans-serif;
 	font-size: 16px;
@@ -71,13 +73,9 @@ a.more_info {
 }
 
 h1,h2,h3 {
-	font-weight: normal;
-	color: #013d93;
-	letter-spacing: -1px;
-	background: #DDD;
+	color: #013d93 !important;
 	padding: 10px;
-	margin: 24px 0 12px;
-	border-bottom: 1px solid white;
+	border-bottom: 1px solid #c3d9ec;
 }
 
 h4,h5,h6 {
@@ -95,7 +93,7 @@ h3 a,h4 a {
 }
 
 p,ul {
-	margin: 24px 10px 12px;
+	word-wrap: break-word;
 }
 
 ul.subGroup {
@@ -119,11 +117,13 @@ h2 {
 }
 
 h3 {
-	font-size: 18px;
+	font-size: 18px !important;
+	padding: 2px !important;
+	margin: 0 0 2px 0 !important;
 }
 
 h4 {
-	font-size: 15px;
+	font-size: 15px !important;
 	margin-left: 10px;
 }
 
@@ -135,17 +135,22 @@ code {
 code pre {
 	display: block;
 	max-height: 500px;
-	margin: 25px;
+	margin: 5px;
 	padding: 20px;
-	background: #EEE;
-	border: 1px solid #CCCCCC;
 	line-height: 20px;
 	overflow: auto;
+	background: #EEE;
+	border: 1px solid #CCCCCC;
 	border-radius: 5px;
+	-moz-border-radius: 5px;
+}
+
+code pre.error {
+	color: #d14 !important;
 }
 
 .logo {
-	background: url(../img/despegar.gif);
+	background: url(../img/fsm-despegar.png) no-repeat;
 	display: block;
 	width: 260px;
 	height: 50px;
@@ -175,7 +180,7 @@ code pre {
 	margin-left: 3px;
 	-webkit-border-radius: 2px;
 	-moz-border-radius: 2px;
-	border-radius: 2px;	
+	border-radius: 2px;
 }
 
 .tags-big {
@@ -185,10 +190,10 @@ code pre {
 	margin-left: 7px;
 	-webkit-border-radius: 4px;
 	-moz-border-radius: 4px;
-	border-radius: 4px;	
+	border-radius: 4px;
 }
 
-#footer {	
+#footer {
 	min-height:50px;
 	max-width:990px;
 	margin:0 auto;
@@ -233,6 +238,7 @@ code pre {
 
 .content-page li {
 	list-style: none;
+	font-size: 13px;
 }
 
 .example {
@@ -241,26 +247,54 @@ code pre {
 }
 
 .service-row {
-	border-bottom: 1px solid #DDD;
+	border: 1px solid #c3d9ec;
+	background: #e7f0f7;
+	margin: 10px;
+	min-height: 50px;
 }
 
 .service-url {
 	width: 300px;
 	float: left;
-	overflow:hidden; 
+	overflow:hidden;
 	text-overflow:ellipsis;
+	line-height: 50px;
+}
+
+.service-url a {
+	color: #000000 !important;
+}
+
+.service-url a:hover {
+	font-weight: bold;
 }
 
 .service-description {
 	width: 400px;
 	float: left;
+	color: #0f6ab4;
+	line-height: 25px;
+	font-size: 13px;
 }
 
 .service-methods {
-	float:left;
-	width:70px;
+    background: none repeat scroll 0 0 #0F6AB4;
+    color: white;
+    float: left;
+    font-size: 11px;
+    line-height: 50px;
+    margin-right: 5px;
+    text-align: center;
+    text-transform: uppercase;
+    width: 80px;
+    font-weight: bold;
 }
 
 .service-tags {
-	float:left;	
+	float:left;
+}
+
+div.toggle-child ul li b {
+	color:#3A8ACF;
+	font-size: 15px;
 }

@@ -63,22 +63,25 @@
 		<#if c.optional?has_content>
 			<#local ret = ret + ' &ndash; <i>Optional</i>.'>
 		</#if>
+		<#if c.requestBody?has_content>
+			<#local ret = ret + ' &ndash; <i>Request Body</i>.'>
+		</#if>
 		<#if c.vectorized?has_content && c.vectorized>
 			<ul><li>This is a <b>vectorized parameter</b>, multiple ids can be sent in a single request if delimitted with a comma string.</li></ul>
 		</#if>
 		<#if c.children?has_content>
-			<#local ret = ret + '<ul>' + render_object(c.children) + '</ul>' >	
+			<#local ret = ret + '<ul>' + render_object(c.children) + '</ul>' >
 		</#if>
 		<#local ret = ret + '</li>'>
 	</#list>
     <#return ret>
  </#function>
- 
+
  <#-- -->
  <#function resolve_description field>
- 	
+
  	<#local ret = ''>
- 	
+
  	<#if field.description?has_content>
  		<#local ret = field.description >
  	<#elseif field.descriptionKey?has_content && dictionary?keys?seq_contains(field.descriptionKey)>
@@ -86,14 +89,14 @@
  	<#elseif dictionary?keys?seq_contains(field.name)>
  		<#local ret = dictionary[field.name]>
  	</#if>
- 	
+
  	<#return ret>
  </#function>
- 
+
  <#-- Macro to get a method item for the index page -->
  <#macro indexPageMethodIndex method support tagsClass>
     		<li class="service-row">
-    			<div class="service-methods"><sub><sub><b>[ <#list method.method?keys as k> ${k?lower_case} </#list> ]</b></sub></sub></div>    			
+    			<div class="service-methods">[ <#list method.method?keys as k> ${k?lower_case} </#list> ]</div>
     			<#if method.shortName?has_content>
     				<div class="service-url" title="${method.shortName}">
 	 					<a href="${p.relativePath + '/docs/method/' + support.internalMethodName}">${method.shortName}</a>

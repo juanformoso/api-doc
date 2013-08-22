@@ -4,8 +4,8 @@ ul.tabs {
     list-style:none;
     margin:0 !important;
     padding:0;
-    height:auto;
-    display:table-row;
+    border-bottom:1px solid #c3d9ec;
+    height:30px;
 }
 
 /* single tab */
