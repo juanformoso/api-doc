@@ -1,26 +1,3 @@
-// Code for examples
-function useExample(parameters, bodyFileName, resourcesPath) {
-	// Lleno la consola get si hay parámetros para usar
-	if (typeof parameters != undefined && parameters != []) {
-		var paramsKeys = Object.keys(parameters);
-		for ( var i = 0; i < paramsKeys.length; i++) {
-			var name = paramsKeys[i];
-			var field = document.getElementById('p-' + name);
-			if (typeof field !== "undefined" && field !== null) {
-				field.value = parameters[paramsKeys[i]];
-			}
-		}
-	}
-
-	// Lleno la consola post si hay nombre de postFile
-	if (typeof bodyFileName != "undefined" && bodyFileName != "") {
-		$.get(resourcesPath + bodyFileName, success = function(data, textStatus,
-				jqXHR) {
-			codeMirrors['post'].setValue(jqXHR.responseText);
-		});
-	}
-}
-
 // Funcion para registrar los métodos de toggle de colapsables
 function registerToggleFunction() {
 	$('.toggle-parent').mouseover(function() {
@@ -30,9 +7,9 @@ function registerToggleFunction() {
 	$('.toggle-parent').click(function(e) {
 
 		var header = $(this).children()
-		
+
 		//Backward compatibilty para el feature de los botones en los ejemplos
-		if (header.children().length > 0) {  
+		if (header.children().length > 0) {
 			header = header.children()
 			header = $(header[0])
 		}

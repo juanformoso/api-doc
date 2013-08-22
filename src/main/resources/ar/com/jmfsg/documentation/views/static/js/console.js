@@ -3,8 +3,16 @@ var console = function () {
     var _paramFields;
 
     return {
-        build: function (div, route, parameters, vectParameters, url, optParameters) {
-            $(div).empty();
+        build: function (div, route, parameters, vectParameters, url, optParameters, methods) {
+
+        	$(div).empty();
+
+            var options = $("<select id='method' style='margin: 10px;' class='span2'/>");
+
+            for (var i = 0; i < methods.length; i++) {
+            	var m = methods[i];
+            	$(options).append("<option value='" + m + "'>" + m.toUpperCase() + "</option>");
+            }
 
             _targetUrl = url;
 
@@ -12,19 +20,17 @@ var console = function () {
 
             if (parameters.length > 0) {
                 $(div).append($('<h3>Parameters</h3>'));
-
-                var table = $('<table width="100%"></table>');
-
+                var table = $('<table width="100%"/>');
                 console.appendParameters($(table), parameters, 0);
-                
                 $(div).append(table);
             }
 
             //Agrego seccion de parametros opcionales
             if (typeof optParameters != "undefined" && optParameters.length > 0) {
-            	var optDiv = $('<div id="optDiv" style="height:auto"></div>');
-            	var optHeadDiv = $('<div id="optHeadDiv" class="toggle-parent"></div>');
-                $(optHeadDiv).append($('<h4 > -Optional Parameters</h4>'));
+            	var optDiv = 		$('<div id="optDiv" style="height:auto"></div>');
+            	var optHeadDiv = 	$('<div id="optHeadDiv" class="toggle-parent"></div>');
+
+            	$(optHeadDiv).append($('<h4> -Optional Parameters</h4>'));
 
             	var optParamDiv = $('<div id="optParamDiv" style="padding-left:20px" class="toggle-child" ></div>')
                 var table = $('<table width="90%"></table>');
@@ -36,62 +42,100 @@ var console = function () {
 
                     $(table).append(p);
                 }
-                
+
                 //Agrego estos nuevos elementos al div original
                 $(optDiv).append(optHeadDiv);
                 $(optParamDiv).append(table);
                 $(optDiv).append(optParamDiv);
                 $(div).append(optDiv);
 
-                //Registro la función de colapsado para los nuevos componente 
+                //Registro la función de colapsado para los nuevos componentes
                 registerToggleFunction();
             }
-            
-            var result = $('<div id="result"></div>');
 
-            var doIt = $('<input type="button" id="doIt" value="Call Method" />');
+            var result = $('<div id="response"/>');
+            var action = $('<div id="actions"/>');
 
-            
-            
-            var doItNew = $('<img src="../../static/img/externalLink.png">' )
+            var doIt = $('<span style="margin: 10px 0 10px 0;"><input type="button" id="doIt" value="Call Method" class="btn btn-info"/></span>');
+
+            $(action).append(doIt).append(options);
+
+            $(doIt).click(function () {
+    			console.makeRequest(route, _paramFields, result, doIt);
+        	});
+
+
+            // Si es post o put, agrego text area para el request body
+            if(methods.indexOf('post') > -1 || methods.indexOf('put') > -1) {
+
+            	$(div).append($('<h3>Request Body</h3>'));
+            	$(div).append($('<textarea id="requestBody"/>'));
+            	$(div).append(action);
+
+            	codeMirrors['requestBody'] = 'requestBody';
+            	codeMirrors['requestBody'] = CodeMirror.fromTextArea($('#'+codeMirrors['requestBody'])[0], {name: "javascript", json: true});
+            } else {
+            	var doItNew = $('<img src="../../static/img/externalLink.png">' )
+
+                doItNew.click(
+            		function() {
+            			var toCall = console.getToCall(route, _paramFields, $('#method').val());
+            			OpenWindow = window.open(toCall, "_blank");
+         		});
+
+            	$(action).append(doItNew);
+                $(div).append(action);
+
+            }
 
             $(div).append(result);
-            $(div).append(doIt);
-            $(div).append(doItNew);
-
-            doIt.click(
-                function () {
-                    console.makeCall(route, _paramFields, result, doIt);
-                });
-            
-            doItNew.click(
-            		function() {
-            			var toCall = console.getToCall(route, _paramFields);
-            			OpenWindow = window.open(toCall, "_blank");
-            		});            
         },
-        makeCall: function (toCall, withParams, writeTo, actionButton) {
-            actionButton.attr('disabled', 'true');
+        makeRequest: function(toCall, withParams, writeTo, actionButton) {
+        	var method = $('#method').val();
+        	toCall = console.getToCall(toCall, withParams, method);
 
-            toCall = console.getToCall(toCall, withParams);
+        	$.ajax({
+        		url : toCall,
+        		type : method.toUpperCase(),
+        		data : codeMirrors['requestBody'] != null ? parseDynamicDate(codeMirrors['requestBody'].getValue()) : null,
+        		contentType : "application/json; charset=utf-8",
+                complete: function (req, status) {
+                    actionButton.removeAttr('disabled');
+                },
+                success: function (data, status, req) {
+                	console.showResponse(toCall, data, false, method, 200);
+                },
+                dataType: 'json',
+                error: function (req, status, e) {
+                	console.showResponse(toCall, req.responseText, true, method, req.status);
+                }
+        	})
+        },
+        showResponse: function (url, message, error, method, status) {
+        	var response = $('#response');
+        	var data;
 
-            $.ajax(
-                {
-                    url: toCall,
-                    success: function (data, status, req) {
-                        var value = '<p>From calling: <a href="' + toCall + '">' + console.replace(toCall, '<', '&lt;') + '</a></p>';
-                        value += '<code class="json"><pre>' + console.replace(JSON.stringify(data, null, 1), '<', '&lt;') + '</pre></code>';
+        	url = console.replace(url, '<', '&lt;');
+            var value = '<h3>Response</h3>';
+            value += '<p><b>URL: &nbsp;</b>' + url + '</p>';
 
-                        writeTo.html(value);
-                    },
-                    dataType: 'json',
-                    complete: function (req, status) {
-                        actionButton.removeAttr('disabled');
-                    },
-                    error: function (req, status, e) {
-                        writeTo.html('From calling: ' + console.replace(toCall, '<', '&lt;') + '<br/>An Error Occured:<br/>' + e);
-                    }
-                });
+            if (error) {
+            	value += '<p><span class="badge badge-important">STATUS ' + status + '</span></p>';
+            	data = message;
+        	} else {
+        		value += '<p><span class="badge badge-success">STATUS ' + status + '</span></p>';
+        		data = console.replace(JSON.stringify(message, null, 1), '<', '&lt;')
+        	}
+
+            var textAreaId = 'responseTextArea';
+            value += '<textarea id=' + textAreaId + '/>';
+            response.html(value);
+
+            $('#' + textAreaId).html(data);
+
+            codeMirrors[textAreaId] = textAreaId;
+            codeMirrors[textAreaId] = CodeMirror.fromTextArea($('#'+codeMirrors[textAreaId])[0], {name: "javascript", json: true});
+
         },
         replace: function (text, target, replaceWith) {
             // IE regex differs from... everything else
@@ -106,11 +150,11 @@ var console = function () {
 
             return text;
         },
-        getToCall: function(toCall, withParams) {
+        getToCall: function(toCall, withParams, method) {
             var toCall = _targetUrl + toCall;
 
             withParams = console.flattenParameters(withParams);
-            
+
             var firstP = true;
 
             for (var i = 0; i < withParams.length; i++) {
@@ -139,20 +183,21 @@ var console = function () {
         },
         appendParameters: function(appender, parameters, indent) {
             for (var i = 0; i < parameters.length; i++) {
-                var vect = parameters[i].vectorized ? "<span class='vectorized' title='This parameter takes multiple values, if comma delimitted'>vectorized</span>" : "";
-                var input = !parameters[i].isPhony ? '<input type="text" id="p-' + parameters[i].name + '" /></td></tr>' : "";
-                
-                var space = ''
-                var sCount = indent * 2;
-                for (var s = sCount; s; s--) { space = space + '&nbsp;' } 
-                
-                var p = $('<tr><td><b>' + space + parameters[i].name + '</b>&nbsp;' + vect + '</td><td style="margin-left:10px;">' + input);
-                
-                appender.append(p);
-                
-                if (parameters[i].children) {
-                	console.appendParameters(appender, parameters[i].children, indent + 1);
-                }
+            	if (!parameters[i].hidden) {
+	            	var vect = parameters[i].vectorized ? "<span class='vectorized' title='This parameter takes multiple values, if comma delimitted'>vectorized</span>" : "";
+                	var input = !parameters[i].isPhony ? '<input type="text" id="p-' + parameters[i].name + '" /></td></tr>' : "";
+	                var space = ''
+	                var sCount = indent * 2;
+	                for (var s = sCount; s; s--) { space = space + '&nbsp;' }
+
+	                var p = $('<tr><td><b>' + space + parameters[i].name + '</b>&nbsp;' + vect + '</td><td style="margin-left:10px;">' + input);
+
+	                appender.append(p);
+
+	                if (parameters[i].children) {
+	                	console.appendParameters(appender, parameters[i].children, indent + 1);
+	                }
+            	}
             }
         },
         flattenParameters: function(withParams, appender) {
