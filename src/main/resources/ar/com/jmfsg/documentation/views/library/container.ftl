@@ -28,7 +28,7 @@
 <#macro fixedBodyFor>
 <body>
     <div id="custom-header"></div>
-    <div class="container">        
+    <div class="container">
         <div id="header">
 	        <#if general?has_content && general.headerImageUrl?has_content && general.headerImageSize?has_content>
     	        <a href="<@s.url "${relativePath}/docs" />" class="logo" style="background:url(<@s.url "${general.headerImageUrl}"/>);width:${general.headerImageSize}"></a>

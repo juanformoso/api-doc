@@ -33,8 +33,9 @@ $(document).ready(function() {
 
 	//Extracting parameters information from ModelAndView context
     var parameters = <#if m.request?has_content && m.request.parameters?has_content> ${u.toJSString(m.request.parameters)}  <#else> [] </#if> ;
+
     var extraParams = [];
-     <#if m.request?has_content>
+    <#if m.request?has_content>
     	<#if m.request.filters?has_content>
         	extraParams = extraParams.concat( ${u.toJSString(m.request.filters)} );
         </#if>
@@ -49,6 +50,7 @@ $(document).ready(function() {
         <#if m.request.sortable?has_content>
         	extraParams = extraParams.concat( [ 'sort', 'order' ] );</#if> 
       </#if>
+
 	parameters = parameters.concat(extraParams);
 	
 	// Parameters is a simple list, I need a list of objects. 
@@ -75,7 +77,7 @@ $(document).ready(function() {
     		return consoleBehaviour.managePanes(this);
     	} 
    	});
-    
+
 });
 </script>
 
@@ -100,7 +102,7 @@ $(document).ready(function() {
  <#-- Depricated as POST was implemented --
  <#if m.method?has_content && (m.method == "POST" || m.method == "PUT")>
  <p>
- This method receives a <b>POST</b> or <b>PUT</b>. The console is not supported at the moment for these methods. <br/> 
+ This method receives a <b>POST</b> or <b>PUT</b>. The console is not supported at the moment for these methods. <br/>
  Keep in mind that the data has to be posted in <b>JSON</b> format. For example, if the method receives a string called "parameterA", a number called "parameterB", and a Dictionary called "parameterC", the posted JSON has to be like this:<br/>
  </p>
  <code><pre>
@@ -112,7 +114,7 @@ $(document).ready(function() {
 		"key2": "value2"
 	}
 }</pre></code>
- 
+
 </#if> -->
         </div>
 
@@ -125,16 +127,16 @@ $(document).ready(function() {
 			<p>Parameters may refer to values in the URL, entity properies posted as json, or both.</p>
                 <ul>
                 	${u.render_object(m.request.parameters)}
-                	
+
             	<#-- Parametros opcionales -->
             	<@o.optParameters />
             </div>
-            
-            
-            
+
+
+
             </div>
             </#if>
-            
+
             <#if m.request?has_content && m.request.filters?has_content>
             <div>
         <div id="filters" class="toggle-parent">
@@ -183,7 +185,7 @@ $(document).ready(function() {
 					</div>
             </div>
             </#if>
-            
+
             <#if m.request?has_content && m.request.facets?has_content>
             <div>
         <div id="facets" class="toggle-parent">
@@ -197,7 +199,7 @@ $(document).ready(function() {
 				</div>
             </div>
             </#if>
-            
+
             <#if m.response?has_content || m.dynamicResponse?has_content>
             	<div>
 	        		<div id="response" class="toggle-parent">
@@ -227,7 +229,7 @@ $(document).ready(function() {
 					</div>
 	            </div>
             </#if>
-            
+
           <#if m.responseSummary?has_content>
           	<div>
 	        		<div id="responseSummary" class="toggle-parent">
@@ -241,11 +243,11 @@ $(document).ready(function() {
 					</div>
 			</div>
           </#if>
-            
+
             <#-- Agrego ejemplos -->
             <@e.examples/>
 
-          
+
             <#if m.facets?has_content>
             <div>
         <div id="options" class="toggle-parent">
@@ -267,7 +269,7 @@ $(document).ready(function() {
 				</pre> -->
 				 <code>
 <pre>
-meta: {	
+meta: {
 	facets: [{
 		key: 'stars',
 		type: 'discrete',
@@ -293,7 +295,7 @@ meta: {
 				</div>
             </div>
             </#if>
-            
+
             <div>
 
 		<#-- if !m.method?has_content || m.method == "GET" || (m.implemented?has_content && m.implemented) -->
@@ -301,7 +303,7 @@ meta: {
             <@tc.consoles />
 		</#if>
         </div>
-            
+
     </div>
 
 

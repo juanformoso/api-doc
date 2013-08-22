@@ -107,12 +107,12 @@
 		    			<#local preferredMethod =  method.method[method.preferredMethod] >
 		    		<#else>
 		    			<#local preferredMethod =  method.method?values?first >
-		    		</#if>	
+		    		</#if>
 		    		<div class="service-url" title="${preferredMethod?replace(":.+", "")}">
 			        	<a href="${p.relativePath + '/docs/method/' + support.internalMethodName}">${preferredMethod?replace(":.+", "")}</a>
 			        </div>
-			    </#if>    				
-    			
+			    </#if>
+
     			<div class="service-description">${method.description}</div>
     			<div class="service-tags">
     				<#if method.tags?has_content>${renderTags(method.tags, tagsClass)}</#if>
@@ -120,9 +120,9 @@
     			</div>
     			<div style="clear: both;">
     		</li>
-    		
+
  </#macro>
- 
+
  <#-- Function that gets parameters names from the list and their children recursively -->
  <#function obtainAllParams objs>
  	<#local ret = '['>
@@ -130,7 +130,7 @@
  	<#local ret = ret + ']'>
  	<#return ret>
  </#function>
- 
+
  <#function obtainAllParamsAux objs>
  	<#local ret = ''>
  	<#list objs as o>
@@ -141,18 +141,18 @@
  	</#list>
  	<#return ret>
  </#function>
- 
+
 <#-- Function render tags extracted from utils and index -->
  <#function renderTags methodTags class>
 	<#local ret = ''>
- 	
+
  	<#list methodTags as tag>
  		<#if tags?has_content && tags?keys?seq_contains(tag)>
  			<#local ret = ret + '<span class="' + class + '" title="' + tags[tag].title +'" style="background-color:' + tags[tag].color +'">' + tags[tag].name + '</span>'>
  		<#else>
  			<#local ret = ret + '<span class="'+ class + '" title="' + tag +'" style="background-color:#EEEEEE">' + tag + '</span>'>
  		</#if>
- 	</#list> 	
- 	
+ 	</#list>
+
  	<#return ret>
  </#function>

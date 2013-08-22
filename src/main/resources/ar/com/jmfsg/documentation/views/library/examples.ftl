@@ -24,18 +24,18 @@
 		<#local exampleId = '+ #' + count?string + " - " + example_title(e, method) + " - ">
 		<#local ret = ret + "<div id=${exampleId} class='example'> <div class='toggle-parent' closed='true'>" >
 		<#local ret = ret + "<h4> <div style='float:left'> ${exampleId} </div>" >
-		
+
 		<#local parameters = "[]">
 		<#if e.uriParams?has_content >
 			<#local parameters = u.toJSString(e.uriParams)>
 		</#if>
-		
+
 		<#-- Muy fea la construcción de parametros, buscar alternativa -->
 		<#local bodyFile = "\"\"">
 		<#if e.bodyFile?has_content>
 			<#local bodyFile = u.toJSString(e.bodyFile)>
 		</#if>
-		
+
 		<#if m.preferredMethod?has_content>
 			<#local preferredMethod = m.preferredMethod >
 		<#else>
@@ -43,7 +43,7 @@
 		</#if>
 		<#local mapping = "${p.methodPath}" + "${m.method[preferredMethod]}" >
 		<#local ret2>
-				<div style='float:right;margin-right:1%'> 
+				<div style='float:right;margin-right:1%'>
 					<a href='#consoles'>
 						<img src='../../static/img/terminal_icon1.png' style='vertical-align:middle; height:25px' onclick='consoleBehaviour.useExample(${parameters}, ${bodyFile}, ${u.toJSString(p.resourcesPath)})' />
 					</a>
@@ -54,7 +54,7 @@
 			</div>
 		</#local>
 		<#local ret = ret + ret2>
-		
+
 		<#local ret = ret + "<div class='toggle-child' style='margin-left:2.5%; margin-bottom:2.5%' >" >
 		<#if e.uriParams?has_content >
 			<#list e.uriParams?keys as k>
@@ -62,9 +62,8 @@
 				<#local ret = ret + ' &ndash; ' + e.uriParams[k]>
 				<#local ret = ret + '</li>'>
 			 </#list>
-			 
+
 		</#if>
-		
 		<#local ret = ret + "<input type='button' value='Use Example' onclick='useExample(${parameters}, ${bodyFile}, ${u.toJSString(p.resourcesPath)})' />" >
 		<#local ret = ret + "</div>" >
 		<#local ret = ret + "</div>" >
@@ -96,6 +95,6 @@
 			</#if>
 		</#if>
 	</#if>
-	
+
 	<#return "">
 </#function>

@@ -13,7 +13,7 @@
 <#function createConsole divName methodName consoleFunction newFunction resultName>
 <#local ret = ''>
 <#if m.method?keys?seq_contains(methodName)>
-<#local mapping = "${p.methodPath}" + "${m.method[methodName]}" > 
+<#local mapping = "${p.methodPath}" + "${m.method[methodName]}" >
 <#local buttonName = methodName + 'Button' >
 <#local ret = ret + '<div id="${divName}">' > 
 <#local ret = ret + '<input type="button" id="${buttonName}" value="${methodName?capitalize} !" onclick="${consoleFunction}(\'${mapping}\', \'${methodName}\', \'${resultName}\')"/>\n' >

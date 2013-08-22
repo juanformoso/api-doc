@@ -51,7 +51,7 @@ function registerToggleFunction() {
 		else
 			header.text(header.text().replace("-", "+"));
 	});
-	
+
 	$('.toggle-parent').each(function(index, e){
 		if($(e).attr('closed')) {
 			$(e).click()
@@ -68,7 +68,7 @@ function httpConsoleJson(url, method, resultName) {
 		contentType : "application/json; charset=utf-8",
         success: function (data, status, req) {
         	var result = $('#'+resultName);
-        	
+
             var value = '<p>From calling: <a href="' + url+ '">' + url + '</a></p>';
             value += '<code class="json"><pre>' + JSON.stringify(data, null, 1) + '</pre></code>';
 
@@ -82,9 +82,10 @@ function httpConsoleJson(url, method, resultName) {
 	})
 }
 
-// Metodo para realizar post o put en otra ventana. Recibe 'put' o 'post' como method. Si data 
+
+// Metodo para realizar post o put en otra ventana. Recibe 'put' o 'post' como method. Si data
 function httpNewJson(url, method, sendData, OpenWindow) {
-	sendData = (typeof sendData === "undefined") ? parseDynamicDate(codeMirrors[method.toLowerCase()].getValue()) : parseDynamicDate(sendData);  
+	sendData = (typeof sendData === "undefined") ? parseDynamicDate(codeMirrors[method.toLowerCase()].getValue()) : parseDynamicDate(sendData);
 	OpenWindow = (typeof OpenWindow === "undefined") ? window.open("../jsonResult/", "_blank") : OpenWindow;
 	$(OpenWindow).ready( function() {
 		$.ajax({
@@ -123,13 +124,13 @@ function execute_example(mapping, preferredMethod, uriParams, bodyFileName, reso
 		request.error(function(jqXHR, textStatus, errorThrown) {
 		  if (textStatus == 'timeout')
 		    console.log('The server is not responding');
-		
+
 		  if (textStatus == 'error')
 		    console.log('errorThrown');
-		
+
 		  // Etc
 		});
-	} 
+	}
 }
 
 //Función que dado un mapping y un diccionario { "varName" : "varValue" } genera el string REST para el get

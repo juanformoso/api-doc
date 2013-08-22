@@ -1,4 +1,4 @@
-<#-- Armamos el div con los tabs y las consolas pertinentes. 
+<#-- Armamos el div con los tabs y las consolas pertinentes.
 	 Llama a makeConsole.ftl para las consolas. -->
 <#-- http://jquerytools.org/demos/tabs/index.html -->
 <#import "/library/makeConsole.ftl" as pc />
@@ -69,3 +69,4 @@
 <#function createConsoleButton methodName>
 	<#return '<div class="pane"><input type="button" class="execButton" id="${methodName}Button" value="${methodName?capitalize} !" onclick="consoleBehaviour.execute(\'${methodName}\')"/></div>\n' >
 </#function>
+
