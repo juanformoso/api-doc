@@ -19,27 +19,23 @@
 	<#assign methodPath = relativePath>
 </#if>
 
-<script type="text/javascript" src="<@s.url "${relativePath}/static/js/console.js?v=3" />" > </script>
+<script type="text/javascript" src="<@s.url "${relativePath}/static/js/consoleBehaviour.js?v=3" />" > </script>
 <script type="text/javascript" src="<@s.url "${relativePath}/static/js/detail.js?v=3" />"  > </script>
 <script type="text/javascript" src="<@s.url "${relativePath}/static/js/codemirror-compressed.js"/>" > </script>
 <script type="text/javascript" src="<@s.url "${relativePath}/static/js/dynamicDate.js"/>" > </script>
 <script type="text/javascript" src="<@s.url "${relativePath}/static/js/date.f-0.5.0-min.js"/>" > </script>
 <script type="text/javascript">
+var editor;
 //Javascript associated with detail view
+$(document).ready(function() {
+	//Setting up body console with CodeMirror
+    editor = CodeMirror.fromTextArea($('#consoleTextArea')[0], {name: "javascript", json: true});
 
-//Este diccionario tiene el nombre de los textAreas que contendrán los codeMirror.
-//Luego reemplazaremos los strings por el codemirror propiamente dicho
-var codeMirrors = { "put" : "putTextArea", "post" : "postTextArea" }; 
-
-function showConsole() {
-    <#if m.method?keys?seq_contains('get')>
-    var x = $('#getConsole');
-    var method= "<@s.url "${methodPath + m.method['get']?replace(':.+', '')}" />";
-    //This should put a list of strings
+	//Extracting parameters information from ModelAndView context
     var parameters = <#if m.request?has_content && m.request.parameters?has_content> ${u.toJSString(m.request.parameters)}  <#else> [] </#if> ;
-    
+
     var extraParams = [];
-     <#if m.request?has_content>
+    <#if m.request?has_content>
     	<#if m.request.filters?has_content>
         	extraParams = extraParams.concat( ${u.toJSString(m.request.filters)} );
         </#if>
@@ -49,7 +45,7 @@ function showConsole() {
         <#if m.request.facets?has_content>
         	extraParams = extraParams.concat( ${u.toJSString(m.request.facets)} );
         </#if>
-        <#if m.request.paginable?has_content>
+        <#if m.request.paginable>
         	extraParams = extraParams.concat( [ 'page','pagesize'  ] );</#if>
         <#if m.request.sortable?has_content>
         	extraParams = extraParams.concat( [ 'sort', 'order' ] );</#if> 
@@ -60,26 +56,28 @@ function showConsole() {
 	// Parameters is a simple list, I need a list of objects. 
 	var mapParameters = [parameters.length]
 	for (i=0;i<parameters.length;i++) {
-		mapParameters[i]= { name : parameters[i]};
+		if (typeof parameters[i] === "string") {
+			mapParameters[i] = { name : parameters[i]};
+		} else {
+			mapParameters[i] = parameters[i];
+		}
 	}
 	
 	var apiUrl = "http://" + window.location.host;
 	var optParameters = <#if m.request?has_content && m.request.optParameters?has_content>${u.toJSString(m.request.optParameters)}<#else>{}</#if>
-    console.build(x, method, mapParameters, {<#if m.request?has_content && m.request.parameters?has_content><#list m.request.parameters as p><#if p.vectorized?has_content && p.vectorized>'${p.name}':true<#if p_has_next>,</#if></#if></#list></#if>}, apiUrl, optParameters);
-    </#if>
-}
-
-$(document).ready(function() {
-    registerToggleFunction();
-    // setup ul.tabs to work as tabs for each div directly under div.panes
-    $("ul.tabs").tabs("div.panes > div");
+	
+	//Initializing consoleBehaviour so it is binded with the HTML console
+    consoleBehaviour.build(apiUrl+'<@s.url "${methodPath}" />', ${u.toJSString(m.method)}, mapParameters, editor, "uriForm", "bodyConsole");
     
-    // setup json consoles
-    for (key in codeMirrors) {
-    	if ($('#' + codeMirrors[key]).length > 0) {
-	    	codeMirrors[key] = CodeMirror.fromTextArea($('#'+codeMirrors[key])[0], {name: "javascript", json: true});
-	    }
-    }
+    //Registering toggle function on togglable elements
+    registerToggleFunction();
+    
+    // setup ul.tabs to work as tabs for each div directly under div.panes
+    $("ul.tabs").tabs("div.pane", { onClick: function( event, tabIndex ) { 
+    		return consoleBehaviour.managePanes(this);
+    	} 
+   	});
+
 });
 </script>
 
@@ -104,7 +102,7 @@ $(document).ready(function() {
  <#-- Depricated as POST was implemented --
  <#if m.method?has_content && (m.method == "POST" || m.method == "PUT")>
  <p>
- This method receives a <b>POST</b> or <b>PUT</b>. The console is not supported at the moment for these methods. <br/> 
+ This method receives a <b>POST</b> or <b>PUT</b>. The console is not supported at the moment for these methods. <br/>
  Keep in mind that the data has to be posted in <b>JSON</b> format. For example, if the method receives a string called "parameterA", a number called "parameterB", and a Dictionary called "parameterC", the posted JSON has to be like this:<br/>
  </p>
  <code><pre>
@@ -116,7 +114,7 @@ $(document).ready(function() {
 		"key2": "value2"
 	}
 }</pre></code>
- 
+
 </#if> -->
         </div>
 
@@ -129,16 +127,16 @@ $(document).ready(function() {
 			<p>Parameters may refer to values in the URL, entity properies posted as json, or both.</p>
                 <ul>
                 	${u.render_object(m.request.parameters)}
-                	
+
             	<#-- Parametros opcionales -->
             	<@o.optParameters />
             </div>
-            
-            
-            
+
+
+
             </div>
             </#if>
-            
+
             <#if m.request?has_content && m.request.filters?has_content>
             <div>
         <div id="filters" class="toggle-parent">
@@ -155,39 +153,39 @@ $(document).ready(function() {
             </div>
             </#if>
             
-            <#if m.request?has_content && (m.request.options?has_content || m.request.paginable?has_content || m.request.sortable?has_content)>
+            <#if m.request?has_content && (m.request.options?has_content || m.request.paginable || m.request.sortable?has_content)>
             <div>
-        <div id="options" class="toggle-parent">
-                <h2>- Options</h2>
-                </div>
-                <div class="toggle-child">
-				<p>Options are a list of values that are used to customize the resultset. They are usually optional and have default values</p>
-                <ul>
-            	<#if m.request.paginable?has_content && m.request.paginable>
-            		<li><b>page</b> &ndash; The pagination offset for the current collection. Affected by the specified pagesize. <i>32-bit signed integer</i><ul><li><b>default value</b>: 1</li></ul></li>
-					<li><b>pagesize</b> &ndash; The number of collection results to display during pagination. Should be between 0 and 100 inclusive. <i>32-bit signed integer</i><ul><li><b>default value</b>: 30</li></ul></li>
-            	</#if>
-            	<#if m.request.sortable?has_content>
-	            	<li><b>sort</b> &ndash; How a collection should be sorted. <i>one of <#list m.request.sortable.possibleValues as v>${v}&nbsp;</#list></i><ul><li><b>default value</b>: none</li></ul></li>
-					<li><b>order</b> &ndash; How the current sort should be ordered. <i>one of asc, or desc</i><ul><li><b>default value</b>: asc</li></ul></li>
-            	</#if>
-            	<#if m.request.options?has_content>
-                <#list m.request.options as o>
-					<li><b>${o.name}</b> &ndash; ${u.resolve_description(o)} <#if o.type?has_content><i>${o.type}</i></#if>
-					<#if o.longDescription?has_content>
-						<ul><li>${o.longDescription}</li></ul>
-					</#if>
-					<#if o.defaultValue?has_content>
-						<ul><li><b>default value</b>: ${o.defaultValue}</li></ul> 
-					</#if>
-					</li>
-				</#list>
-				</#if>
-				</ul>
-			</div>
+		        <div id="options" class="toggle-parent">
+		                <h2>- Options</h2>
+		                </div>
+		                <div class="toggle-child">
+						<p>Options are a list of values that are used to customize the resultset. They are usually optional and have default values</p>
+		                <ul>
+		            	<#if m.request.paginable?has_content && m.request.paginable>
+		            		<li><b>page</b> &ndash; The pagination offset for the current collection. Affected by the specified pagesize. <i>32-bit signed integer</i><ul><li><b>default value</b>: 1</li></ul></li>
+							<li><b>pagesize</b> &ndash; The number of collection results to display during pagination. Should be between 0 and 100 inclusive. <i>32-bit signed integer</i><ul><li><b>default value</b>: 30</li></ul></li>
+		            	</#if>
+		            	<#if m.request.sortable?has_content>
+			            	<li><b>sort</b> &ndash; How a collection should be sorted. <i>one of <#list m.request.sortable.possibleValues as v>${v}&nbsp;</#list></i><ul><li><b>default value</b>: none</li></ul></li>
+							<li><b>order</b> &ndash; How the current sort should be ordered. <i>one of asc, or desc</i><ul><li><b>default value</b>: asc</li></ul></li>
+		            	</#if>
+		            	<#if m.request.options?has_content>
+		                <#list m.request.options as o>
+							<li><b>${o.name}</b> &ndash; ${u.resolve_description(o)} <#if o.type?has_content><i>${o.type}</i></#if>
+							<#if o.longDescription?has_content>
+								<ul><li>${o.longDescription}</li></ul>
+							</#if>
+							<#if o.defaultValue?has_content>
+								<ul><li><b>default value</b>: ${o.defaultValue}</li></ul> 
+							</#if>
+							</li>
+						</#list>
+						</#if>
+						</ul>
+					</div>
             </div>
             </#if>
-            
+
             <#if m.request?has_content && m.request.facets?has_content>
             <div>
         <div id="facets" class="toggle-parent">
@@ -201,7 +199,7 @@ $(document).ready(function() {
 				</div>
             </div>
             </#if>
-            
+
             <#if m.response?has_content || m.dynamicResponse?has_content>
             	<div>
 	        		<div id="response" class="toggle-parent">
@@ -231,7 +229,7 @@ $(document).ready(function() {
 					</div>
 	            </div>
             </#if>
-            
+
           <#if m.responseSummary?has_content>
           	<div>
 	        		<div id="responseSummary" class="toggle-parent">
@@ -245,11 +243,11 @@ $(document).ready(function() {
 					</div>
 			</div>
           </#if>
-            
+
             <#-- Agrego ejemplos -->
             <@e.examples/>
 
-          
+
             <#if m.facets?has_content>
             <div>
         <div id="options" class="toggle-parent">
@@ -271,7 +269,7 @@ $(document).ready(function() {
 				</pre> -->
 				 <code>
 <pre>
-meta: {	
+meta: {
 	facets: [{
 		key: 'stars',
 		type: 'discrete',
@@ -297,7 +295,7 @@ meta: {
 				</div>
             </div>
             </#if>
-            
+
             <div>
 
 		<#-- if !m.method?has_content || m.method == "GET" || (m.implemented?has_content && m.implemented) -->
@@ -305,7 +303,7 @@ meta: {
             <@tc.consoles />
 		</#if>
         </div>
-            
+
     </div>
 
 

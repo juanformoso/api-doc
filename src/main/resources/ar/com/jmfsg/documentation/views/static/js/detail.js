@@ -1,39 +1,3 @@
-// Code for examples
-function useExample(parameters, postFileName, putFileName, resourcesPath) {
-	// Limpio todos los parámetros de la consola
-	if (typeof console._targetUrl === "undefined") showConsole()
-	console.clean();
-	
-	// Lleno la consola get si hay parámetros para usar
-	if (typeof parameters != undefined && parameters != []) {
-		var paramsKeys = Object.keys(parameters);
-		for ( var i = 0; i < paramsKeys.length; i++) {
-			var name = paramsKeys[i];
-			var field = document.getElementById('p-' + name);
-			if (typeof field !== "undefined" && field !== null) {
-				field.value = parameters[paramsKeys[i]];
-			}
-		}
-	}
-
-	// Lleno la consola post si hay nombre de postFile
-	if (typeof postFileName != "undefined" && postFileName != "") {
-		$.get(resourcesPath + postFileName, success = function(data, textStatus,
-				jqXHR) {
-			codeMirrors['post'].setValue(jqXHR.responseText);
-		});
-	}
-	
-	// Lleno la consola post si hay nombre de putFile
-	if (typeof putFileName != "undefined" && putFileName != "") {
-		$.get(resourcesPath + putFileName, success = function(data, textStatus,
-				jqXHR) {
-			codeMirrors['put'].setValue(jqXHR.responseText);
-		});
-	}
-	
-}
-
 // Funcion para registrar los métodos de toggle de colapsables
 function registerToggleFunction() {
 	$('.toggle-parent').mouseover(function() {
@@ -64,7 +28,7 @@ function registerToggleFunction() {
 		else
 			header.text(header.text().replace("-", "+"));
 	});
-	
+
 	$('.toggle-parent').each(function(index, e){
 		if($(e).attr('closed')) {
 			$(e).click()
@@ -72,32 +36,9 @@ function registerToggleFunction() {
 	})
 }
 
-// Metodo para realizar el post
-function httpConsoleJson(url, method, resultName) {
-	$.ajax({
-		url : url,
-		type : method.toUpperCase(),
-		data : parseDynamicDate(codeMirrors[method.toLowerCase()].getValue()),
-		contentType : "application/json; charset=utf-8",
-        success: function (data, status, req) {
-        	var result = $('#'+resultName);
-        	
-            var value = '<p>From calling: <a href="' + url+ '">' + url + '</a></p>';
-            value += '<code class="json"><pre>' + JSON.stringify(data, null, 1) + '</pre></code>';
-
-            result.html(value);
-        },
-        dataType: 'json',
-        error: function (req, status, e) {
-        	var result = $('#'+ resultName);
-            result.html('From calling: <a href="' + url + '">' + url + '</a> <br/>An Error Occured:<br/>' + e);
-        }
-	})
-}
-
-// Metodo para realizar post o put en otra ventana. Recibe 'put' o 'post' como method. Si data 
+// Metodo para realizar post o put en otra ventana. Recibe 'put' o 'post' como method. Si data
 function httpNewJson(url, method, sendData, OpenWindow) {
-	sendData = (typeof sendData === "undefined") ? parseDynamicDate(codeMirrors[method.toLowerCase()].getValue()) : parseDynamicDate(sendData);  
+	sendData = (typeof sendData === "undefined") ? parseDynamicDate(codeMirrors[method.toLowerCase()].getValue()) : parseDynamicDate(sendData);
 	OpenWindow = (typeof OpenWindow === "undefined") ? window.open("../jsonResult/", "_blank") : OpenWindow;
 	$(OpenWindow).ready( function() {
 		$.ajax({
@@ -121,13 +62,13 @@ function httpNewJson(url, method, sendData, OpenWindow) {
 }
 
 //Función para ejecutar un ejemplo sin utilizar la consola
-function execute_example(mapping, preferredMethod, example, resourcesPath) {
+function execute_example(mapping, preferredMethod, uriParams, bodyFileName, resourcesPath) {
 	var toCall = "http://" + window.location.host + mapping;
+	toCall = getToCall(toCall, uriParams);
 	if (preferredMethod == "get") {
-		var toCall = getToCall(toCall, example.getParams);
 		OpenWindow = window.open(toCall, "_blank");
 	} else if (preferredMethod == "post" || preferredMethod == "put") {
-		var fileName = (preferredMethod == "post") ? example.postFile : example.putFile;
+		var fileName = bodyFileName;
 		var OpenWindow = window.open("../jsonResult/", "_blank");
 		var request = $.get(resourcesPath + fileName, success = function(data, textStatus,
 				jqXHR) {
@@ -136,13 +77,13 @@ function execute_example(mapping, preferredMethod, example, resourcesPath) {
 		request.error(function(jqXHR, textStatus, errorThrown) {
 		  if (textStatus == 'timeout')
 		    console.log('The server is not responding');
-		
+
 		  if (textStatus == 'error')
 		    console.log('errorThrown');
-		
+
 		  // Etc
 		});
-	} 
+	}
 }
 
 //Función que dado un mapping y un diccionario { "varName" : "varValue" } genera el string REST para el get
@@ -154,7 +95,7 @@ function getToCall(toCall, params) {
 
         if (!value) continue;
 
-        var newCall = console.replace(toCall, '{' + key + '}', encodeURIComponent(value));
+        var newCall = replace(toCall, '{' + key + '}', encodeURIComponent(value));
 
         if (newCall == toCall) {
             toCall = toCall + (firstP ? '?' : '&') + key + '=' + encodeURIComponent(value);
@@ -164,4 +105,18 @@ function getToCall(toCall, params) {
         }
     }
     return toCall;
+}
+
+var replace = function (text, target, replaceWith) {
+    // IE regex differs from... everything else
+    //   Arguably, it makes more sense but still
+    if (!$.browser.msie) {
+        replaceWith = replaceWith.replace(/\$/g, "$$$");
+    }
+
+    while (text.indexOf(target) != -1) {
+        text = text.replace(target, replaceWith);
+    }
+
+    return text;
 }
