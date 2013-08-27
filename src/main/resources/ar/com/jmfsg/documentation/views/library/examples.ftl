@@ -64,7 +64,7 @@
 			 </#list>
 
 		</#if>
-		<#local ret = ret + "<input type='button' value='Use Example' onclick='useExample(${parameters}, ${bodyFile}, ${u.toJSString(p.resourcesPath)})' />" >
+		<#local ret = ret + "<input type='button' value='Use Example' onclick='consoleBehaviour.useExample(${parameters}, ${bodyFile}, ${u.toJSString(p.resourcesPath)})' />" >
 		<#local ret = ret + "</div>" >
 		<#local ret = ret + "</div>" >
 		<#local count = count + 1>
@@ -85,7 +85,7 @@
 			<#local getInfo = "">
 			<#if example.uriParams?has_content >
 				<#list example.uriParams?keys as k>
-					<#local getInfo = getInfo + "${example.uriParams[k]}" + "/" > 
+					<#local getInfo = getInfo + "${example.uriParams[k]}" + "/" >
 				</#list>
 			</#if>
 			<#return getInfo>

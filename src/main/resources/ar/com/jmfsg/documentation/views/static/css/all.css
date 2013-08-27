@@ -54,7 +54,7 @@ body {
 	background: #E9EAEE !important;
 	color: #444;
 	font-family: sans-serif;
-	font-size: 16px;
+	font-size: 14px;
 	line-height: 24px;
 }
 
@@ -74,18 +74,18 @@ a.more_info {
 
 h1,h2,h3 {
 	color: #013d93 !important;
-	padding: 10px;
+	padding: 7px;
 	border-bottom: 1px solid #c3d9ec;
+	margin-bottom: 5px;
+	line-height: 30px;
 }
 
 h4,h5,h6 {
 	font-weight: normal;
 	color: #013d93;
 	letter-spacing: -1px;
-	background: #EEE;
 	padding: 5px 5px 5px 10px;
 	margin-left: 10px;
-	border-bottom: 1px solid white;
 }
 
 h3 a,h4 a {
@@ -241,9 +241,16 @@ code pre.error {
 	font-size: 13px;
 }
 
+div.toggle-child ul li b {
+	color:#3A8ACF;
+	font-size: 15px;
+}
+
 .example {
 	font-size: 14px;
-	padding-left: 20px;
+	border: 1px solid #c3d9ec;
+	background: #e7f0f7;
+	margin-bottom: 2px;
 }
 
 .service-row {
@@ -294,7 +301,3 @@ code pre.error {
 	float:left;
 }
 
-div.toggle-child ul li b {
-	color:#3A8ACF;
-	font-size: 15px;
-}

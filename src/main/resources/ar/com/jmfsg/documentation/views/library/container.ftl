@@ -73,11 +73,11 @@
 <#if headerNewRelicScript?has_content>
 	${headerNewRelicScript}
 </#if>
+<link rel="stylesheet" href="<@s.url "${relativePath}/static/css/bootstrap.css" />" />
 <link rel="stylesheet" href="<@s.url "${relativePath}/static/css/all.css" />" />
 <link rel="stylesheet" href="<@s.url "${relativePath}/static/css/tabs.css" />" />
 <link rel="stylesheet" href="<@s.url "${relativePath}/static/css/tabs-panes.css" />" />
 <link rel="stylesheet" href="<@s.url "${relativePath}/static/css/codemirror.css" />" />
-<link rel="stylesheet" href="<@s.url "${relativePath}/static/css/bootstrap.css" />" />
 <link rel="icon" type="image/x-icon" href="<@s.url "${relativePath}/static/img/favicon.gif" />"/>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
 <script type="text/javascript" src="<@s.url "${relativePath}/static/js/jquery.tools.min.js?v=3" />"  ></script>
@@ -91,12 +91,12 @@
 <#if headerNewRelicScript?has_content>
 	${headerNewRelicScript}
 </#if>
+<link rel="stylesheet" href="<@s.url "${relativePath}/static/css/bootstrap.css" />" />
 <link rel="stylesheet" href="<@s.url "${relativePath}/static/css/all.css" />" />
 <link rel="stylesheet" href="<@s.url "${relativePath}/static/css/console.css" />" />
 <link rel="stylesheet" href="<@s.url "${relativePath}/static/css/tabs.css" />" />
 <link rel="stylesheet" href="<@s.url "${relativePath}/static/css/tabs-panes.css" />" />
 <link rel="stylesheet" href="<@s.url "${relativePath}/static/css/codemirror.css" />" />
-<link rel="stylesheet" href="<@s.url "${relativePath}/static/css/bootstrap.css" />" />
 <link rel="icon" type="image/x-icon" href="<@s.url "${relativePath}/static/img/favicon.gif" />"/>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
 <script type="text/javascript" src="<@s.url "${relativePath}/static/js/jquery.tools.min.js?v=3" />"  ></script>
