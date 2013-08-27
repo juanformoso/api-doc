@@ -26,10 +26,14 @@
 <script type="text/javascript" src="<@s.url "${relativePath}/static/js/date.f-0.5.0-min.js"/>" > </script>
 <script type="text/javascript">
 var editor;
+var response;
 //Javascript associated with detail view
 $(document).ready(function() {
 	//Setting up body console with CodeMirror
     editor = CodeMirror.fromTextArea($('#consoleTextArea')[0], {name: "javascript", json: true});
+    response = CodeMirror.fromTextArea($('#responseTextArea')[0], {name: "javascript", json: true});
+
+	$('#response').hide();
 
 	//Extracting parameters information from ModelAndView context
     var parameters = <#if m.request?has_content && m.request.parameters?has_content> ${u.toJSString(m.request.parameters)}  <#else> [] </#if> ;
@@ -48,12 +52,12 @@ $(document).ready(function() {
         <#if m.request.paginable>
         	extraParams = extraParams.concat( [ 'page','pagesize'  ] );</#if>
         <#if m.request.sortable?has_content>
-        	extraParams = extraParams.concat( [ 'sort', 'order' ] );</#if> 
+        	extraParams = extraParams.concat( [ 'sort', 'order' ] );</#if>
       </#if>
 
 	parameters = parameters.concat(extraParams);
-	
-	// Parameters is a simple list, I need a list of objects. 
+
+	// Parameters is a simple list, I need a list of objects.
 	var mapParameters = [parameters.length]
 	for (i=0;i<parameters.length;i++) {
 		if (typeof parameters[i] === "string") {
@@ -62,23 +66,35 @@ $(document).ready(function() {
 			mapParameters[i] = parameters[i];
 		}
 	}
-	
+
 	var apiUrl = "http://" + window.location.host;
 	var optParameters = <#if m.request?has_content && m.request.optParameters?has_content>${u.toJSString(m.request.optParameters)}<#else>{}</#if>
-	
+
 	//Initializing consoleBehaviour so it is binded with the HTML console
-    consoleBehaviour.build(apiUrl+'<@s.url "${methodPath}" />', ${u.toJSString(m.method)}, mapParameters, editor, "uriForm", "bodyConsole");
-    
+    consoleBehaviour.build(apiUrl+'<@s.url "${methodPath}" />', ${u.toJSString(m.method)}, mapParameters, editor, response, "uriForm", "bodyConsole");
+
+	var methods = ${u.toJSString(m.method?keys)};
+
+	showRequestBodyConsole(methods);
+
     //Registering toggle function on togglable elements
     registerToggleFunction();
-    
+
     // setup ul.tabs to work as tabs for each div directly under div.panes
-    $("ul.tabs").tabs("div.pane", { onClick: function( event, tabIndex ) { 
+    $("ul.tabs").tabs("div.pane", { onClick: function( event, tabIndex ) {
     		return consoleBehaviour.managePanes(this);
-    	} 
+    	}
    	});
 
 });
+
+function showRequestBodyConsole(methods) {
+	$('#bodyConsole').hide();
+
+	if (methods.indexOf('post') > -1 | methods.indexOf('put') > -1 ) {
+		$('#bodyConsole').show();
+	}
+}
 </script>
 
 <title>Usage of ${m.friendlyName}</title>
@@ -152,7 +168,7 @@ $(document).ready(function() {
 				</div>
             </div>
             </#if>
-            
+
             <#if m.request?has_content && (m.request.options?has_content || m.request.paginable || m.request.sortable?has_content)>
             <div>
 		        <div id="options" class="toggle-parent">
@@ -176,7 +192,7 @@ $(document).ready(function() {
 								<ul><li>${o.longDescription}</li></ul>
 							</#if>
 							<#if o.defaultValue?has_content>
-								<ul><li><b>default value</b>: ${o.defaultValue}</li></ul> 
+								<ul><li><b>default value</b>: ${o.defaultValue}</li></ul>
 							</#if>
 							</li>
 						</#list>
