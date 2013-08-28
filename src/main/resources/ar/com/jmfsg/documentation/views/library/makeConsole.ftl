@@ -12,7 +12,7 @@
 <#macro createBodyResponse >
 <div id="response">
 	<h3>Response</h3>
-	<span class="url">URL:</span><span id="url"></span>
+	<div ><span class="url">URL: </span><input id="url" type="text" readonly></input></div>
 	<div>
 		<span id="status" class="badge">200</span>
 	</div>

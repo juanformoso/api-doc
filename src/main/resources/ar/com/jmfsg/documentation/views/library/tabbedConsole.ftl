@@ -20,6 +20,7 @@
 					<@createExecutionButtons />
 					${createMethods(supportedMappings)}
 				</div>
+				<div id="loading-icon"> <i class="icon-spinner icon-spin icon-large"></i>  Loading response... </div>
 				<@pc.createBodyResponse />
 			</div>
 		</#if>

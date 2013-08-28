@@ -111,7 +111,7 @@ var consoleBehaviour = function() {
 		execute : function () {
 			var method = $('#method').val();
 			_url = getToCall(_mappings[method.toLowerCase()], _parameters)
-			consoleBehaviour.makeRequest(method)
+			consoleBehaviour.makeRequest(method, _url)
 		},
 		
 		executeNew : function () {
@@ -128,8 +128,9 @@ var consoleBehaviour = function() {
 	    		_bodyConsole.style.display = 'block'
 	    	}
 	    },
-	    makeRequest: function(method) {
+	    makeRequest: function(method, _url) {
 	    	sendData = parseDynamicDate(editor.getValue())
+	    	$('#loading-icon').show()
 			$.ajax({
 				url : _url,
 				type : method.toUpperCase(),
@@ -138,25 +139,26 @@ var consoleBehaviour = function() {
 		        success: function (data, status, xhr) {
 		        	_xhr = xhr;
 		        	_statusClass = 'badge-success';
-		        	consoleBehaviour.showResponse();
+		        	consoleBehaviour.showResponse(_url);
 		        },
 		        dataType: 'json',
 		        error: function (xhr, status, e) {
 		        	_xhr = xhr;
 		        	_statusClass = 'badge-important';
-		        	consoleBehaviour.showResponse();
+		        	consoleBehaviour.showResponse(_url);
 		        }
 			})
 	    },
-	    showResponse: function () {
+	    showResponse: function (_url) {
 	    	$('#response').show();
+	    	$('#loading-icon').hide()
         	_response.setValue(_xhr.statusText);
 
         	if(_xhr.getResponseHeader("content-type").indexOf('json') > -1 ) {
         		_response.setValue(JSON.stringify(JSON.parse(_xhr.responseText), null, 1));
         	}
 
-        	$('#url').empty().append(_url);
+        	$('#url').val(_url);
         	$('#status').empty().removeClass().addClass('badge ' + _statusClass).append('STATUS: ' + _xhr.status);
 
     	    $("a#newWindow").click(function() {

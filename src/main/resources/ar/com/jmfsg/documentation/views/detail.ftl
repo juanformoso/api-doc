@@ -34,6 +34,7 @@ $(document).ready(function() {
     response = CodeMirror.fromTextArea($('#responseTextArea')[0], {name: "javascript", json: true});
 
 	$('#response').hide();
+	$('#loading-icon').hide();
 
 	//Extracting parameters information from ModelAndView context
     var parameters = <#if m.request?has_content && m.request.parameters?has_content> ${u.toJSString(m.request.parameters)}  <#else> [] </#if> ;
