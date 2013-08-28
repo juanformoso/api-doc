@@ -91,6 +91,7 @@
 <#if headerNewRelicScript?has_content>
 	${headerNewRelicScript}
 </#if>
+<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
 <link rel="stylesheet" href="<@s.url "${relativePath}/static/css/bootstrap.css" />" />
 <link rel="stylesheet" href="<@s.url "${relativePath}/static/css/all.css" />" />
 <link rel="stylesheet" href="<@s.url "${relativePath}/static/css/console.css" />" />

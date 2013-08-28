@@ -37,51 +37,51 @@ var consoleBehaviour = function() {
 
     var httpNewJson = function(_url, method) {
 
-//    	sendData = parseDynamicDate(editor.getValue())
-//    	OpenWindow = window.open(_url, "_blank")
-//    	if (_noBodyMethodNames.indexOf(method.toUpperCase()) < 0) {
-//	    	$(OpenWindow).ready( function() {
-//	    		$.ajax({
-//	    			url : _url,
-//	    			type : method.toUpperCase(),
-//	    			data : sendData,
-//	    			contentType : "application/json; charset=utf-8",
-//	    	        success:
-//	    	        	function (data, status, req) {
-//	    	    		OpenWindow.document.write(JSON.stringify(data, null, 1))
-//	    	    		OpenWindow.document.close()
-//	    	        },
-//	    	        dataType: 'json',
-//	    	        error: function (req, status, e) {
-//	    	            OpenWindow.document.write('From calling: ' + _url + ' An Error Occured: ' + e +"\n");
-//	    	            OpenWindow.document.write("Request:\n");
-//	    	            OpenWindow.document.write(sendData);
-//	    	            OpenWindow.document.close();
-//	    	        }
-//	    		})
-//	    	});
-//    	}
-
     	sendData = parseDynamicDate(editor.getValue())
-		$.ajax({
-			url : _url,
-			type : method.toUpperCase(),
-			data : sendData,
-			contentType : "application/json; charset=utf-8",
-	        success: function (data, status, xhr) {
-	        	_xhr = xhr;
-	        	_statusClass = 'badge-success';
-	        	_url = url;
-	        	consoleBehaviour.showResponse();
-	        },
-	        dataType: 'json',
-	        error: function (xhr, status, e) {
-	        	_xhr = xhr;
-	        	_statusClass = 'badge-important';
-	        	_url = url;
-	        	consoleBehaviour.showResponse();
-	        }
-		})
+    	OpenWindow = window.open(_url, "_blank")
+    	if (_noBodyMethodNames.indexOf(method.toUpperCase()) < 0) {
+	    	$(OpenWindow).ready( function() {
+	    		$.ajax({
+	    			url : _url,
+	    			type : method.toUpperCase(),
+	    			data : sendData,
+	    			contentType : "application/json; charset=utf-8",
+	    	        success:
+	    	        	function (data, status, req) {
+	    	    		OpenWindow.document.write(JSON.stringify(data, null, 1))
+	    	    		OpenWindow.document.close()
+	    	        },
+	    	        dataType: 'json',
+	    	        error: function (req, status, e) {
+	    	            OpenWindow.document.write('From calling: ' + _url + ' An Error Occured: ' + e +"\n");
+	    	            OpenWindow.document.write("Request:\n");
+	    	            OpenWindow.document.write(sendData);
+	    	            OpenWindow.document.close();
+	    	        }
+	    		})
+	    	});
+    	}
+
+//    	sendData = parseDynamicDate(editor.getValue())
+//		$.ajax({
+//			url : _url,
+//			type : method.toUpperCase(),
+//			data : sendData,
+//			contentType : "application/json; charset=utf-8",
+//	        success: function (data, status, xhr) {
+//	        	_xhr = xhr;
+//	        	_statusClass = 'badge-success';
+//	        	_url = url;
+//	        	consoleBehaviour.showResponse();
+//	        },
+//	        dataType: 'json',
+//	        error: function (xhr, status, e) {
+//	        	_xhr = xhr;
+//	        	_statusClass = 'badge-important';
+//	        	_url = url;
+//	        	consoleBehaviour.showResponse();
+//	        }
+//		})
     }
 
     var flattenParameters = function(withParams, appender) {
@@ -112,6 +112,12 @@ var consoleBehaviour = function() {
 			var method = $('#method').val();
 			_url = getToCall(_mappings[method.toLowerCase()], _parameters)
 			consoleBehaviour.makeRequest(method)
+		},
+		
+		executeNew : function () {
+			var method = $('#method').val();
+			var toCall = getToCall(_mappings[method.toLowerCase()], _parameters)
+			httpNewJson(toCall, method)
 		},
 
 	    managePanes : function ( tabs ) {
