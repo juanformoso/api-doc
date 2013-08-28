@@ -13,6 +13,7 @@ import java.util.Set;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -26,12 +27,22 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.io.Resource;
+import org.springframework.util.ReflectionUtils;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+
+import ar.com.jmfsg.documentation.annotation.Documented;
 import ar.com.jmfsg.documentation.model.DictionaryEntry;
 import ar.com.jmfsg.documentation.model.Documentation;
+import ar.com.jmfsg.documentation.model.Field;
 import ar.com.jmfsg.documentation.model.General;
 import ar.com.jmfsg.documentation.model.Group;
 import ar.com.jmfsg.documentation.model.Method;
+import ar.com.jmfsg.documentation.model.Request;
+import ar.com.jmfsg.documentation.model.RequestMethods;
 import ar.com.jmfsg.documentation.model.Tag;
 
 /**
@@ -145,15 +156,62 @@ public class DocumentationLoader implements InitializingBean,
 												ar.com.jmfsg.documentation.annotation.Documentation.class)
 										.data());
 
-						Method method = objectMapper.readValue(o.toString(),
-								Method.class);
+						Method method = objectMapper.readValue(o.toString(),Method.class);
 						this.addModuleMethod(modulePrefix, method);
 					}
+					
+					processDocumentedAnnotation(modulePrefix, reflections);
 				}
 			}
 		}
 		for (DocumentationListener listener : listeners) {
 			listener.documentationChanged(this);
+		}
+	}
+
+	/**
+	 * process {@link Documented} annotation
+	 */
+	private void processDocumentedAnnotation(String modulePrefix,
+			Reflections reflections) {
+		Set<java.lang.reflect.Method> annotated;
+		Iterator<java.lang.reflect.Method> it;
+		annotated = reflections.getMethodsAnnotatedWith(Documented.class);
+		it = annotated.iterator();
+		while (it.hasNext()) {
+			java.lang.reflect.Method m = it.next();
+			Documented annotation = m.getAnnotation(Documented.class);
+
+			Method method = new Method();
+			// try to infer some data from the request mapping annotation
+			RequestMapping mappingRequested = m.getAnnotation(RequestMapping.class);
+			if (mappingRequested != null){
+				method.requestMapping = m.getName();
+				Map<String,String> methodMap = Maps.newHashMap();
+				for (int i = 0; i < mappingRequested.value().length; i++) {
+					for (int j = 0; j < mappingRequested.method().length; j++) {
+						methodMap.put(mappingRequested.method()[j].name(), mappingRequested.value()[i]);
+					}
+				}
+				method.method = new RequestMethods(methodMap);
+				method.order = 1;
+				method.friendlyName = StringUtils.isEmpty(annotation.friendlyName())?m.getName():annotation.friendlyName();
+				method.group = annotation.group();
+				method.longDescription = annotation.longDescription();
+				method.subGroup = annotation.subgroup();
+				method.description = annotation.description();
+				
+				if (!ArrayUtils.isEmpty(annotation.parameterNames())){
+					method.request = new Request();
+					method.request.parameters = Lists.newArrayList();
+					for (String name : annotation.parameterNames()) {
+						Field field = new Field();
+						field.name = name;
+						method.request.parameters.add(field);
+					}
+				}
+			}
+			this.addModuleMethod(modulePrefix, method);
 		}
 	}
 
