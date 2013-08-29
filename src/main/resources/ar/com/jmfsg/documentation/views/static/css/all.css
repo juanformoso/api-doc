@@ -298,14 +298,17 @@ div.toggle-child ul li b {
 
 .service-methods {
     background: none repeat scroll 0 0 #0F6AB4;
-    color: white;
     float: left;
-    font-size: 11px;
+    text-align: center;
     line-height: 50px;
     margin-right: 5px;
-    text-align: center;
-    text-transform: uppercase;
     width: 80px;
+}
+
+.service-methods a {
+    color: white;
+    text-transform: uppercase;
+    font-size: 11px;
     font-weight: bold;
 }
 

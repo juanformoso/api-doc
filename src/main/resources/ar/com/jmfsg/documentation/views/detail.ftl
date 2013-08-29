@@ -219,7 +219,7 @@ function showRequestBodyConsole(methods) {
 
             <#if m.response?has_content || m.dynamicResponse?has_content>
             	<div>
-	        		<div id="response" class="toggle-parent">
+	        		<div id="responseDescription" class="toggle-parent">
 	                	<h2>+ Response</h2>
 	                </div>
 	                <div class="toggle-child" style="display: none;">

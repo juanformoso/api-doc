@@ -96,7 +96,7 @@
  <#-- Macro to get a method item for the index page -->
  <#macro indexPageMethodIndex method support tagsClass>
     		<li class="service-row">
-    			<div class="service-methods">[ <#list method.method?keys as k> ${k?lower_case} </#list> ]</div>
+    			<div class="service-methods"><a href="${p.relativePath + '/docs/method/' + support.internalMethodName}">[ <#list method.method?keys as k> ${k?lower_case} </#list> ]</a></div>
     			<#if method.shortName?has_content>
     				<div class="service-url" title="${method.shortName}">
 	 					<a href="${p.relativePath + '/docs/method/' + support.internalMethodName}">${method.shortName}</a>
