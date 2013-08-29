@@ -32,10 +32,10 @@ And that's it!
 When you run your application, you'll see your pretty documentation
 
 ###Method index
-![](https://raw.github.com/juanformoso/api-doc/master/img/index.png)
+![](img/index.png)
 
 ###Method detail
-![](https://raw.github.com/juanformoso/api-doc/master/img/detail.png)
+![](img/detail.png)
 
 Stuff I know is wrong and plan on fixing
 ----------------------------------------
