@@ -36,30 +36,6 @@ function registerToggleFunction() {
 	})
 }
 
-// Metodo para realizar el post
-function httpConsoleJson(url, method, resultName) {
-	$.ajax({
-		url : url,
-		type : method.toUpperCase(),
-		data : parseDynamicDate(codeMirrors[method.toLowerCase()].getValue()),
-		contentType : "application/json; charset=utf-8",
-        success: function (data, status, req) {
-        	var result = $('#'+resultName);
-
-            var value = '<p>From calling: <a href="' + url+ '">' + url + '</a></p>';
-            value += '<code class="json"><pre>' + JSON.stringify(data, null, 1) + '</pre></code>';
-
-            result.html(value);
-        },
-        dataType: 'json',
-        error: function (req, status, e) {
-        	var result = $('#'+ resultName);
-            result.html('From calling: <a href="' + url + '">' + url + '</a> <br/>An Error Occured:<br/>' + e);
-        }
-	})
-}
-
-
 // Metodo para realizar post o put en otra ventana. Recibe 'put' o 'post' como method. Si data
 function httpNewJson(url, method, sendData, OpenWindow) {
 	sendData = (typeof sendData === "undefined") ? parseDynamicDate(codeMirrors[method.toLowerCase()].getValue()) : parseDynamicDate(sendData);
