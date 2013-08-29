@@ -280,9 +280,21 @@ div.toggle-child ul li b {
 	width: 400px;
 	float: left;
 	color: #0f6ab4;
-	line-height: 25px;
 	font-size: 13px;
+	display: table;
+	height: 50px;
 }
+
+.service-description a {
+	display:table-cell;
+	vertical-align:middle;
+	text-align:left;
+}
+
+.service-description a p {
+	display:block;
+}
+
 
 .service-methods {
     background: none repeat scroll 0 0 #0F6AB4;

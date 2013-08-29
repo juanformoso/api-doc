@@ -103,7 +103,7 @@
 	 				</div>
 	 			<#elseif method.friendlyName == "">
 	 				<div class="service-url" title="${method.method?values?first}">
-		    			${method.method?values?first}
+		    			<a href="${p.relativePath + '/docs/method/' + support.internalMethodName}">${method.method?values?first}</a>
 		    		</div>
 		    	<#else>
 		    		<#if method.preferredMethod?has_content && method.method?keys?seq_contains(method.preferredMethod) >
@@ -116,7 +116,7 @@
 			        </div>
 			    </#if>
 
-    			<div class="service-description">${method.description}</div>
+    			<div class="service-description"><a href="${p.relativePath + '/docs/method/' + support.internalMethodName}"><p>${method.description}</p></a></div>
     			<div class="service-tags">
     				<#if method.tags?has_content>${renderTags(method.tags, tagsClass)}</#if>
     				<#if method.implemented?has_content && !method.implemented><span class="not-implemented" title="This method is not currently implemented but will be included in a future release. Parameters and responses are subject to change in the final version.">not implemented</span></#if>
