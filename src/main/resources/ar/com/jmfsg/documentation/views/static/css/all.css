@@ -270,7 +270,8 @@ div.toggle-child ul li b {
 }
 
 .service-url a {
-	color: #000000 !important;
+	color: #319FDA !important;
+	font-weight: bold;
 }
 
 .service-url a:hover {
