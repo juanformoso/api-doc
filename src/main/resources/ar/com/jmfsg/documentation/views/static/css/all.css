@@ -266,6 +266,7 @@ div.toggle-child ul li b {
 	overflow:hidden;
 	text-overflow:ellipsis;
 	line-height: 50px;
+    padding-left: 5pt;
 }
 
 .service-url a {
@@ -283,6 +284,7 @@ div.toggle-child ul li b {
 	font-size: 13px;
 	display: table;
 	height: 50px;
+    border-right : 1px solid #c3d9ec;
 }
 
 .service-description a {
@@ -297,18 +299,19 @@ div.toggle-child ul li b {
 
 
 .service-methods {
-    background: none repeat scroll 0 0 #0F6AB4;
+    /*background: none repeat scroll 0 0 #0F6AB4; */
     float: left;
     text-align: center;
     line-height: 50px;
     margin-right: 5px;
     width: 80px;
+    border-right : 1px solid #c3d9ec;
 }
 
 .service-methods a {
-    color: white;
-    text-transform: uppercase;
-    font-size: 11px;
+    color: #444444;
+    text-transform: lowercase;
+    font-size: 10px;
     font-weight: bold;
 }
 
