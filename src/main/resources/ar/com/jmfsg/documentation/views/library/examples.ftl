@@ -85,7 +85,7 @@
 			<#local getInfo = "">
 			<#if example.uriParams?has_content >
 				<#list example.uriParams?keys as k>
-					<#local getInfo = getInfo + "${example.uriParams[k]}" + "/" > 
+					<#local getInfo = getInfo + "${example.uriParams[k]}" + "/" >
 				</#list>
 			</#if>
 			<#return getInfo>

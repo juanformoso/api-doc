@@ -7,9 +7,9 @@ function registerToggleFunction() {
 	$('.toggle-parent').click(function(e) {
 
 		var header = $(this).children()
-		
+
 		//Backward compatibilty para el feature de los botones en los ejemplos
-		if (header.children().length > 0) {  
+		if (header.children().length > 0) {
 			header = header.children()
 			header = $(header[0])
 		}

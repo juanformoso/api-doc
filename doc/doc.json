@@ -37,6 +37,7 @@
                  			  			 {  "description" : "If method is an object then it defines in itself both method (POST, GET, etc.) and mapping URI. If method is an object,  'requestMapping' is ignored. All properties are optional but must have at least one defined. The URI defined will be shown in the webpage.",
                  			  			    "id" : "mappingObject", 
                  			  			    "properties" : {
+                 			  			    	"head" : { "type" : "string/uri" },
                  			  			    	"get" : { "type" : "string/uri" },
                  			  			    	"put" : { "type" : "string/uri" },
                  			  			    	"post" : { "type" : "string/uri" },
