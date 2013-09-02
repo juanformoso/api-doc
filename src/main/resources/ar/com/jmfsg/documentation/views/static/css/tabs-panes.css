@@ -1,7 +1,9 @@
 
 /* tab pane styling */
 .pane {
-    display:block;
+    display:none;
+    padding:15px 10px;
+    border:1px solid #c3d9ec;
     border-top:0;
     height:auto;
     font-size:14px;
