@@ -1,8 +1,10 @@
 .CodeMirror {
   line-height: 1em;
   font-family: monospace;
-  background-color:#F0F0E8;
-  border: 1px solid #CCCCB2;
+	background: #EEE;
+	border: 1px solid #CCCCCC;
+	border-radius: 5px;
+	-moz-border-radius: 5px;
   /* Necessary so the scrollbar can be absolutely positioned within the wrapper on Lion. */
   position: relative;
   /* This prevents unwanted scrollbars from showing up on the body and wrapper in IE. */

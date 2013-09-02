@@ -31,7 +31,11 @@ All you need to do, is
 And that's it!  
 When you run your application, you'll see your pretty documentation
 
-![](https://raw.github.com/juanformoso/api-doc/master/img/screenshot.png)
+###Method index
+![](img/index.png)
+
+###Method detail
+![](img/detail.png)
 
 Stuff I know is wrong and plan on fixing
 ----------------------------------------

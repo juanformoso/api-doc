@@ -63,22 +63,25 @@
 		<#if c.optional?has_content>
 			<#local ret = ret + ' &ndash; <i>Optional</i>.'>
 		</#if>
+		<#if c.requestBody?has_content>
+			<#local ret = ret + ' &ndash; <i>Request Body</i>.'>
+		</#if>
 		<#if c.vectorized?has_content && c.vectorized>
 			<ul><li>This is a <b>vectorized parameter</b>, multiple ids can be sent in a single request if delimitted with a comma string.</li></ul>
 		</#if>
 		<#if c.children?has_content>
-			<#local ret = ret + '<ul>' + render_object(c.children) + '</ul>' >	
+			<#local ret = ret + '<ul>' + render_object(c.children) + '</ul>' >
 		</#if>
 		<#local ret = ret + '</li>'>
 	</#list>
     <#return ret>
  </#function>
- 
+
  <#-- -->
  <#function resolve_description field>
- 	
+
  	<#local ret = ''>
- 	
+
  	<#if field.description?has_content>
  		<#local ret = field.description >
  	<#elseif field.descriptionKey?has_content && dictionary?keys?seq_contains(field.descriptionKey)>
@@ -86,21 +89,21 @@
  	<#elseif dictionary?keys?seq_contains(field.name)>
  		<#local ret = dictionary[field.name]>
  	</#if>
- 	
+
  	<#return ret>
  </#function>
- 
+
  <#-- Macro to get a method item for the index page -->
  <#macro indexPageMethodIndex method support tagsClass>
     		<li class="service-row">
-    			<div class="service-methods"><sub><sub><b>[ <#list method.method?keys as k> ${k?lower_case} </#list> ]</b></sub></sub></div>    			
+    			<div class="service-methods"><a href="${p.relativePath + '/docs/method/' + support.internalMethodName}">[ <#list method.method?keys as k> ${k?lower_case} </#list> ]</a></div>
     			<#if method.shortName?has_content>
     				<div class="service-url" title="${method.shortName}">
 	 					<a href="${p.relativePath + '/docs/method/' + support.internalMethodName}">${method.shortName}</a>
 	 				</div>
 	 			<#elseif method.friendlyName == "">
 	 				<div class="service-url" title="${method.method?values?first}">
-		    			${method.method?values?first}
+		    			<a href="${p.relativePath + '/docs/method/' + support.internalMethodName}">${method.method?values?first}</a>
 		    		</div>
 		    	<#else>
 		    		<#if method.preferredMethod?has_content && method.method?keys?seq_contains(method.preferredMethod) >
@@ -113,7 +116,7 @@
 			        </div>
 			    </#if>
 
-    			<div class="service-description">${method.description}</div>
+    			<div class="service-description"><a href="${p.relativePath + '/docs/method/' + support.internalMethodName}"><p>${method.description}</p></a></div>
     			<div class="service-tags">
     				<#if method.tags?has_content>${renderTags(method.tags, tagsClass)}</#if>
     				<#if method.implemented?has_content && !method.implemented><span class="not-implemented" title="This method is not currently implemented but will be included in a future release. Parameters and responses are subject to change in the final version.">not implemented</span></#if>
